@@ -1,0 +1,41 @@
+PLACEHOLDER IMAGES - Replace these with your actual images:
+
+1. hero-packed-room.jpg
+   - Replace with: "Copy of Crave Show Photos.png"
+   - Used in: Hero section background
+   - Recommended size: 1920x1080 or larger
+
+2. packed-room-placeholder.jpg
+   - Replace with: "Copy of Crave Show Photos.png"
+   - Used in: Gallery section
+   - Recommended size: 800x800
+
+3. performer-stage-placeholder.jpg
+   - Replace with: "823 45 Ratio Photo (2).png"
+   - Used in: Gallery section
+   - Recommended size: 800x800
+
+4. flyer-1-placeholder.jpg
+   - Replace with: "Sep 25 Flyer.png"
+   - Used in: Gallery section
+   - Recommended size: 800x800
+
+5. showcase-placeholder.jpg
+   - Replace with: Actual showcase show photo
+   - Used in: Crave Laughs Showcase card
+   - Recommended size: 800x600
+
+6. openmic-placeholder.jpg
+   - Replace with: Actual open mic photo
+   - Used in: Crave Laughs Open Mic card
+   - Recommended size: 800x600
+
+7. Other gallery placeholders (flyer-2, audience-laughing, venue)
+   - Replace with: Your other Instagram photos, Eventbrite screenshots, or venue photos
+   - Used in: Gallery section
+   - Recommended size: 800x800
+
+To add images:
+1. Copy your image files to the /public/images/ folder
+2. Rename them to match the placeholder names above, OR
+3. Update the image paths in pages/index.js and data/shows.js

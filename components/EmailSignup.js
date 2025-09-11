@@ -2,6 +2,10 @@ import { useState } from 'react'
 
 export default function EmailSignup() {
   const [email, setEmail] = useState('')
+  const [interests, setInterests] = useState({
+    showcase: true,
+    openmic: false
+  })
   const [status, setStatus] = useState('')
 
   const handleSubmit = (e) => {
@@ -10,8 +14,11 @@ export default function EmailSignup() {
     // You can find this in your Mailchimp embed form code
     const MAILCHIMP_ACTION_URL = 'https://YOUR-MAILCHIMP-URL-HERE'
     
+    // Also update the group IDs in the checkboxes above to match your Mailchimp groups
+    // You can create groups in Mailchimp under Audience > Manage Audience > Groups
+    
     // For now, just show a message
-    setStatus('Please replace the Mailchimp URL in EmailSignup.js with your actual Mailchimp form action URL')
+    setStatus('Please replace the Mailchimp URL and group IDs in EmailSignup.js')
     
     // Uncomment below when you have your Mailchimp URL
     // const form = e.target
@@ -20,33 +27,61 @@ export default function EmailSignup() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-comedy-purple to-comedy-blue rounded-2xl p-8 md:p-12 text-white">
+    <div className="bg-gradient-to-br from-purple-700 to-comedy-purple rounded-2xl p-8 md:p-12 text-white">
       <div className="max-w-2xl mx-auto text-center">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-display uppercase tracking-tight mb-4">Stay in the Loop</h2>
         <p className="text-lg sm:text-xl mb-2">Get very occasional updates about upcoming shows.</p>
-        <p className="text-base sm:text-lg opacity-90 mb-6 sm:mb-8">No spam. Not even once a month. Just when something cool is happening.</p>
+        <p className="text-base sm:text-lg opacity-90 mb-6 sm:mb-8">No spam. Just when something fun is happening!</p>
         
         <form 
           onSubmit={handleSubmit}
           method="post"
           target="_blank"
-          className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
+          className="max-w-md mx-auto"
         >
-          <input
-            type="email"
-            name="EMAIL"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            required
-            className="flex-1 px-6 py-3 rounded-lg text-gray-900 bg-white placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30"
-          />
-          <button
-            type="submit"
-            className="px-8 py-3 bg-white text-comedy-purple font-semibold rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-4 focus:ring-white/30"
-          >
-            Subscribe
-          </button>
+          <p className="text-white/90 text-center mb-3">I'm interested in hearing about:</p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center mb-6">
+            <label className="flex items-center cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
+              <input
+                type="checkbox"
+                name="group[12345][1]" // Replace 12345 with your Mailchimp group ID
+                value="1"
+                checked={interests.showcase}
+                onChange={(e) => setInterests({...interests, showcase: e.target.checked})}
+                className="w-5 h-5 mr-3 rounded accent-comedy-purple"
+              />
+              <span className="text-white font-medium">Comedy showcases</span>
+            </label>
+            <label className="flex items-center cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
+              <input
+                type="checkbox"
+                name="group[12345][2]" // Replace with your Mailchimp group ID
+                value="2"
+                checked={interests.openmic}
+                onChange={(e) => setInterests({...interests, openmic: e.target.checked})}
+                className="w-5 h-5 mr-3 rounded accent-comedy-green"
+              />
+              <span className="text-white font-medium">Open mic nights</span>
+            </label>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4">
+            <input
+              type="email"
+              name="EMAIL"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              required
+              className="flex-1 px-6 py-3 rounded-lg text-gray-900 bg-white placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30"
+            />
+            <button
+              type="submit"
+              className="px-8 py-3 bg-white text-comedy-purple font-semibold rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-4 focus:ring-white/30"
+            >
+              Subscribe
+            </button>
+          </div>
         </form>
         
         {status && (

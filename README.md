@@ -20,7 +20,7 @@ npm install
 npm run dev
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser
+3. Open [http://localhost:3005](http://localhost:3005) in your browser
 
 ## Important Setup Steps
 
@@ -38,12 +38,29 @@ Replace the placeholder images in `/public/images/` with your actual photos:
 3. Replace `'https://YOUR-MAILCHIMP-URL-HERE'` with your actual Mailchimp form action URL
 4. Uncomment the form submission code
 
-### 3. Update Show Information
+### 3. Managing Show Dates and Ticket Sales
+
+**When tickets are NOT available:**
+1. In `/config/site.js`, set `showcaseTicketsAvailable: false`
+2. The site will automatically:
+   - Show "Next date coming soon" for the showcase
+   - Change buttons to "Get Notified About Next Show"
+   - Link to the email signup instead of Eventbrite
+
+**When tickets go on sale:**
+1. In `/config/site.js`:
+   - Set `showcaseTicketsAvailable: true`
+   - Update `nextShowDate: "Saturday, March 15"` (or your actual date)
+2. The site will automatically:
+   - Show the actual show date
+   - Change buttons back to "Get Tickets"
+   - Link to your Eventbrite page
+
+**Other show details:**
 Edit `/data/shows.js` to update:
-- Show dates and times
 - Ticket prices
 - Event descriptions
-- Eventbrite links (if different from defaults)
+- Venue information
 
 ## Deployment to Vercel
 

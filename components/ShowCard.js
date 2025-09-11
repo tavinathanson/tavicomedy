@@ -1,8 +1,9 @@
 import Image from 'next/image'
+import { siteConfig } from '@/config/site'
 
 export default function ShowCard({ show }) {
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col h-full">
       <div className="relative h-48 bg-gray-200">
         {/* Replace src with actual show images */}
         <Image
@@ -25,7 +26,7 @@ export default function ShowCard({ show }) {
         )}
       </div>
       
-      <div className="p-4 sm:p-6">
+      <div className="p-4 sm:p-6 flex flex-col flex-grow">
         <h3 className="text-lg sm:text-xl font-bold text-comedy-dark mb-2">{show.name}</h3>
         <div className="space-y-1 sm:space-y-2 text-sm sm:text-base text-gray-600 mb-4">
           <p className="flex items-center">
@@ -38,7 +39,10 @@ export default function ShowCard({ show }) {
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {show.time}
+            <span>{show.time}</span>
+            {show.doors && (
+              <span className="text-xs text-gray-500 ml-2">(Doors {show.doors})</span>
+            )}
           </p>
           <p className="flex items-center">
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,16 +52,24 @@ export default function ShowCard({ show }) {
             {show.venue}
           </p>
         </div>
-        <p className="text-sm sm:text-base text-gray-700 mb-4 line-clamp-2">{show.description}</p>
-        <div className="flex items-center justify-between">
-          <span className="text-xl sm:text-2xl font-bold text-comedy-purple">{show.price}</span>
+        <p className="text-sm sm:text-base text-gray-700 mb-4 line-clamp-2 flex-grow">{show.description}</p>
+        <div className="flex items-center justify-between mt-auto">
+          <div>
+            <span className="text-xl sm:text-2xl font-bold text-comedy-purple">{show.price}</span>
+            {show.price !== "Free" && siteConfig.showcaseTicketsAvailable && (
+              <span className="text-xs text-gray-600 block">No additional fees</span>
+            )}
+            {show.isShowcase && !siteConfig.showcaseTicketsAvailable && (
+              <span className="text-xs text-gray-600 block">Tickets coming soon</span>
+            )}
+          </div>
           <a
-            href={show.ticketLink}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : show.ticketLink}
+            target={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '_self' : '_blank'}
+            rel={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? undefined : 'noopener noreferrer'}
             className={`${show.isOpenMic ? 'btn-secondary' : 'btn-primary'} !py-3 !px-6 text-sm`}
           >
-            {show.isOpenMic ? 'Sign Up' : 'Get Tickets'}
+            {show.isOpenMic ? 'Sign Up' : (siteConfig.showcaseTicketsAvailable ? 'Get Tickets' : siteConfig.noTickets.buttonText)}
           </a>
         </div>
       </div>

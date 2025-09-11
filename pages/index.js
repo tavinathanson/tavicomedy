@@ -4,6 +4,7 @@ import Navigation from '@/components/Navigation'
 import ShowCard from '@/components/ShowCard'
 import EmailSignup from '@/components/EmailSignup'
 import { upcomingShows } from '@/data/shows'
+import { siteConfig } from '@/config/site'
 
 export default function Home() {
   const galleryImages = [
@@ -49,9 +50,19 @@ export default function Home() {
           <p className="text-2xl sm:text-3xl md:text-4xl text-gray-100 mb-12 md:mb-14 font-medium px-2">
             Lawrenceville/Princeton
           </p>
+          {!siteConfig.showcaseTicketsAvailable && (
+            <p className="text-base sm:text-lg text-gray-200 mb-4 px-2">
+              Join our mailing list to hear about the next show
+            </p>
+          )}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            <a href="https://cravelaughs.tavicomedy.com" target="_blank" rel="noopener noreferrer" className="btn-primary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm">
-              Get Tickets →
+            <a 
+              href={siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink} 
+              target={siteConfig.showcaseTicketsAvailable ? "_blank" : "_self"}
+              rel={siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined}
+              className="btn-primary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm"
+            >
+              {siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonText : siteConfig.noTickets.buttonText} →
             </a>
             <a href="https://openmic.tavicomedy.com" target="_blank" rel="noopener noreferrer" className="btn-secondary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm">
               Sign Up for Open Mic →

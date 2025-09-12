@@ -27,11 +27,12 @@ export default function EmailSignup() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-purple-700 to-comedy-purple rounded-2xl p-8 md:p-12 text-white">
+    <div className="bg-gradient-to-br from-purple-700 to-comedy-purple rounded-2xl p-8 md:p-12 text-white max-w-4xl mx-auto">
       <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-display uppercase tracking-tight mb-4">Stay in the Loop</h2>
-        <p className="text-lg sm:text-xl mb-2">Get very occasional updates about upcoming shows.</p>
-        <p className="text-base sm:text-lg opacity-90 mb-6 sm:mb-8">No spam. Just when something fun is happening!</p>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display uppercase tracking-tight mb-6">Stay in the Loop</h2>
+        <div className="max-w-md mx-auto">
+          <p className="text-lg sm:text-xl mb-8">Get very occasional updates about upcoming shows. No spam.</p>
+        </div>
         
         <form 
           onSubmit={handleSubmit}
@@ -39,8 +40,8 @@ export default function EmailSignup() {
           target="_blank"
           className="max-w-md mx-auto"
         >
-          <p className="text-white/90 text-center mb-3">I'm interested in hearing about:</p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center mb-6">
+          <p className="text-white/90 text-center mb-4 text-sm uppercase tracking-wide">I'm interested in hearing about:</p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8">
             <label className="flex items-center cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
               <input
                 type="checkbox"
@@ -48,7 +49,7 @@ export default function EmailSignup() {
                 value="1"
                 checked={interests.showcase}
                 onChange={(e) => setInterests({...interests, showcase: e.target.checked})}
-                className="w-5 h-5 mr-3 rounded accent-comedy-purple"
+                className="w-5 h-5 mr-3 rounded accent-white"
               />
               <span className="text-white font-medium">Comedy shows</span>
             </label>
@@ -59,9 +60,9 @@ export default function EmailSignup() {
                 value="2"
                 checked={interests.openmic}
                 onChange={(e) => setInterests({...interests, openmic: e.target.checked})}
-                className="w-5 h-5 mr-3 rounded accent-comedy-green"
+                className="w-5 h-5 mr-3 rounded accent-white"
               />
-              <span className="text-white font-medium">Open mic nights</span>
+              <span className="text-white font-medium">Comedy open mics</span>
             </label>
           </div>
           

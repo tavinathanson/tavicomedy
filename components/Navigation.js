@@ -26,7 +26,7 @@ export default function Navigation() {
                 About
               </Link>
               <Link href="#updates" className="text-gray-700 hover:text-comedy-purple transition-colors">
-                Updates
+                Get Updates
               </Link>
             </div>
           </div>
@@ -61,7 +61,7 @@ export default function Navigation() {
               About
             </Link>
             <Link href="#updates" className="block px-3 py-2 text-gray-700 hover:text-comedy-purple">
-              Updates
+              Get Updates
             </Link>
           </div>
         </div>

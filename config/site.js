@@ -9,7 +9,7 @@ export const siteConfig = {
   
   // No tickets available mode (when showcaseTicketsAvailable is false)
   noTickets: {
-    dateText: "Next date coming soon",
+    dateText: "Every few months, next date coming soon",
     buttonText: "Next Show Alerts",
     buttonLink: "#updates", // Scrolls to email signup section
   },

@@ -11,6 +11,7 @@ export const upcomingShows = [
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
     description: "The comedy show everyone is talking about, featuring local and touring comedians!",
+    vibe: "Expect: 80+ people in the cafe's connected event space",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     ticketLink: "https://cravelaughs.tavicomedy.com",
     isShowcase: true
@@ -18,12 +19,13 @@ export const upcomingShows = [
   {
     id: 2,
     name: "Crave Laughs Open Mic",
-    date: "Usually Last Thursday of Month",
+    date: "Usually last Thursday of the month",
     time: "7:30 PM",
     price: "Free",
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
     description: "Anyone can perform or watch for free! Whether you're brand new to comedy or a pro, everyone is welcome.",
+    vibe: "Expect: Chill cafe setting, ~30 friendly folks",
     image: "/images/photo-for-mic-card.jpg", // 800x600px recommended
     ticketLink: "https://openmic.tavicomedy.com",
     isOpenMic: true

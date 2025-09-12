@@ -52,7 +52,10 @@ export default function ShowCard({ show }) {
             {show.venue}
           </p>
         </div>
-        <p className="text-sm sm:text-base text-gray-700 mb-4 line-clamp-2 flex-grow">{show.description}</p>
+        <p className="text-sm sm:text-base text-gray-700 mb-2 line-clamp-2">{show.description}</p>
+        {show.vibe && (
+          <p className="text-xs sm:text-sm text-gray-600 italic mb-4">{show.vibe}</p>
+        )}
         <div className="flex items-center justify-between mt-auto">
           <div>
             <span className="text-xl sm:text-2xl font-bold text-comedy-purple">{show.price}</span>

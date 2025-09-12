@@ -11,7 +11,7 @@ export const upcomingShows = [
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
     description: "The comedy show everyone is talking about, featuring local and touring comedians!",
-    image: "/images/showcase-placeholder.jpg", // Replace with actual show photo
+    image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     ticketLink: "https://cravelaughs.tavicomedy.com",
     isShowcase: true
   },
@@ -24,7 +24,7 @@ export const upcomingShows = [
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
     description: "Anyone can perform or watch for free! Whether you're brand new to comedy or a pro, everyone is welcome.",
-    image: "/images/openmic-placeholder.jpg", // Replace with actual open mic photo
+    image: "/images/photo-for-mic-card.jpg", // 800x600px recommended
     ticketLink: "https://openmic.tavicomedy.com",
     isOpenMic: true
   }

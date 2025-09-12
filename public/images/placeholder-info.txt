@@ -20,15 +20,17 @@ PLACEHOLDER IMAGES - Replace these with your actual images:
    - Used in: Gallery section
    - Recommended size: 800x800
 
-5. showcase-placeholder.jpg
-   - Replace with: Actual showcase show photo
+5. photo-for-show-card.jpg
+   - Replace with: Your best showcase show photo
    - Used in: Crave Laughs Showcase card
-   - Recommended size: 800x600
+   - Required size: 800x600px (4:3 ratio)
+   - Tip: Use a consistent photo showing packed audience or great performer shot
 
-6. openmic-placeholder.jpg
-   - Replace with: Actual open mic photo
+6. photo-for-mic-card.jpg
+   - Replace with: Your best open mic photo
    - Used in: Crave Laughs Open Mic card
-   - Recommended size: 800x600
+   - Required size: 800x600px (4:3 ratio)
+   - Tip: Show the welcoming open mic vibe
 
 7. Other gallery placeholders (flyer-2, audience-laughing, venue)
    - Replace with: Your other Instagram photos, Eventbrite screenshots, or venue photos

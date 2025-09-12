@@ -50,7 +50,7 @@ export default function EmailSignup() {
                 onChange={(e) => setInterests({...interests, showcase: e.target.checked})}
                 className="w-5 h-5 mr-3 rounded accent-comedy-purple"
               />
-              <span className="text-white font-medium">Comedy showcases</span>
+              <span className="text-white font-medium">Comedy shows</span>
             </label>
             <label className="flex items-center cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
               <input

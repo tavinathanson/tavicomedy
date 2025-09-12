@@ -10,10 +10,7 @@ export default function Home() {
   const galleryImages = [
     { src: '/images/packed-room-placeholder.jpg', alt: 'Packed comedy show audience' }, // Replace with Copy of Crave Show Photos.png
     { src: '/images/performer-stage-placeholder.jpg', alt: 'Comedian performing on stage' }, // Replace with 823 45 Ratio Photo (2).png
-    { src: '/images/flyer-1-placeholder.jpg', alt: 'Comedy show flyer' }, // Replace with Sep 25 Flyer.png
-    { src: '/images/flyer-2-placeholder.jpg', alt: 'Comedy show promotional material' },
-    { src: '/images/audience-laughing-placeholder.jpg', alt: 'Audience enjoying the show' },
-    { src: '/images/venue-placeholder.jpg', alt: 'Crave Nature\'s Eatery venue' },
+    { src: '/images/packed-open-mic.jpg', alt: 'Packed open mic night' }, // Replace with your open mic photo
   ]
 
   return (
@@ -95,7 +92,7 @@ export default function Home() {
             Packed rooms, genuine laughter, and a community that keeps coming back
           </p>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {galleryImages.map((image, index) => (
               <div key={index} className="relative aspect-square rounded-lg overflow-hidden group">
                 <Image

@@ -18,7 +18,36 @@ export default function EmailSignup() {
       return
     }
     
+    // Add tag IDs if configured
+    const baseTag = process.env.NEXT_PUBLIC_MAILCHIMP_TAG_WEBSITE
+    const comedyShowTag = process.env.NEXT_PUBLIC_MAILCHIMP_TAG_COMEDY_SHOWS
+    const openMicTag = process.env.NEXT_PUBLIC_MAILCHIMP_TAG_OPEN_MICS
+    
+    const tags = []
+    
+    // Always add base website tag if configured
+    if (baseTag) tags.push(baseTag)
+    
+    // Add specific tags based on interests
+    if (interests.showcase && comedyShowTag) tags.push(comedyShowTag)
+    if (interests.openmic && openMicTag) tags.push(openMicTag)
+    
     const form = e.target
+    
+    // Add hidden tags field if we have any tags
+    if (tags.length > 0) {
+      const tagsDiv = document.createElement('div')
+      tagsDiv.setAttribute('hidden', '')
+      
+      const tagsInput = document.createElement('input')
+      tagsInput.type = 'hidden'
+      tagsInput.name = 'tags'
+      tagsInput.value = tags.join(',')
+      
+      tagsDiv.appendChild(tagsInput)
+      form.appendChild(tagsDiv)
+    }
+    
     form.action = MAILCHIMP_ACTION_URL
     form.submit()
   }

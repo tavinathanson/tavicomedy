@@ -131,6 +131,34 @@ When you import your project to Vercel, you'll see the **Configure Project** scr
 4. Click **Save**
 5. Go to **Deployments** tab → click **Redeploy** on the latest deployment
 
+**Using Your Interest Groups & Tags**
+
+**Interest Groups** (already configured):
+- Automatically track what subscribers are interested in
+- Create segments: Audience → Segments → Group interests → Comedy Shows/Open Mics
+
+**Tags** (optional but powerful):
+1. Create tags in Mailchimp:
+   - Go to Audience → **Tags** → **Create Tag**
+   - Suggested tags: "website-signup", "comedy-shows-interest", "open-mics-interest"
+   
+2. Get tag IDs:
+   - Click on a tag in your Tags list
+   - Look at the URL: `/tags/1234567` → `1234567` is your tag ID
+   
+3. Add tag IDs to your `.env.local`:
+   ```
+   NEXT_PUBLIC_MAILCHIMP_TAG_WEBSITE=1234567
+   NEXT_PUBLIC_MAILCHIMP_TAG_COMEDY_SHOWS=1234568
+   NEXT_PUBLIC_MAILCHIMP_TAG_OPEN_MICS=1234569
+   ```
+
+4. How it works:
+   - Everyone gets the "website-signup" tag
+   - If they check "Comedy Shows" → also gets "comedy-shows-interest" tag
+   - If they check "Open Mics" → also gets "open-mics-interest" tag
+   - Multiple tags can be applied to one subscriber
+
 **Troubleshooting Mailchimp Setup**
 - **Can't find embed code?** Make sure you clicked "Continue" after configuring form settings
 - **Form doesn't submit?** Check browser console (F12) for errors, verify your URL is correct

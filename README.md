@@ -230,16 +230,18 @@ If you're already running the [openmic project](https://github.com/tavinathanson
 2. You'll see your existing records (like the `openmic` CNAME if you have the openmic project)
 3. Add these NEW records without touching existing ones:
 
+**⚠️ IMPORTANT: The DNS values below need to be updated with the actual values Vercel provides in your project's domain settings.**
+
 For the root domain (`tavicomedy.com`):
 - **Type**: A Record
 - **Host**: @ 
-- **Value**: `76.76.21.21` (Vercel's IP)
+- **Value**: `[UPDATE WITH VERCEL'S A RECORD IP]`
 - **TTL**: Automatic
 
 For www subdomain (recommended):
 - **Type**: CNAME Record  
 - **Host**: www
-- **Value**: `cname.vercel-dns.com.`
+- **Value**: `[UPDATE WITH VERCEL'S CNAME VALUE]`
 - **TTL**: Automatic
 
 4. **Wait**: DNS propagation takes 10-30 minutes

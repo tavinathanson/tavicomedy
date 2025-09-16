@@ -66,7 +66,7 @@ export default function EmailSignup() {
           target="_blank"
           className="max-w-md mx-auto"
         >
-          <p className="text-white/90 text-center mb-4 text-sm uppercase tracking-wide">I'm interested in hearing about:</p>
+          <p className="text-white/90 text-center mb-4 text-sm uppercase tracking-wide">I&apos;m interested in hearing about:</p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8">
             <label className="flex items-center cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
               <input

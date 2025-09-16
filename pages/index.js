@@ -74,7 +74,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto section-padding">
           <h2 className="text-3xl md:text-5xl font-display uppercase tracking-tight text-center mb-4">Upcoming Shows</h2>
           <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
-            Join us for our regular shows at <a href="https://share.google/sB2zjLQtXJxnBnvzp" target="_blank" rel="noopener noreferrer" className="link-text">Crave Nature's Eatery</a> in Lawrenceville
+            Join us for our regular shows at <a href="https://share.google/sB2zjLQtXJxnBnvzp" target="_blank" rel="noopener noreferrer" className="link-text">Crave Nature&apos;s Eatery</a> in Lawrenceville
           </p>
           
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">

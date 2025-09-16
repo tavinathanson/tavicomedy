@@ -121,6 +121,9 @@ When you import your project to Vercel, you'll see the **Configure Project** scr
    |-----|-------|
    | `NEXT_PUBLIC_MAILCHIMP_ACTION_URL` | Your URL from Step 1 (the full https://... URL) |
    | `NEXT_PUBLIC_MAILCHIMP_GROUP_ID` | Your 5-digit Group ID from Step 2 |
+   | `NEXT_PUBLIC_MAILCHIMP_TAG_WEBSITE` | (Optional) Tag ID for all website signups |
+   | `NEXT_PUBLIC_MAILCHIMP_TAG_COMEDY_SHOWS` | (Optional) Tag ID for comedy show interests |
+   | `NEXT_PUBLIC_MAILCHIMP_TAG_OPEN_MICS` | (Optional) Tag ID for open mic interests |
    
 4. Click **Deploy**
 
@@ -211,10 +214,31 @@ vercel
 4. Vercel will automatically detect Next.js and deploy
 
 ### Custom Domain Setup
-1. In your Vercel dashboard, go to your project settings
-2. Navigate to "Domains"
-3. Add `tavicomedy.com`
-4. Follow Vercel's instructions to update your DNS settings
+
+**In Vercel:**
+1. Go to your project → **Settings** → **Domains**
+2. Add `tavicomedy.com` 
+3. Also add `www.tavicomedy.com` if you want www to work
+4. Vercel will show you the required DNS records
+
+**In Namecheap:**
+1. Go to **Domain List** → **Manage** → **Advanced DNS**
+2. Add these records:
+
+For the root domain (`tavicomedy.com`):
+- **Type**: A Record
+- **Host**: @
+- **Value**: `76.76.21.21` (Vercel's IP)
+- **TTL**: Automatic
+
+For www subdomain (optional but recommended):
+- **Type**: CNAME Record  
+- **Host**: www
+- **Value**: `cname.vercel-dns.com.`
+- **TTL**: Automatic
+
+3. **Wait**: DNS propagation takes 10-30 minutes
+4. **Verify**: In Vercel, your domains should show as "Valid Configuration"
 
 ## Project Structure
 

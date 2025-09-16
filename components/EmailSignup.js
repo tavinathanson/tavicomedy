@@ -10,20 +10,17 @@ export default function EmailSignup() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Replace the action URL below with your actual Mailchimp form action URL
-    // You can find this in your Mailchimp embed form code
-    const MAILCHIMP_ACTION_URL = 'https://YOUR-MAILCHIMP-URL-HERE'
     
-    // Also update the group IDs in the checkboxes above to match your Mailchimp groups
-    // You can create groups in Mailchimp under Audience > Manage Audience > Groups
+    const MAILCHIMP_ACTION_URL = process.env.NEXT_PUBLIC_MAILCHIMP_ACTION_URL
     
-    // For now, just show a message
-    setStatus('Please replace the Mailchimp URL and group IDs in EmailSignup.js')
+    if (!MAILCHIMP_ACTION_URL) {
+      setStatus('Mailchimp is not configured. Please add NEXT_PUBLIC_MAILCHIMP_ACTION_URL to your environment variables.')
+      return
+    }
     
-    // Uncomment below when you have your Mailchimp URL
-    // const form = e.target
-    // form.action = MAILCHIMP_ACTION_URL
-    // form.submit()
+    const form = e.target
+    form.action = MAILCHIMP_ACTION_URL
+    form.submit()
   }
 
   return (
@@ -45,7 +42,7 @@ export default function EmailSignup() {
             <label className="flex items-center cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
               <input
                 type="checkbox"
-                name="group[12345][1]" // Replace 12345 with your Mailchimp group ID
+                name={`group[${process.env.NEXT_PUBLIC_MAILCHIMP_GROUP_ID}][1]`}
                 value="1"
                 checked={interests.showcase}
                 onChange={(e) => setInterests({...interests, showcase: e.target.checked})}
@@ -56,7 +53,7 @@ export default function EmailSignup() {
             <label className="flex items-center cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
               <input
                 type="checkbox"
-                name="group[12345][2]" // Replace with your Mailchimp group ID
+                name={`group[${process.env.NEXT_PUBLIC_MAILCHIMP_GROUP_ID}][2]`}
                 value="2"
                 checked={interests.openmic}
                 onChange={(e) => setInterests({...interests, openmic: e.target.checked})}

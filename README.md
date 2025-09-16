@@ -33,10 +33,111 @@ Replace the placeholder images in `/public/images/` with your actual photos:
   - Show cards: Add showcase and open mic photos
 
 ### 2. Configure Mailchimp
-1. Get your Mailchimp form action URL from your Mailchimp account
-2. Edit `/components/EmailSignup.js`
-3. Replace `'https://YOUR-MAILCHIMP-URL-HERE'` with your actual Mailchimp form action URL
-4. Uncomment the form submission code
+
+**Step 1: Get your Mailchimp Form Action URL**
+1. Log into [Mailchimp](https://mailchimp.com)
+2. Click **Audience** in the left sidebar
+3. Click **Manage Audience** dropdown (see screenshot) → **Signup forms**
+4. Click **Embedded forms**
+5. You'll see the form builder with:
+   - **Settings** panel on the left
+   - **Form Title** field (e.g., "Subscribe" or "Comedy Show Updates")
+   - Preview of your form on the right
+6. Configure your form settings (optional):
+   - Form Title: Whatever you want
+   - Width: Leave default (600 pixels)
+   - Keep other checkboxes unchecked for now
+7. Click **Continue** button (top right, green button)
+8. On the next page, you'll see **"Copy the code below"** with the embed code
+9. In the embed code, look for this line (usually around line 9-10):
+    ```html
+    <form action="https://YOURDOMAIN.usXX.list-manage.com/subscribe/post?u=XXXXXXXX&amp;id=YYYYYYYY&amp;f_id=ZZZZZZZZ" method="post"
+    ```
+10. Copy the URL from `action="..."` but **replace `&amp;` with `&`**. Your final URL should look like:
+    ```
+    https://YOURDOMAIN.usXX.list-manage.com/subscribe/post?u=XXXXXXXX&id=YYYYYYYY&f_id=ZZZZZZZZ
+    ```
+    
+    The URL contains:
+    - Data center: `usXX` (like us11, us21, etc.)
+    - User ID: The long string after `u=`
+    - List ID: The string after `id=`
+
+**Step 2: Get your Group ID (for interest checkboxes)**
+1. In your Audience, click **Manage Audience** dropdown → **More options** → **Groups**
+2. Click **Create Groups**
+3. Create a new group category:
+   - **Group category name**: "Show Preferences" (or similar)
+   - **Group type**: Select "Checkboxes - subscribers can select one or more"
+   - Click **Save**
+4. Add group options:
+   - Click **Add Group** and enter "Comedy Shows"
+   - Click **Add Group** again and enter "Comedy Open Mics"
+   - Click **Save**
+5. Go back to the main **Forms** page (click Forms in the top navigation)
+6. Find your embedded form in the list and click on it
+7. In the **Form fields** section:
+   - Click **Add a field** 
+   - Select **Show Preferences** (this is your group category)
+   - Your interest groups will now appear in the form preview
+8. Click **Continue** (green button, top right) to get the embed code
+9. In the embed code, search for `group[` - you'll find a section like this:
+   ```html
+   <strong>Show Preferences </strong><ul>
+   <li><input type="checkbox" name="group[XXXXX][1]" id="mce-group[XXXXX]-XXXXX-0" value="">
+   <label for="mce-group[XXXXX]-XXXXX-0">Comedy Shows</label></li>
+   <li><input type="checkbox" name="group[XXXXX][2]" id="mce-group[XXXXX]-XXXXX-1" value="">
+   <label for="mce-group[XXXXX]-XXXXX-1">Comedy Open Mics</label></li>
+   </ul>
+   ```
+10. The number in `group[XXXXX]` is your Group ID (usually a 5-digit number like 12345 or 18523)
+    - Comedy Shows is `group[XXXXX][1]`
+    - Comedy Open Mics is `group[XXXXX][2]`
+
+**Step 3: Set up Environment Variables Locally**
+1. In your terminal, copy the example file:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+2. Open `.env.local` and add your values:
+   ```
+   NEXT_PUBLIC_MAILCHIMP_ACTION_URL=https://gmail.us21.list-manage.com/subscribe/post?u=a1b2c3d4e5&id=f6g7h8i9j0
+   NEXT_PUBLIC_MAILCHIMP_GROUP_ID=17269
+   ```
+3. Restart your development server for changes to take effect
+
+**Step 4: Deploy to Vercel with Environment Variables**
+
+When you import your project to Vercel, you'll see the **Configure Project** screen. Here's what to do:
+
+1. **Framework Preset**: Next.js (auto-detected)
+2. **Build and Output Settings**: Leave all defaults
+   - Build Command: `next build` (default)
+   - Output Directory: `.next` (default)
+   - Install Command: `npm install` (default)
+3. **Environment Variables**: Click to expand this section and add:
+   
+   | Key | Value |
+   |-----|-------|
+   | `NEXT_PUBLIC_MAILCHIMP_ACTION_URL` | Your URL from Step 1 (the full https://... URL) |
+   | `NEXT_PUBLIC_MAILCHIMP_GROUP_ID` | Your 5-digit Group ID from Step 2 |
+   
+4. Click **Deploy**
+
+**To add/update environment variables after deployment:**
+1. Go to your project in Vercel Dashboard
+2. Click **Settings** → **Environment Variables**
+3. Add or modify variables
+4. Click **Save**
+5. Go to **Deployments** tab → click **Redeploy** on the latest deployment
+
+**Troubleshooting Mailchimp Setup**
+- **Can't find embed code?** Make sure you clicked "Continue" after configuring form settings
+- **Form doesn't submit?** Check browser console (F12) for errors, verify your URL is correct
+- **Groups not showing?** Ensure "Show interest group fields" is checked in form builder
+- **Wrong data center?** Your URL must match your account's data center (check your Mailchimp URL)
+- **Test first:** Always test with your own email before going live
+- **Common mistake:** Don't include the entire embed code - only copy the URL from action=""
 
 ### 3. Managing Show Dates and Ticket Sales
 
@@ -126,18 +227,13 @@ Edit `tailwind.config.js` to change the color scheme:
 2. Add a new object to the `upcomingShows` array
 3. Include all required fields (name, date, time, etc.)
 
-## Environment Variables (Optional)
-If you want to use environment variables for sensitive data:
+## Environment Variables
 
-1. Create `.env.local`:
-```
-NEXT_PUBLIC_MAILCHIMP_URL=your-mailchimp-url
-```
+Required for email signup functionality:
 
-2. Update `EmailSignup.js` to use:
-```js
-const MAILCHIMP_ACTION_URL = process.env.NEXT_PUBLIC_MAILCHIMP_URL
-```
+1. Copy `.env.local.example` to `.env.local`
+2. Fill in your Mailchimp values (see Configure Mailchimp section above)
+3. When deploying to Vercel, add these same variables in your project settings
 
 ## Support
 

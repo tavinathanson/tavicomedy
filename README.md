@@ -215,30 +215,41 @@ vercel
 
 ### Custom Domain Setup
 
-**In Vercel:**
+**Important Note About Multiple Projects:**
+If you're already running the [openmic project](https://github.com/tavinathanson/openmic) on `openmic.tavicomedy.com`, that subdomain is already configured and will continue working independently. This setup is only for the main domain.
+
+**In Vercel (tavicomedy project):**
 1. Go to your project → **Settings** → **Domains**
 2. Add `tavicomedy.com` 
 3. Also add `www.tavicomedy.com` if you want www to work
-4. Vercel will show you the required DNS records
+4. Both will show "DNS Change Recommended" until you complete the Namecheap setup
+5. Click "Learn more" to see the exact DNS records needed
 
 **In Namecheap:**
 1. Go to **Domain List** → **Manage** → **Advanced DNS**
-2. Add these records:
+2. You'll see your existing records (like the `openmic` CNAME if you have the openmic project)
+3. Add these NEW records without touching existing ones:
 
 For the root domain (`tavicomedy.com`):
 - **Type**: A Record
-- **Host**: @
+- **Host**: @ 
 - **Value**: `76.76.21.21` (Vercel's IP)
 - **TTL**: Automatic
 
-For www subdomain (optional but recommended):
+For www subdomain (recommended):
 - **Type**: CNAME Record  
 - **Host**: www
 - **Value**: `cname.vercel-dns.com.`
 - **TTL**: Automatic
 
-3. **Wait**: DNS propagation takes 10-30 minutes
-4. **Verify**: In Vercel, your domains should show as "Valid Configuration"
+4. **Wait**: DNS propagation takes 10-30 minutes
+5. **Verify**: In Vercel, your domains should change from "DNS Change Recommended" to "Valid Configuration"
+
+**Domain Structure After Setup:**
+- `tavicomedy.com` → Main comedy website (this project)
+- `www.tavicomedy.com` → Same as above
+- `openmic.tavicomedy.com` → Open mic project (separate Vercel project)
+- Future subdomains can be added for other projects
 
 ## Project Structure
 

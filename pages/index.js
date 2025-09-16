@@ -93,7 +93,7 @@ export default function Home() {
             Packed rooms, genuine laughter, and supporting local community
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
             {galleryImages.map((image, index) => (
               <div key={index} className="relative aspect-square rounded-lg overflow-hidden group">
                 <Image

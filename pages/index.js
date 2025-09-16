@@ -18,7 +18,7 @@ export default function Home() {
     <>
       <Head>
         <title>Tavi Comedy Lab - Comedy Shows in Lawrenceville/Princeton</title>
-        <meta name="description" content="Packed comedy nights in Lawrenceville and Princeton. Experience Crave Laughs - the comedy show people actually show up for. 80-100+ attendees every show." />
+        <meta name="description" content="Packed comedy nights in Lawrenceville/Princeton. Building fun, personal, and creative comedy experiences. Expect 80+ attendees at shows!" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

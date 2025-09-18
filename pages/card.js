@@ -139,7 +139,7 @@ export default function Card() {
                     Join us for shows at
                   </p>
                   <p className="text-2xl text-gray-900 font-semibold mb-1">
-                    Crave Nature's Eatery
+                    Crave Nature&apos;s Eatery
                   </p>
                   <p className="text-lg text-gray-600">
                     in Lawrenceville
@@ -151,7 +151,7 @@ export default function Card() {
         </div>
 
         <p className="mt-8 text-gray-600 text-sm">
-          Standard business card size: 3.5" × 2" (scaled up for high DPI export)
+          Standard business card size: 3.5&quot; × 2&quot; (scaled up for high DPI export)
         </p>
       </div>
     </>

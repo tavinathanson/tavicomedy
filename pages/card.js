@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { useRef } from 'react'
 import { FaInstagram, FaEnvelope } from 'react-icons/fa'
 import { toPng, toJpeg } from 'html-to-image'
+import { QRCodeSVG } from 'qrcode.react'
 
 export default function Card() {
   const cardRef = useRef(null)
@@ -58,61 +59,91 @@ export default function Card() {
         <div className="shadow-2xl">
           <div 
             ref={cardRef}
-            className="bg-white relative overflow-hidden"
+            className="flex"
             style={{
               width: '1050px',
               height: '600px',
             }}
           >
-            {/* Background hero image */}
-            <div className="absolute inset-0 z-0">
+            {/* Left side - Dark hero image */}
+            <div className="relative w-1/2 overflow-hidden">
               <Image
                 src="/images/hero-packed-room.jpg"
                 alt="Packed comedy show"
                 fill
-                className="object-cover opacity-20"
+                className="object-cover"
               />
-            </div>
-
-            <div className="relative z-10 h-full flex items-center" style={{ padding: '60px' }}>
-              <div className="flex-1 pr-16">
-                <h1 className="text-8xl font-display uppercase tracking-tight leading-none mb-8">
-                  Tavi<br />
-                  Comedy<br />
-                  Lab
-                </h1>
-                <p className="text-3xl text-gray-700 font-medium">
-                  Packed Comedy Shows
-                </p>
-                <p className="text-3xl text-gray-600">
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+              
+              <div className="relative z-10 h-full flex flex-col justify-center p-12 text-white">
+                <div className="mb-8">
+                  <h1 className="text-6xl font-display uppercase tracking-tight leading-tight">
+                    Comedy<br />
+                    Shows<br />
+                    & Open Mics
+                  </h1>
+                </div>
+                <p className="text-2xl text-gray-200 font-medium">
                   Lawrenceville/Princeton
                 </p>
               </div>
+            </div>
 
-              <div className="flex-1 flex flex-col justify-center items-end text-right">
-                <div className="space-y-6">
-                  <h2 className="text-5xl font-display uppercase tracking-wide mb-10">
-                    Tavi Nathanson
-                  </h2>
-                  
-                  <div className="flex items-center gap-3 justify-end text-3xl">
-                    <span className="text-gray-700">@tavinathanson</span>
-                    <FaInstagram className="text-4xl text-comedy-purple" />
-                  </div>
-                  
-                  <div className="flex items-center gap-3 justify-end text-3xl">
-                    <span className="text-gray-700">tavi@tavicomedy.com</span>
-                    <FaEnvelope className="text-4xl text-comedy-purple" />
+            {/* Right side - White background with contact info */}
+            <div className="w-1/2 bg-gradient-to-br from-white via-white to-purple-50 flex flex-col p-12 pb-16">
+              <div className="mb-12">
+                <h2 className="text-6xl font-display uppercase tracking-wide text-gray-900 leading-tight">
+                  TAVI COMEDY LAB
+                </h2>
+              </div>
+              
+              <div className="flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="space-y-3 mb-10">
+                    <div className="flex items-center gap-4">
+                      <FaInstagram className="text-3xl text-comedy-purple" />
+                      <span className="text-2xl text-gray-700">@tavinathanson</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <FaEnvelope className="text-3xl text-comedy-purple" />
+                      <span className="text-2xl text-gray-700">tavi@tavicomedy.com</span>
+                    </div>
                   </div>
 
-                  <div className="pt-6">
-                    <p className="text-2xl text-gray-600 italic">
-                      Join us for regular shows at
-                    </p>
-                    <p className="text-2xl text-gray-700 font-medium">
-                      Crave Nature's Eatery
-                    </p>
+                  <div className="flex items-start gap-10 mb-12">
+                    <div className="w-32 h-32 bg-white rounded-xl flex items-center justify-center border border-gray-200 shadow-sm flex-shrink-0 p-2">
+                      <QRCodeSVG
+                        value="https://tavicomedy.com"
+                        size={112}
+                        level="M"
+                        includeMargin={false}
+                        fgColor="#000000"
+                        bgColor="#ffffff"
+                      />
+                    </div>
+                    
+                    <div className="flex-1 pt-2">
+                      <p className="text-5xl font-display uppercase tracking-wide text-comedy-purple mb-3">
+                        TAVICOMEDY.COM
+                      </p>
+                      <p className="text-lg text-gray-500 font-light">
+                        Scan QR for website
+                      </p>
+                    </div>
                   </div>
+                </div>
+
+                <div className="pt-4">
+                  <p className="text-sm uppercase tracking-wider text-gray-500 mb-3 font-medium">
+                    Join us for shows at
+                  </p>
+                  <p className="text-2xl text-gray-900 font-semibold mb-1">
+                    Crave Nature's Eatery
+                  </p>
+                  <p className="text-lg text-gray-600">
+                    in Lawrenceville
+                  </p>
                 </div>
               </div>
             </div>

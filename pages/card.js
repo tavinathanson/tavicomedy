@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { useRef } from 'react'
 import { FaInstagram, FaEnvelope } from 'react-icons/fa'
 import { toPng, toJpeg } from 'html-to-image'
-import { QRCodeSVG } from 'qrcode.react'
 
 export default function Card() {
   const cardRef = useRef(null)
@@ -61,8 +60,8 @@ export default function Card() {
             ref={cardRef}
             className="flex"
             style={{
-              width: '1050px',
-              height: '600px',
+              width: '1125px',
+              height: '675px',
             }}
           >
             {/* Left side - Dark hero image */}
@@ -73,9 +72,9 @@ export default function Card() {
                 fill
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
               
-              <div className="relative z-10 h-full flex flex-col justify-center p-12 text-white">
+              <div className="relative z-10 h-full flex flex-col justify-center pl-20 pr-16 py-16 text-white">
                 <div className="mb-8">
                   <h1 className="text-6xl font-display uppercase tracking-tight leading-tight">
                     Comedy<br />
@@ -90,58 +89,38 @@ export default function Card() {
             </div>
 
             {/* Right side - White background with contact info */}
-            <div className="w-1/2 bg-gradient-to-br from-white via-white to-purple-50 flex flex-col p-12 pb-16">
-              <div className="mb-12">
-                <h2 className="text-6xl font-display uppercase tracking-wide text-gray-900 leading-tight">
-                  TAVI COMEDY LAB
-                </h2>
-              </div>
-              
+            <div className="w-1/2 bg-gradient-to-br from-white via-white to-purple-50 flex flex-col pl-20 pr-16 py-16">
               <div className="flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="space-y-3 mb-10">
-                    <div className="flex items-center gap-4">
-                      <FaInstagram className="text-3xl text-comedy-purple" />
+                <div className="mt-8">
+                  <h2 className="text-6xl font-display uppercase tracking-wide text-gray-900 leading-none mb-8">
+                    TAVI COMEDY LAB
+                  </h2>
+                  
+                  <p className="text-4xl font-sans font-semibold text-comedy-purple mb-12" style={{ letterSpacing: '-0.01em' }}>
+                    tavicomedy.com
+                  </p>
+                  
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-5">
+                      <FaInstagram className="text-3xl text-comedy-purple flex-shrink-0" />
                       <span className="text-2xl text-gray-700">@tavinathanson</span>
                     </div>
                     
-                    <div className="flex items-center gap-4">
-                      <FaEnvelope className="text-3xl text-comedy-purple" />
+                    <div className="flex items-center gap-5">
+                      <FaEnvelope className="text-3xl text-comedy-purple flex-shrink-0" />
                       <span className="text-2xl text-gray-700">tavi@tavicomedy.com</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-10 mb-12">
-                    <div className="w-32 h-32 bg-white rounded-xl flex items-center justify-center border border-gray-200 shadow-sm flex-shrink-0 p-2">
-                      <QRCodeSVG
-                        value="https://tavicomedy.com"
-                        size={112}
-                        level="M"
-                        includeMargin={false}
-                        fgColor="#000000"
-                        bgColor="#ffffff"
-                      />
-                    </div>
-                    
-                    <div className="flex-1 pt-2">
-                      <p className="text-5xl font-display uppercase tracking-wide text-comedy-purple mb-3">
-                        TAVICOMEDY.COM
-                      </p>
-                      <p className="text-lg text-gray-500 font-light">
-                        Scan QR for website
-                      </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4">
-                  <p className="text-sm uppercase tracking-wider text-gray-500 mb-3 font-medium">
+                <div className="mb-2">
+                  <p className="text-sm uppercase tracking-wider text-gray-500 mb-2 font-medium">
                     Join us for shows at
                   </p>
-                  <p className="text-2xl text-gray-900 font-semibold mb-1">
+                  <p className="text-2xl text-gray-900 font-semibold leading-tight">
                     Crave Nature&apos;s Eatery
                   </p>
-                  <p className="text-lg text-gray-600">
+                  <p className="text-lg text-gray-600 mt-1">
                     in Lawrenceville
                   </p>
                 </div>
@@ -151,7 +130,7 @@ export default function Card() {
         </div>
 
         <p className="mt-8 text-gray-600 text-sm">
-          Standard business card size: 3.5&quot; × 2&quot; (scaled up for high DPI export)
+          Standard business card size: 3.5&quot; × 2&quot; with 0.125&quot; bleed (scaled up for high DPI export)
         </p>
       </div>
     </>

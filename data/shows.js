@@ -19,7 +19,7 @@ export const upcomingShows = [
   {
     id: 2,
     name: "Crave Laughs Open Mic",
-    date: "Usually last Thursday of the month",
+    date: siteConfig.nextOpenMicDate,
     time: "7:30 PM",
     price: "Free",
     venue: "Crave Nature's Eatery",

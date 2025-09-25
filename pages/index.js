@@ -59,10 +59,25 @@ export default function Home() {
               target={siteConfig.showcaseTicketsAvailable ? "_blank" : "_self"}
               rel={siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined}
               className="btn-primary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm"
+              onClick={() => {
+                if (typeof window !== 'undefined' && window.fbq) {
+                  window.fbq('track', 'Lead')
+                }
+              }}
             >
               {siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonText : siteConfig.noTickets.buttonText} →
             </a>
-            <a href="https://openmic.tavicomedy.com" target="_blank" rel="noopener noreferrer" className="btn-secondary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm">
+            <a 
+              href="https://openmic.tavicomedy.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="btn-secondary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm"
+              onClick={() => {
+                if (typeof window !== 'undefined' && window.fbq) {
+                  window.fbq('track', 'Lead')
+                }
+              }}
+            >
               Sign Up for Open Mic →
             </a>
           </div>

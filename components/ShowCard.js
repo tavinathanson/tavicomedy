@@ -71,6 +71,11 @@ export default function ShowCard({ show }) {
             target={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '_self' : '_blank'}
             rel={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? undefined : 'noopener noreferrer'}
             className={`${show.isOpenMic ? 'btn-secondary' : 'btn-primary'} !py-3 !px-6 text-sm`}
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.fbq) {
+                window.fbq('track', 'Lead')
+              }
+            }}
           >
             {show.isOpenMic ? 'Sign Up' : (siteConfig.showcaseTicketsAvailable ? 'Get Tickets' : siteConfig.noTickets.buttonText)}
           </a>

@@ -18,6 +18,11 @@ export default function EmailSignup() {
       return
     }
     
+    // Track Meta Pixel Lead event
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Lead')
+    }
+    
     // Add tag IDs if configured
     const baseTag = process.env.NEXT_PUBLIC_MAILCHIMP_TAG_WEBSITE
     const comedyShowTag = process.env.NEXT_PUBLIC_MAILCHIMP_TAG_COMEDY_SHOWS

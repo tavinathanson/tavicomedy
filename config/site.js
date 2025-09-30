@@ -8,7 +8,7 @@ export const siteConfig = {
   nextShowDate: "Saturday, February 22", // Update this when you have a date!
   
   // Open mic date
-  nextOpenMicDate: "Thursday, September 25, 2025",
+  nextOpenMicDate: "Thursday, October 16, 2025",
   
   // No tickets available mode (when showcaseTicketsAvailable is false)
   noTickets: {

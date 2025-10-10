@@ -13,7 +13,7 @@ export const upcomingShows = [
     description: "The comedy show everyone is talking about, featuring local and touring comedians!",
     vibe: "Expect: 80+ people in the cafe's connected event space",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
-    ticketLink: "https://cravelaughs.tavicomedy.com",
+    ticketLink: "https://cravelaughs.eventbrite.com",
     isShowcase: true
   },
   {

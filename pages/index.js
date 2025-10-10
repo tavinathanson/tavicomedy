@@ -164,7 +164,7 @@ export default function Home() {
               <ul className="space-y-2">
                 {siteConfig.showcaseTicketsAvailable && (
                   <li>
-                    <a href="https://cravelaughs.tavicomedy.com" className="text-gray-400 hover:text-white transition-colors">
+                    <a href="https://cravelaughs.eventbrite.com" className="text-gray-400 hover:text-white transition-colors">
                       Get Tickets
                     </a>
                   </li>

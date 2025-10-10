@@ -20,6 +20,6 @@ export const siteConfig = {
   // Ticket mode settings (when showcaseTicketsAvailable is true)
   tickets: {
     buttonText: "Get Tickets",
-    buttonLink: "https://cravelaughs.tavicomedy.com"
+    buttonLink: "https://cravelaughs.eventbrite.com"
   }
 }

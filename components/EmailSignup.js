@@ -2,10 +2,7 @@ import { useState } from 'react'
 
 export default function EmailSignup() {
   const [email, setEmail] = useState('')
-  const [interests, setInterests] = useState({
-    showcase: true,
-    openmic: false
-  })
+  const [interestType, setInterestType] = useState('both') // 'shows', 'openmics', or 'both'
   const [status, setStatus] = useState('')
 
   const handleSubmit = (e) => {
@@ -34,8 +31,8 @@ export default function EmailSignup() {
     if (baseTag) tags.push(baseTag)
     
     // Add specific tags based on interests
-    if (interests.showcase && comedyShowTag) tags.push(comedyShowTag)
-    if (interests.openmic && openMicTag) tags.push(openMicTag)
+    if ((interestType === 'shows' || interestType === 'both') && comedyShowTag) tags.push(comedyShowTag)
+    if ((interestType === 'openmics' || interestType === 'both') && openMicTag) tags.push(openMicTag)
     
     const form = e.target
     
@@ -72,30 +69,96 @@ export default function EmailSignup() {
           className="max-w-md mx-auto"
         >
           <p className="text-white/90 text-center mb-4 text-sm uppercase tracking-wide">I&apos;m interested in hearing about:</p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8">
-            <label className="flex items-center cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
+          <div className="flex flex-col gap-3 max-w-sm mx-auto mb-8">
+            <label className={`flex items-center cursor-pointer px-4 py-4 rounded-lg transition-all border-2 ${
+              interestType === 'both'
+                ? 'bg-white border-white text-comedy-purple shadow-lg'
+                : 'bg-white/10 border-white/30 hover:bg-white/20 hover:border-white/50 text-white'
+            }`}>
               <input
-                type="checkbox"
-                name={`group[${process.env.NEXT_PUBLIC_MAILCHIMP_GROUP_ID}][1]`}
-                value="1"
-                checked={interests.showcase}
-                onChange={(e) => setInterests({...interests, showcase: e.target.checked})}
-                className="w-5 h-5 mr-3 rounded accent-white"
+                type="radio"
+                name="interest-type"
+                value="both"
+                checked={interestType === 'both'}
+                onChange={(e) => setInterestType(e.target.value)}
+                className="sr-only"
               />
-              <span className="text-white font-medium">Comedy shows</span>
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mr-3 flex-shrink-0 ${
+                interestType === 'both'
+                  ? 'border-comedy-purple bg-comedy-purple'
+                  : 'border-white bg-transparent'
+              }`}>
+                {interestType === 'both' && (
+                  <div className="w-2 h-2 rounded-full bg-white"></div>
+                )}
+              </div>
+              <span className="font-medium">All comedy events<span className="block text-sm font-normal opacity-80">(shows + open mics)</span></span>
             </label>
-            <label className="flex items-center cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
+            <label className={`flex items-center cursor-pointer px-4 py-4 rounded-lg transition-all border-2 ${
+              interestType === 'shows'
+                ? 'bg-white border-white text-comedy-purple shadow-lg'
+                : 'bg-white/10 border-white/30 hover:bg-white/20 hover:border-white/50 text-white'
+            }`}>
               <input
-                type="checkbox"
-                name={`group[${process.env.NEXT_PUBLIC_MAILCHIMP_GROUP_ID}][2]`}
-                value="2"
-                checked={interests.openmic}
-                onChange={(e) => setInterests({...interests, openmic: e.target.checked})}
-                className="w-5 h-5 mr-3 rounded accent-white"
+                type="radio"
+                name="interest-type"
+                value="shows"
+                checked={interestType === 'shows'}
+                onChange={(e) => setInterestType(e.target.value)}
+                className="sr-only"
               />
-              <span className="text-white font-medium">Comedy open mics</span>
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mr-3 flex-shrink-0 ${
+                interestType === 'shows'
+                  ? 'border-comedy-purple bg-comedy-purple'
+                  : 'border-white bg-transparent'
+              }`}>
+                {interestType === 'shows' && (
+                  <div className="w-2 h-2 rounded-full bg-white"></div>
+                )}
+              </div>
+              <span className="font-medium">Comedy shows only</span>
+            </label>
+            <label className={`flex items-center cursor-pointer px-4 py-4 rounded-lg transition-all border-2 ${
+              interestType === 'openmics'
+                ? 'bg-white border-white text-comedy-purple shadow-lg'
+                : 'bg-white/10 border-white/30 hover:bg-white/20 hover:border-white/50 text-white'
+            }`}>
+              <input
+                type="radio"
+                name="interest-type"
+                value="openmics"
+                checked={interestType === 'openmics'}
+                onChange={(e) => setInterestType(e.target.value)}
+                className="sr-only"
+              />
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mr-3 flex-shrink-0 ${
+                interestType === 'openmics'
+                  ? 'border-comedy-purple bg-comedy-purple'
+                  : 'border-white bg-transparent'
+              }`}>
+                {interestType === 'openmics' && (
+                  <div className="w-2 h-2 rounded-full bg-white"></div>
+                )}
+              </div>
+              <span className="font-medium">Open mics only</span>
             </label>
           </div>
+
+          {/* Hidden fields for Mailchimp groups - only include when checked */}
+          {(interestType === 'shows' || interestType === 'both') && (
+            <input
+              type="hidden"
+              name={`group[${process.env.NEXT_PUBLIC_MAILCHIMP_GROUP_ID}][1]`}
+              value="1"
+            />
+          )}
+          {(interestType === 'openmics' || interestType === 'both') && (
+            <input
+              type="hidden"
+              name={`group[${process.env.NEXT_PUBLIC_MAILCHIMP_GROUP_ID}][2]`}
+              value="2"
+            />
+          )}
           
           <div className="flex flex-col sm:flex-row gap-4">
             <input

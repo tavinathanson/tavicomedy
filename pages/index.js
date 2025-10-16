@@ -14,6 +14,17 @@ export default function Home() {
     { src: '/images/packed-open-mic.jpg', alt: 'Packed open mic night' }, // Replace with your open mic photo
   ]
 
+  // Format dates from config
+  const formatButtonDate = (dateString) => {
+    const date = new Date(dateString)
+    const month = date.toLocaleDateString('en-US', { month: 'short' })
+    const day = date.getDate()
+    return `${month} ${day}`
+  }
+
+  const showDate = formatButtonDate(siteConfig.nextShowDate)
+  const openMicDate = formatButtonDate(siteConfig.nextOpenMicDate)
+
   return (
     <>
       <Head>
@@ -54,8 +65,8 @@ export default function Home() {
             </p>
           )}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            <a 
-              href={siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink} 
+            <a
+              href={siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink}
               target={siteConfig.showcaseTicketsAvailable ? "_blank" : "_self"}
               rel={siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined}
               className="btn-primary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm"
@@ -65,12 +76,12 @@ export default function Home() {
                 }
               }}
             >
-              {siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonText : siteConfig.noTickets.buttonText} →
+              {siteConfig.showcaseTicketsAvailable ? `Show Tickets for ${showDate}` : siteConfig.noTickets.buttonText} →
             </a>
-            <a 
-              href="https://openmic.tavicomedy.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href="https://openmic.tavicomedy.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-secondary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm"
               onClick={() => {
                 if (typeof window !== 'undefined' && window.fbq) {
@@ -78,7 +89,7 @@ export default function Home() {
                 }
               }}
             >
-              Sign Up for Open Mic →
+              Open Mic on {openMicDate} →
             </a>
           </div>
         </div>

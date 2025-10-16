@@ -5,8 +5,8 @@ export const siteConfig = {
   showcaseTicketsAvailable: true,
   
   // When showcaseTicketsAvailable is true, set the show date
-  nextShowDate: "Saturday, November 15", // Update this when you have a date!
-  
+  nextShowDate: "Saturday, November 15, 2025", // Update this when you have a date!
+
   // Open mic date
   nextOpenMicDate: "Thursday, October 16, 2025",
   

@@ -25,6 +25,42 @@ export default function Home() {
   const showDate = formatButtonDate(siteConfig.nextShowDate)
   const openMicDate = formatButtonDate(siteConfig.nextOpenMicDate)
 
+  // Sort shows by date (earliest first)
+  const sortedShows = [...upcomingShows].sort((a, b) => {
+    const dateA = new Date(a.date)
+    const dateB = new Date(b.date)
+    return dateA - dateB
+  })
+
+  // Sort hero buttons by date if both dates are available
+  const buttons = []
+
+  // Show tickets button
+  const showButton = {
+    href: siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink,
+    target: siteConfig.showcaseTicketsAvailable ? "_blank" : "_self",
+    rel: siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined,
+    text: siteConfig.showcaseTicketsAvailable ? `Show Tickets for ${showDate}` : siteConfig.noTickets.buttonText,
+    className: "btn-primary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm",
+    date: siteConfig.showcaseTicketsAvailable ? new Date(siteConfig.nextShowDate) : null
+  }
+
+  // Open mic button
+  const openMicButton = {
+    href: "https://openmic.tavicomedy.com",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    text: `Open Mic on ${openMicDate}`,
+    className: "btn-secondary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm",
+    date: new Date(siteConfig.nextOpenMicDate)
+  }
+
+  // Add buttons and sort by date if both have dates
+  buttons.push(showButton, openMicButton)
+  if (showButton.date && openMicButton.date) {
+    buttons.sort((a, b) => a.date - b.date)
+  }
+
   return (
     <>
       <Head>
@@ -65,32 +101,22 @@ export default function Home() {
             </p>
           )}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            <a
-              href={siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink}
-              target={siteConfig.showcaseTicketsAvailable ? "_blank" : "_self"}
-              rel={siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined}
-              className="btn-primary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm"
-              onClick={() => {
-                if (typeof window !== 'undefined' && window.fbq) {
-                  window.fbq('track', 'Lead')
-                }
-              }}
-            >
-              {siteConfig.showcaseTicketsAvailable ? `Show Tickets for ${showDate}` : siteConfig.noTickets.buttonText} →
-            </a>
-            <a
-              href="https://openmic.tavicomedy.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm"
-              onClick={() => {
-                if (typeof window !== 'undefined' && window.fbq) {
-                  window.fbq('track', 'Lead')
-                }
-              }}
-            >
-              Open Mic on {openMicDate} →
-            </a>
+            {buttons.map((button, index) => (
+              <a
+                key={index}
+                href={button.href}
+                target={button.target}
+                rel={button.rel}
+                className={button.className}
+                onClick={() => {
+                  if (typeof window !== 'undefined' && window.fbq) {
+                    window.fbq('track', 'Lead')
+                  }
+                }}
+              >
+                {button.text} →
+              </a>
+            ))}
           </div>
         </div>
       </section>
@@ -104,7 +130,7 @@ export default function Home() {
           </p>
           
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {upcomingShows.map(show => (
+            {sortedShows.map(show => (
               <ShowCard key={show.id} show={show} />
             ))}
           </div>

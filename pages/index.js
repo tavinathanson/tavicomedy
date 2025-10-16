@@ -118,6 +118,16 @@ export default function Home() {
               </a>
             ))}
           </div>
+          {siteConfig.showcaseTicketsAvailable && (
+            <div className="mt-6 text-center">
+              <a
+                href="#updates"
+                className="text-white/80 hover:text-white text-base sm:text-lg transition-colors inline-flex items-center gap-1"
+              >
+                Stay in the Loop: Get Updates →
+              </a>
+            </div>
+          )}
         </div>
       </section>
 

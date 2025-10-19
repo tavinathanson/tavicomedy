@@ -162,8 +162,8 @@ export default function ShowCard({ show }) {
           </div>
         )}
 
-        {/* Performers - Show names, click to expand bios */}
-        {show.performers && show.performers.length > 0 && (
+        {/* Performers - Show names, click to expand bios - only show when tickets available */}
+        {show.performers && show.performers.length > 0 && siteConfig.showcaseTicketsAvailable && show.isShowcase && (
           <div className="border-t border-gray-200 pt-3 mb-6">
             <h4 className="text-sm font-semibold text-gray-800 mb-2">Lineup ({show.performers.length} comedians):</h4>
             <div className="space-y-3">

@@ -47,7 +47,7 @@ export default function Home() {
     {
       href: "#shows",
       target: "_self",
-      text: "Show Details",
+      text: "Show Info",
       isScrollLink: true
     },
     {
@@ -92,11 +92,6 @@ export default function Home() {
           <p className="text-2xl sm:text-3xl md:text-4xl text-gray-100 mb-12 md:mb-14 font-medium px-2">
             Lawrenceville/Princeton
           </p>
-          {!siteConfig.showcaseTicketsAvailable && (
-            <p className="text-base sm:text-lg text-gray-200 mb-4 px-2">
-              Join the mailing list to hear about the next show
-            </p>
-          )}
 
           {/* Primary CTA - Full width on mobile, centered */}
           <div className="flex flex-col items-center gap-4 max-w-2xl mx-auto w-full px-2">

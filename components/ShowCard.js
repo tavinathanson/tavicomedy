@@ -43,6 +43,22 @@ export default function ShowCard({ show }) {
       <div className="p-4 sm:p-6 flex flex-col flex-grow">
         <h3 className="text-lg sm:text-xl font-bold text-comedy-dark mb-3">{show.name}</h3>
 
+        {/* Price prominently displayed */}
+        <div className="mb-4">
+          <span className="text-3xl sm:text-4xl font-bold text-comedy-purple">{show.price}</span>
+          {show.price !== "Free" && siteConfig.showcaseTicketsAvailable && (
+            <span className="text-sm text-gray-600 block mt-1">online or at door</span>
+          )}
+          {show.isShowcase && !siteConfig.showcaseTicketsAvailable && (
+            <span className="text-sm text-gray-600 block mt-1">Tickets coming soon</span>
+          )}
+        </div>
+
+        {/* Event Details Section Header */}
+        <div className="border-t border-gray-200 pt-4 mb-4">
+          <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Event Details</h4>
+        </div>
+
         {/* Key Info */}
         <div className="space-y-2 text-sm sm:text-base text-gray-600 mb-4">
           <p className="flex items-center">
@@ -59,7 +75,14 @@ export default function ShowCard({ show }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            {show.venue}, {show.location}
+            <a
+              href="https://share.google/9tb5seashzWDsVGOr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-comedy-purple transition-colors hover:underline"
+            >
+              {show.venue}, {show.location}
+            </a>
           </p>
         </div>
 
@@ -141,7 +164,7 @@ export default function ShowCard({ show }) {
 
         {/* Performers - Show names, click to expand bios */}
         {show.performers && show.performers.length > 0 && (
-          <div className="mb-4 border-t border-gray-200 pt-3">
+          <div className="border-t border-gray-200 pt-3 mb-6">
             <h4 className="text-sm font-semibold text-gray-800 mb-2">Lineup ({show.performers.length} comedians):</h4>
             <div className="space-y-3">
               {show.performers.map((performer, index) => (
@@ -151,22 +174,13 @@ export default function ShowCard({ show }) {
           </div>
         )}
 
-        {/* Price & CTA */}
-        <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-200">
-          <div>
-            <span className="text-xl sm:text-2xl font-bold text-comedy-purple">{show.price}</span>
-            {show.price !== "Free" && siteConfig.showcaseTicketsAvailable && (
-              <span className="text-xs text-gray-600 block">online or at door</span>
-            )}
-            {show.isShowcase && !siteConfig.showcaseTicketsAvailable && (
-              <span className="text-xs text-gray-600 block">Tickets coming soon</span>
-            )}
-          </div>
+        {/* CTA Button - Full width at bottom */}
+        <div className="mt-auto pt-6">
           <a
             href={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : show.ticketLink}
             target={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '_self' : '_blank'}
             rel={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? undefined : 'noopener noreferrer'}
-            className={`${show.isOpenMic ? 'btn-secondary' : 'btn-primary'} !py-3 !px-6 text-sm`}
+            className={`${show.isOpenMic ? 'btn-secondary' : 'btn-primary'} w-full !py-4 text-base sm:text-lg font-semibold`}
             onClick={(e) => {
               if (typeof window !== 'undefined' && window.fbq) {
                 window.fbq('track', 'Lead')
@@ -189,7 +203,7 @@ export default function ShowCard({ show }) {
             }}
             id={show.isShowcase && siteConfig.showcaseTicketsAvailable ? `eb-showcard-${show.id}` : undefined}
           >
-            {show.isOpenMic ? 'Sign Up →' : (siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonText + ' →' : siteConfig.noTickets.buttonText + ' →')}
+            {show.isOpenMic ? 'Sign Up →' : (siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonText : siteConfig.noTickets.buttonText)}
           </a>
         </div>
       </div>

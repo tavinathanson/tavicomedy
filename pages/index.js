@@ -32,37 +32,31 @@ export default function Home() {
     return dateA - dateB
   })
 
-  // Sort hero buttons by date if both dates are available
-  const buttons = []
-
-  // Show tickets button
-  const showButton = {
+  // Primary CTA - Show tickets
+  const primaryCTA = {
     href: siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink,
     target: siteConfig.showcaseTicketsAvailable ? "_blank" : "_self",
     rel: siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined,
     text: siteConfig.showcaseTicketsAvailable ? `${siteConfig.tickets.buttonText} for ${showDate}` : siteConfig.noTickets.buttonText,
-    className: "btn-primary text-base sm:text-lg md:text-xl w-full sm:w-auto backdrop-blur-sm",
-    date: siteConfig.showcaseTicketsAvailable ? new Date(siteConfig.nextShowDate) : null,
     isEventbrite: siteConfig.showcaseTicketsAvailable,
     eventId: siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.eventId : null
   }
 
-  // Open mic button
-  const openMicButton = {
-    href: "https://openmic.tavicomedy.com",
-    target: "_blank",
-    rel: "noopener noreferrer",
-    text: `Open Mic on ${openMicDate}`,
-    className: "btn-secondary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm opacity-90",
-    date: new Date(siteConfig.nextOpenMicDate),
-    isEventbrite: false
-  }
-
-  // Add buttons and sort by date if both have dates
-  buttons.push(showButton, openMicButton)
-  if (showButton.date && openMicButton.date) {
-    buttons.sort((a, b) => a.date - b.date)
-  }
+  // Secondary CTAs
+  const secondaryCTAs = [
+    {
+      href: "#shows",
+      target: "_self",
+      text: "Show Details",
+      isScrollLink: true
+    },
+    {
+      href: "https://openmic.tavicomedy.com",
+      target: "_blank",
+      rel: "noopener noreferrer",
+      text: `Open Mic on ${openMicDate}`
+    }
+  ]
 
   return (
     <>
@@ -103,40 +97,69 @@ export default function Home() {
               Join the mailing list to hear about the next show
             </p>
           )}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            {buttons.map((button, index) => (
+
+          {/* Primary CTA - Full width on mobile, centered */}
+          <div className="flex flex-col items-center gap-4 max-w-2xl mx-auto w-full px-2">
+            <a
+              href={primaryCTA.href}
+              target={primaryCTA.target}
+              rel={primaryCTA.rel}
+              className="btn-primary text-lg sm:text-xl md:text-2xl w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 backdrop-blur-sm font-semibold"
+              onClick={(e) => {
+                if (typeof window !== 'undefined' && window.fbq) {
+                  window.fbq('track', 'Lead')
+                }
+                // Eventbrite modal only works on HTTPS
+                if (primaryCTA.isEventbrite && primaryCTA.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
+                  e.preventDefault()
+                  window.EBWidgets.createWidget({
+                    widgetType: 'checkout',
+                    eventId: primaryCTA.eventId,
+                    modal: true,
+                    modalTriggerElementId: 'eb-primary-cta',
+                    onOrderComplete: function() {
+                      if (typeof window !== 'undefined' && window.fbq) {
+                        window.fbq('track', 'Purchase')
+                      }
+                    }
+                  })
+                }
+              }}
+              id={primaryCTA.isEventbrite ? 'eb-primary-cta' : undefined}
+            >
+              {primaryCTA.text} →
+            </a>
+
+            {/* Secondary CTAs */}
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              {/* Show Details - More subtle */}
               <a
-                key={index}
-                href={button.href}
-                target={button.target}
-                rel={button.rel}
-                className={button.className}
+                href={secondaryCTAs[0].href}
+                target={secondaryCTAs[0].target}
+                className="text-white/90 hover:text-white text-base sm:text-lg font-medium backdrop-blur-sm bg-white/10 hover:bg-white/20 transition-all px-6 py-3 rounded-full border border-white/30 w-full sm:w-auto text-center"
                 onClick={(e) => {
+                  e.preventDefault()
+                  document.querySelector('#shows')?.scrollIntoView({ behavior: 'smooth' })
+                }}
+              >
+                {secondaryCTAs[0].text} ↓
+              </a>
+
+              {/* Open Mic - Green to stand out */}
+              <a
+                href={secondaryCTAs[1].href}
+                target={secondaryCTAs[1].target}
+                rel={secondaryCTAs[1].rel}
+                className="btn-secondary text-sm sm:text-base md:text-lg px-6 py-3 backdrop-blur-sm w-full sm:w-auto"
+                onClick={() => {
                   if (typeof window !== 'undefined' && window.fbq) {
                     window.fbq('track', 'Lead')
                   }
-                  // Eventbrite modal only works on HTTPS
-                  if (button.isEventbrite && button.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
-                    e.preventDefault()
-                    window.EBWidgets.createWidget({
-                      widgetType: 'checkout',
-                      eventId: button.eventId,
-                      modal: true,
-                      modalTriggerElementId: `eb-button-${index}`,
-                      onOrderComplete: function() {
-                        if (typeof window !== 'undefined' && window.fbq) {
-                          window.fbq('track', 'Purchase')
-                        }
-                      }
-                    })
-                  }
-                  // On HTTP (localhost), fall back to opening Eventbrite in new tab
                 }}
-                id={button.isEventbrite ? `eb-button-${index}` : undefined}
               >
-                {button.text} →
+                {secondaryCTAs[1].text} →
               </a>
-            ))}
+            </div>
           </div>
           {siteConfig.showcaseTicketsAvailable && (
             <div className="mt-6 text-center">

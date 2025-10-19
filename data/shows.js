@@ -10,11 +10,32 @@ export const upcomingShows = [
     price: "$20",
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
-    description: "The comedy show everyone is talking about, featuring local and touring comedians!",
-    vibe: "Expect: 80+ people in the cafe's connected event space",
+    description: "A standup comedy show in Lawrenceville! See talented comedians at a great neighborhood venue. BYOB!",
+    vibe: "Our shows regularly sell out with 80+ attendees! Don't wait to get your ticket!",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     ticketLink: "https://cravelaughs.eventbrite.com",
-    isShowcase: true
+    eventId: siteConfig.tickets?.eventId, // For Eventbrite modal
+    isShowcase: true,
+    highlights: {
+      duration: "1 hour 30 minutes",
+      ages: "Ages 18+",
+      format: "In person",
+      doors: "Doors at 5:30 PM"
+    },
+    additionalInfo: [
+      "Tickets are $20 online or at the door—no extra taxes or fees!",
+      "Seating is limited, so pre-purchase is highly recommended.",
+      "There is a one item minimum purchase at Crave, and you are welcome to BYOB!",
+      "Lineup of 7+ comedians to be announced shortly! It'll be fantastic!"
+    ],
+    performers: [
+      // Add your performers here - example format:
+      // {
+      //   name: "Comedian Name",
+      //   credits: "As seen on Comedy Central, Netflix",
+      //   bio: "A hilarious comedian who has been performing for over 10 years..."
+      // }
+    ]
   },
   {
     id: 2,

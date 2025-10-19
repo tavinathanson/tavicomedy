@@ -81,7 +81,7 @@ export default function ShowCard({ show }) {
               }
             }}
           >
-            {show.isOpenMic ? 'Sign Up' : (siteConfig.showcaseTicketsAvailable ? 'Get Tickets' : siteConfig.noTickets.buttonText)}
+            {show.isOpenMic ? 'Sign Up' : (siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonText : siteConfig.noTickets.buttonText)}
           </a>
         </div>
       </div>

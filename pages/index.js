@@ -232,7 +232,7 @@ export default function Home() {
                 {siteConfig.showcaseTicketsAvailable && (
                   <li>
                     <a href="https://cravelaughs.eventbrite.com" className="text-gray-400 hover:text-white transition-colors">
-                      Get Tickets
+                      Buy Tickets
                     </a>
                   </li>
                 )}

@@ -17,17 +17,16 @@ export const upcomingShows = [
     eventId: siteConfig.tickets?.eventId, // For Eventbrite modal
     isShowcase: true,
     highlights: {
-      duration: "1 hour 30 minutes",
+      duration: "90 minutes",
       ages: "Ages 18+",
-      format: "In person",
-      doors: "Doors at 5:30 PM"
+      doors: "Doors at 5:30 PM",
+      parking: "Free street parking nearby"
     },
     additionalInfo: [
       "Tickets are <strong>$20 online or at the door—no extra taxes or fees!</strong> Refundable up to 2 days before the show.",
       "Seating is limited, so pre-purchase is highly recommended.",
       "<strong>BYOB!</strong> There is a one item minimum purchase at Crave, and you are welcome to bring your own beverages.",
-      "Parking at Crave is limited. Free street parking is available on nearby residential streets within a block or two. Please allow extra time to find a spot.",
-      "Lineup of 7+ comedians to be announced shortly! It'll be fantastic!"
+      "<strong>Parking at Crave is limited.</strong> Free street parking is available on nearby residential streets within a block or two. Please allow extra time to find a spot."
     ],
     performers: [
       {
@@ -35,14 +34,31 @@ export const upcomingShows = [
         instagram: "steve_schwarz_nj",
         credits: "Willie McBride's",
         bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
+      },
+      {
+        name: "Chelsea Moroski",
+        instagram: "chelseamoroski"
+      },
+      {
+        name: "Foster Nicholson",
+        instagram: "thegeniusfos"
+      },
+      {
+        name: "Abe Shapiro",
+        instagram: "abeshaps"
+      },
+      {
+        name: "John Montague",
+        instagram: "montaguecomedy"
+      },
+      {
+        name: "Josh Tinley",
+        instagram: "thatsjtcomedy"
+      },
+      {
+        name: "Carla Ulbrich",
+        instagram: "carlaucomedy"
       }
-      // Add more performers here - example format:
-      // {
-      //   name: "Comedian Name",
-      //   instagram: "their_instagram_handle", // without the @
-      //   credits: "Comedy Cellar, Caroline's", // venues or TV credits
-      //   bio: "A hilarious comedian who has been performing for over 10 years..."
-      // }
     ]
   },
   {
@@ -57,6 +73,11 @@ export const upcomingShows = [
     vibe: "Expect: Chill cafe setting, ~30 friendly folks",
     image: "/images/photo-for-mic-card.jpg", // 800x600px recommended
     ticketLink: "https://openmic.tavicomedy.com",
-    isOpenMic: true
+    isOpenMic: true,
+    additionalInfo: [
+      "Lineup order is determined by lottery. Sign up early and arrive by 7:15 PM for extra entries!",
+      "<strong>5 minutes per comedian</strong>, or 7 minutes if you bring 1+ non-performing guests",
+      "This open mic is only possible thanks to our hosts at Crave. To keep the show going, please support them with a purchase if you can. This is not required, but is very much appreciated!"
+    ]
   }
 ]

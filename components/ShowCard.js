@@ -47,7 +47,7 @@ export default function ShowCard({ show }) {
         <div className="mb-4">
           <span className="text-3xl sm:text-4xl font-bold text-comedy-purple">{show.price}</span>
           {show.price !== "Free" && siteConfig.showcaseTicketsAvailable && (
-            <span className="text-sm text-gray-600 block mt-1">online or at door</span>
+            <span className="text-sm text-gray-600 block mt-1">online or at door • no extra taxes or fees</span>
           )}
           {show.isShowcase && !siteConfig.showcaseTicketsAvailable && (
             <span className="text-sm text-gray-600 block mt-1">Tickets coming soon</span>
@@ -102,33 +102,41 @@ export default function ShowCard({ show }) {
             <h4 className="text-sm font-semibold text-gray-800 mb-2">Good to know:</h4>
             <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
               {show.highlights.duration && (
-                <div className="flex items-start">
-                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center">
+                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <span>{show.highlights.duration}</span>
                 </div>
               )}
               {show.highlights.ages && (
-                <div className="flex items-start">
-                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center">
+                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                   <span>{show.highlights.ages}</span>
                 </div>
               )}
               {show.highlights.format && (
-                <div className="flex items-start">
-                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center">
+                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                   <span>{show.highlights.format}</span>
                 </div>
               )}
               {show.highlights.doors && (
-                <div className="flex items-start">
-                  <MdMeetingRoom className="w-4 h-4 mr-1.5 flex-shrink-0 mt-0.5" />
+                <div className="flex items-center">
+                  <MdMeetingRoom className="w-4 h-4 mr-1.5 flex-shrink-0" />
                   <span>{show.highlights.doors}</span>
+                </div>
+              )}
+              {show.highlights.parking && (
+                <div className="flex items-center">
+                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                  <span>{show.highlights.parking}</span>
                 </div>
               )}
             </div>
@@ -174,16 +182,9 @@ export default function ShowCard({ show }) {
           </div>
         )}
 
-        {/* Performers - Show names, click to expand bios - only show when tickets available */}
+        {/* Performers - Show names, click to expand - only show when tickets available */}
         {show.performers && show.performers.length > 0 && siteConfig.showcaseTicketsAvailable && show.isShowcase && (
-          <div className="border-t border-gray-200 pt-3 mb-6">
-            <h4 className="text-sm font-semibold text-gray-800 mb-2">Lineup ({show.performers.length} comedians):</h4>
-            <div className="space-y-3">
-              {show.performers.map((performer, index) => (
-                <PerformerCard key={index} performer={performer} />
-              ))}
-            </div>
-          </div>
+          <LineupSection performers={show.performers} />
         )}
 
         {/* CTA Button - Full width at bottom */}
@@ -219,6 +220,57 @@ export default function ShowCard({ show }) {
           </a>
         </div>
       </div>
+    </div>
+  )
+}
+
+// Lineup section with collapsible performer details
+function LineupSection({ performers }) {
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <div className="border-t border-gray-200 pt-3 mb-6">
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="text-sm font-semibold text-gray-800">
+          Lineup ({performers.length} comedians):
+        </h4>
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-sm text-comedy-purple hover:text-comedy-purple/80 font-semibold px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded transition-colors flex-shrink-0"
+        >
+          {expanded ? 'Hide Comedian Bios' : 'Show Comedian Bios'}
+        </button>
+      </div>
+
+      {!expanded && (
+        <p className="text-xs sm:text-sm text-gray-600 mb-3">
+          {performers.map((performer, index) => (
+            <span key={index}>
+              {performer.instagram ? (
+                <a
+                  href={`https://instagram.com/${performer.instagram}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-comedy-purple hover:text-comedy-purple/80 hover:underline"
+                >
+                  {performer.name}
+                </a>
+              ) : (
+                performer.name
+              )}
+              {index < performers.length - 1 && ', '}
+            </span>
+          ))}
+        </p>
+      )}
+
+      {expanded && (
+        <div className="space-y-3 mt-3">
+          {performers.map((performer, index) => (
+            <PerformerCard key={index} performer={performer} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

@@ -107,18 +107,25 @@ export default function Home() {
                 // Eventbrite modal only works on HTTPS
                 if (primaryCTA.isEventbrite && primaryCTA.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
                   e.preventDefault()
-                  window.EBWidgets.createWidget({
-                    widgetType: 'checkout',
-                    eventId: primaryCTA.eventId,
-                    modal: true,
-                    modalTriggerElementId: 'eb-primary-cta',
-                    onOrderComplete: function() {
-                      if (typeof window !== 'undefined' && window.fbq) {
-                        window.fbq('track', 'Purchase')
+                  try {
+                    window.EBWidgets.createWidget({
+                      widgetType: 'checkout',
+                      eventId: primaryCTA.eventId,
+                      modal: true,
+                      modalTriggerElementId: 'eb-primary-cta',
+                      onOrderComplete: function() {
+                        if (typeof window !== 'undefined' && window.fbq) {
+                          window.fbq('track', 'Purchase')
+                        }
                       }
-                    }
-                  })
+                    })
+                  } catch (error) {
+                    // If widget fails, redirect to Eventbrite page
+                    console.error('Eventbrite widget failed:', error)
+                    window.open(primaryCTA.href, '_blank')
+                  }
                 }
+                // If modal conditions aren't met, the link's href will handle navigation naturally
               }}
               id={primaryCTA.isEventbrite ? 'eb-primary-cta' : undefined}
             >

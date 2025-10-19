@@ -201,18 +201,25 @@ export default function ShowCard({ show }) {
               // Eventbrite modal only works on HTTPS
               if (show.isShowcase && siteConfig.showcaseTicketsAvailable && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
                 e.preventDefault()
-                window.EBWidgets.createWidget({
-                  widgetType: 'checkout',
-                  eventId: show.eventId,
-                  modal: true,
-                  modalTriggerElementId: `eb-showcard-${show.id}`,
-                  onOrderComplete: function() {
-                    if (typeof window !== 'undefined' && window.fbq) {
-                      window.fbq('track', 'Purchase')
+                try {
+                  window.EBWidgets.createWidget({
+                    widgetType: 'checkout',
+                    eventId: show.eventId,
+                    modal: true,
+                    modalTriggerElementId: `eb-showcard-${show.id}`,
+                    onOrderComplete: function() {
+                      if (typeof window !== 'undefined' && window.fbq) {
+                        window.fbq('track', 'Purchase')
+                      }
                     }
-                  }
-                })
+                  })
+                } catch (error) {
+                  // If widget fails, redirect to Eventbrite page
+                  console.error('Eventbrite widget failed:', error)
+                  window.open(show.ticketLink, '_blank')
+                }
               }
+              // If modal conditions aren't met, the link's href will handle navigation naturally
             }}
             id={show.isShowcase && siteConfig.showcaseTicketsAvailable ? `eb-showcard-${show.id}` : undefined}
           >

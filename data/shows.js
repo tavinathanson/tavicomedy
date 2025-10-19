@@ -23,9 +23,9 @@ export const upcomingShows = [
       doors: "Doors at 5:30 PM"
     },
     additionalInfo: [
-      "Tickets are $20 online or at the door—no extra taxes or fees! Refundable up to 2 days before the show.",
+      "Tickets are <strong>$20 online or at the door—no extra taxes or fees!</strong> Refundable up to 2 days before the show.",
       "Seating is limited, so pre-purchase is highly recommended.",
-      "BYOB! There is a one item minimum purchase at Crave, and you are welcome to bring your own beverages.",
+      "<strong>BYOB!</strong> There is a one item minimum purchase at Crave, and you are welcome to bring your own beverages.",
       "Parking at Crave is limited. Free street parking is available on nearby residential streets within a block or two. Please allow extra time to find a spot.",
       "Lineup of 7+ comedians to be announced shortly! It'll be fantastic!"
     ],
@@ -33,12 +33,14 @@ export const upcomingShows = [
       {
         name: "Steve Schwarz",
         instagram: "steve_schwarz_nj",
-        bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBrides in Branchburg."
+        credits: "Willie McBride's",
+        bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
       }
       // Add more performers here - example format:
       // {
       //   name: "Comedian Name",
       //   instagram: "their_instagram_handle", // without the @
+      //   credits: "Comedy Cellar, Caroline's", // venues or TV credits
       //   bio: "A hilarious comedian who has been performing for over 10 years..."
       // }
     ]

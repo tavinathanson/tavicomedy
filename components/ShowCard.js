@@ -153,11 +153,23 @@ export default function ShowCard({ show }) {
               </svg>
             </button>
             {expanded && (
-              <div className="mt-3 text-xs sm:text-sm text-gray-700 space-y-2">
-                {show.additionalInfo.map((info, index) => (
-                  <p key={index}>• {info}</p>
-                ))}
-              </div>
+              <ul className="mt-3 text-xs sm:text-sm text-gray-700 space-y-2 list-disc pl-5">
+                {show.additionalInfo.map((info, index) => {
+                  // Simple safe HTML rendering - only allow <strong> tags
+                  const parts = info.split(/(<strong>.*?<\/strong>)/g)
+                  return (
+                    <li key={index}>
+                      {parts.map((part, i) => {
+                        if (part.startsWith('<strong>')) {
+                          const text = part.replace(/<\/?strong>/g, '')
+                          return <strong key={i}>{text}</strong>
+                        }
+                        return part
+                      })}
+                    </li>
+                  )
+                })}
+              </ul>
             )}
           </div>
         )}
@@ -219,22 +231,27 @@ function PerformerCard({ performer }) {
     <div className="bg-gray-50 rounded-lg p-3">
       <div className="flex items-start justify-between gap-2">
         <div className="flex-grow">
-          <h5 className="font-semibold text-sm text-gray-900">{performer.name}</h5>
-          {performer.instagram && (
-            <a
-              href={`https://instagram.com/${performer.instagram}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-comedy-purple hover:text-comedy-purple/80 mt-0.5 inline-block hover:underline"
-            >
-              @{performer.instagram}
-            </a>
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <h5 className="font-semibold text-sm text-gray-900">{performer.name}</h5>
+            {performer.instagram && (
+              <a
+                href={`https://instagram.com/${performer.instagram}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-comedy-purple hover:text-comedy-purple/80 hover:underline py-1"
+              >
+                @{performer.instagram}
+              </a>
+            )}
+          </div>
+          {performer.credits && (
+            <p className="text-xs text-gray-600 mt-1">{performer.credits}</p>
           )}
         </div>
         {performer.bio && (
           <button
             onClick={() => setShowBio(!showBio)}
-            className="text-xs text-comedy-purple hover:text-comedy-purple/80 font-medium flex-shrink-0"
+            className="text-xs text-comedy-purple hover:text-comedy-purple/80 font-medium flex-shrink-0 py-1 px-2"
           >
             {showBio ? 'Less' : 'Bio'}
           </button>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FaInstagram } from 'react-icons/fa'
 
 export default function EmailSignup() {
   const [email, setEmail] = useState('')
@@ -57,11 +58,11 @@ export default function EmailSignup() {
   return (
     <div className="bg-gradient-to-br from-purple-700 to-comedy-purple rounded-2xl p-8 md:p-12 text-white max-w-4xl mx-auto">
       <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display uppercase tracking-tight mb-6">Stay in the Loop</h2>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display uppercase tracking-tight mb-4">Stay in the Loop</h2>
         <div className="max-w-md mx-auto">
           <p className="text-lg sm:text-xl mb-8">Get very occasional updates about upcoming shows.</p>
         </div>
-        
+
         <form 
           onSubmit={handleSubmit}
           method="post"
@@ -178,10 +179,26 @@ export default function EmailSignup() {
             </button>
           </div>
         </form>
-        
+
         {status && (
           <p className="mt-4 text-sm bg-white/20 rounded p-2">{status}</p>
         )}
+
+        {/* Instagram Follow - Below form */}
+        <div className="mt-6 pt-6 border-t border-white/20">
+          <p className="text-sm sm:text-base text-white/90 flex items-center justify-center gap-1 flex-wrap">
+            <span>Or follow on Instagram:</span>
+            <a
+              href="https://instagram.com/tavinathanson"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-white hover:text-white font-medium transition-colors"
+            >
+              <FaInstagram className="text-base sm:text-lg" />
+              <span className="hover:underline">@tavinathanson</span>
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   )

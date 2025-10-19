@@ -40,9 +40,11 @@ export default function Home() {
     href: siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink,
     target: siteConfig.showcaseTicketsAvailable ? "_blank" : "_self",
     rel: siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined,
-    text: siteConfig.showcaseTicketsAvailable ? `Show Tickets for ${showDate}` : siteConfig.noTickets.buttonText,
-    className: "btn-primary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm",
-    date: siteConfig.showcaseTicketsAvailable ? new Date(siteConfig.nextShowDate) : null
+    text: siteConfig.showcaseTicketsAvailable ? `${siteConfig.tickets.buttonText} for ${showDate}` : siteConfig.noTickets.buttonText,
+    className: "btn-primary text-base sm:text-lg md:text-xl w-full sm:w-auto backdrop-blur-sm",
+    date: siteConfig.showcaseTicketsAvailable ? new Date(siteConfig.nextShowDate) : null,
+    isEventbrite: siteConfig.showcaseTicketsAvailable,
+    eventId: siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.eventId : null
   }
 
   // Open mic button
@@ -51,8 +53,9 @@ export default function Home() {
     target: "_blank",
     rel: "noopener noreferrer",
     text: `Open Mic on ${openMicDate}`,
-    className: "btn-secondary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm",
-    date: new Date(siteConfig.nextOpenMicDate)
+    className: "btn-secondary text-sm sm:text-base md:text-lg w-full sm:w-auto backdrop-blur-sm opacity-90",
+    date: new Date(siteConfig.nextOpenMicDate),
+    isEventbrite: false
   }
 
   // Add buttons and sort by date if both have dates
@@ -108,11 +111,28 @@ export default function Home() {
                 target={button.target}
                 rel={button.rel}
                 className={button.className}
-                onClick={() => {
+                onClick={(e) => {
                   if (typeof window !== 'undefined' && window.fbq) {
                     window.fbq('track', 'Lead')
                   }
+                  // Eventbrite modal only works on HTTPS
+                  if (button.isEventbrite && button.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
+                    e.preventDefault()
+                    window.EBWidgets.createWidget({
+                      widgetType: 'checkout',
+                      eventId: button.eventId,
+                      modal: true,
+                      modalTriggerElementId: `eb-button-${index}`,
+                      onOrderComplete: function() {
+                        if (typeof window !== 'undefined' && window.fbq) {
+                          window.fbq('track', 'Purchase')
+                        }
+                      }
+                    })
+                  }
+                  // On HTTP (localhost), fall back to opening Eventbrite in new tab
                 }}
+                id={button.isEventbrite ? `eb-button-${index}` : undefined}
               >
                 {button.text} →
               </a>

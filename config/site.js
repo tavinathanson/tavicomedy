@@ -19,7 +19,8 @@ export const siteConfig = {
   
   // Ticket mode settings (when showcaseTicketsAvailable is true)
   tickets: {
-    buttonText: "Get Tickets",
-    buttonLink: "https://cravelaughs.eventbrite.com"
+    buttonText: "Buy Tickets",
+    buttonLink: "https://cravelaughs.eventbrite.com",
+    eventId: "1799746753989"
   }
 }

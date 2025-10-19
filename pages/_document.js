@@ -34,6 +34,14 @@ export default function Document() {
           />
         </noscript>
         {/* End Meta Pixel Code */}
+
+        {/* Eventbrite Widget */}
+        <Script
+          id="eventbrite-widget"
+          strategy="afterInteractive"
+          src="https://www.eventbrite.com/static/widgets/eb_widgets.js"
+        />
+        {/* End Eventbrite Widget */}
       </Head>
       <body>
         <Main />

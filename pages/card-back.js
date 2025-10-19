@@ -5,29 +5,64 @@ import { QRCodeSVG } from 'qrcode.react'
 
 export default function CardBack() {
   const cardRef = useRef(null)
+  const qrRef = useRef(null)
 
   const downloadCard = async (format = 'png') => {
     if (!cardRef.current) return
 
     try {
-      const dataUrl = format === 'png' 
-        ? await toPng(cardRef.current, { 
+      const dataUrl = format === 'png'
+        ? await toPng(cardRef.current, {
             quality: 1.0,
             pixelRatio: 4,
             backgroundColor: '#FFFFFF'
           })
-        : await toJpeg(cardRef.current, { 
+        : await toJpeg(cardRef.current, {
             quality: 0.95,
             pixelRatio: 4,
             backgroundColor: '#FFFFFF'
           })
-      
+
       const link = document.createElement('a')
       link.download = `tavi-comedy-card-back.${format}`
       link.href = dataUrl
       link.click()
     } catch (err) {
       console.error('Failed to generate image', err)
+    }
+  }
+
+  const downloadQRCode = async () => {
+    if (!qrRef.current) return
+
+    try {
+      // Create a temporary wrapper to add padding for the shadow
+      const wrapper = document.createElement('div')
+      wrapper.style.padding = '20px'
+      wrapper.style.display = 'inline-block'
+
+      // Clone the QR code element
+      const clone = qrRef.current.cloneNode(true)
+      wrapper.appendChild(clone)
+
+      // Temporarily add to document (needed for rendering)
+      document.body.appendChild(wrapper)
+
+      const dataUrl = await toPng(wrapper, {
+        quality: 1.0,
+        pixelRatio: 4,
+        backgroundColor: 'transparent'
+      })
+
+      // Clean up
+      document.body.removeChild(wrapper)
+
+      const link = document.createElement('a')
+      link.download = 'tavi-comedy-qr-code.png'
+      link.href = dataUrl
+      link.click()
+    } catch (err) {
+      console.error('Failed to generate QR code image', err)
     }
   }
 
@@ -40,17 +75,23 @@ export default function CardBack() {
 
       <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
         <div className="mb-8 flex gap-4">
-          <button 
-            onClick={() => downloadCard('png')} 
+          <button
+            onClick={() => downloadCard('png')}
             className="px-4 py-2 bg-comedy-purple text-white rounded hover:bg-purple-700 transition-colors"
           >
-            Download as PNG
+            Download Card as PNG
           </button>
-          <button 
-            onClick={() => downloadCard('jpeg')} 
+          <button
+            onClick={() => downloadCard('jpeg')}
             className="px-4 py-2 bg-comedy-purple text-white rounded hover:bg-purple-700 transition-colors"
           >
-            Download as JPEG
+            Download Card as JPEG
+          </button>
+          <button
+            onClick={downloadQRCode}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
+          >
+            Download QR Code Only
           </button>
         </div>
 
@@ -79,7 +120,10 @@ export default function CardBack() {
               
               <div className="flex flex-col items-center">
                 <div className="mb-8">
-                  <div className="w-48 h-48 bg-white rounded-2xl flex items-center justify-center border-2 border-purple-100 shadow-lg p-3">
+                  <div
+                    ref={qrRef}
+                    className="w-48 h-48 bg-white rounded-2xl flex items-center justify-center border-2 border-purple-100 shadow-lg p-3"
+                  >
                     <QRCodeSVG
                       value="https://tavicomedy.com"
                       size={168}

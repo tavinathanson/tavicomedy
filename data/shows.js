@@ -23,16 +23,22 @@ export const upcomingShows = [
       doors: "Doors at 5:30 PM"
     },
     additionalInfo: [
-      "Tickets are $20 online or at the door—no extra taxes or fees!",
+      "Tickets are $20 online or at the door—no extra taxes or fees! Refundable up to 2 days before the show.",
       "Seating is limited, so pre-purchase is highly recommended.",
-      "There is a one item minimum purchase at Crave, and you are welcome to BYOB!",
+      "BYOB! There is a one item minimum purchase at Crave, and you are welcome to bring your own beverages.",
+      "Parking at Crave is limited. Free street parking is available on nearby residential streets within a block or two. Please allow extra time to find a spot.",
       "Lineup of 7+ comedians to be announced shortly! It'll be fantastic!"
     ],
     performers: [
-      // Add your performers here - example format:
+      {
+        name: "Steve Schwarz",
+        instagram: "steve_schwarz_nj",
+        bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBrides in Branchburg."
+      }
+      // Add more performers here - example format:
       // {
       //   name: "Comedian Name",
-      //   credits: "As seen on Comedy Central, Netflix",
+      //   instagram: "their_instagram_handle", // without the @
       //   bio: "A hilarious comedian who has been performing for over 10 years..."
       // }
     ]

@@ -220,8 +220,15 @@ function PerformerCard({ performer }) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex-grow">
           <h5 className="font-semibold text-sm text-gray-900">{performer.name}</h5>
-          {performer.credits && (
-            <p className="text-xs text-gray-600 mt-0.5">{performer.credits}</p>
+          {performer.instagram && (
+            <a
+              href={`https://instagram.com/${performer.instagram}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-comedy-purple hover:text-comedy-purple/80 mt-0.5 inline-block hover:underline"
+            >
+              @{performer.instagram}
+            </a>
           )}
         </div>
         {performer.bio && (

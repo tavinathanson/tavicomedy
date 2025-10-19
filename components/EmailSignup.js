@@ -59,7 +59,7 @@ export default function EmailSignup() {
       <div className="max-w-2xl mx-auto text-center">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-display uppercase tracking-tight mb-6">Stay in the Loop</h2>
         <div className="max-w-md mx-auto">
-          <p className="text-lg sm:text-xl mb-8">Get very occasional updates about upcoming shows. No spam.</p>
+          <p className="text-lg sm:text-xl mb-8">Get very occasional updates about upcoming shows.</p>
         </div>
         
         <form 

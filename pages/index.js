@@ -231,8 +231,71 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section id="faq" className="py-20 bg-purple-50">
+        <div className="max-w-4xl mx-auto section-padding">
+          <h2 className="text-3xl md:text-5xl font-display uppercase tracking-tight text-center mb-8 md:mb-12">Frequently Asked Questions</h2>
+          <div className="space-y-6">
+            {/* FAQ Item */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-comedy-dark mb-3">Are ticketed shows BYOB?</h3>
+              <p className="text-gray-700">Yes! BYOB is welcome at shows you buy a ticket for. Your purchase of food/drink from Crave keeps our BYOB policy possible!</p>
+            </div>
+
+            {/* FAQ Item */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-comedy-dark mb-3">Is there a minimum purchase?</h3>
+              <p className="text-gray-700">Yes, there&apos;s a 1-item minimum per person at ticketed shows. Anything from the cafe menu counts! For free events like open mics, a purchase is highly encouraged to support the venue.</p>
+            </div>
+
+            {/* FAQ Item */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-comedy-dark mb-3">Are tickets refundable?</h3>
+              <p className="text-gray-700">Yes! Tickets for the standup show are refundable until two days before the show.</p>
+            </div>
+
+            {/* FAQ Item */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-comedy-dark mb-3">Where can I park?</h3>
+              <p className="text-gray-700">Parking at Crave is limited. Free street parking is also available on nearby residential streets within a block or two of the venue. Please allow a few extra minutes to find a spot.</p>
+            </div>
+
+            {/* FAQ Item */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-comedy-dark mb-3">What sort of place is Crave?</h3>
+              <p className="text-gray-700">
+                Crave is a healthy cafe with a great setting for events and shows like this one. Check out their menu at{' '}
+                <a href="https://www.cravenatureseatery.com/menu-2023" target="_blank" rel="noopener noreferrer" className="link-text">
+                  cravenatureseatery.com
+                </a>
+              </p>
+            </div>
+
+            {/* FAQ Item */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-comedy-dark mb-3">I can&apos;t make this one but I&apos;m interested in the next one!</h3>
+              <p className="text-gray-700">
+                Want to stay updated about shows and open mics? Email{' '}
+                <a href="mailto:tavi@tavicomedy.com" className="link-text">
+                  tavi@tavicomedy.com
+                </a>
+                {' '}or follow{' '}
+                <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text">
+                  @tavinathanson
+                </a>
+                {' '}on Instagram, or{' '}
+                <a href="#updates" className="link-text">
+                  join the mailing list
+                </a>
+                .
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Email Updates Section */}
-      <section id="updates" className="py-20">
+      <section id="updates" className="py-20 bg-gray-50">
         <div className="section-padding">
           <EmailSignup />
         </div>

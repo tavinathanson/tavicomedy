@@ -41,7 +41,9 @@ export const upcomingShows = [
       },
       {
         name: "Foster Nicholson",
-        instagram: "thegeniusfos"
+        instagram: "thegeniusfos",
+        credits: "Apollo Theater",
+        bio: "Foster Nicholson is a comedian and actor born out of Brooklyn, NY and raised in Howell, NJ. Foster has been performing stand-up comedy for over 20 years and was most recently seen performing at the world-renowned Apollo."
       },
       {
         name: "Abe Shapiro",

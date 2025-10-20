@@ -132,9 +132,11 @@ When deploying to Vercel:
 
    | Key | Value |
    |-----|-------|
-   | `GOOGLE_SERVICE_ACCOUNT_KEY` | Paste the entire JSON file contents wrapped in single quotes: `'{"type":"service_account",...}'` (you can minify to one line or keep multi-line) |
+   | `GOOGLE_SERVICE_ACCOUNT_KEY` | Paste the entire JSON file contents **WITHOUT quotes** in Vercel (just the raw JSON: `{"type":"service_account",...}`) |
    | `GOOGLE_SHEET_ID` | Your Sheet ID from Step 1 |
    | `GOOGLE_SHEET_NAME` | Your tab name (e.g., "website-mailing-list") |
+
+   **Note:** In Vercel, paste the JSON directly without single quotes. The single quotes are only needed in your local `.env.local` file.
 
 3. Click **Save**
 4. Redeploy your site: **Deployments** tab → **Redeploy** on latest deployment

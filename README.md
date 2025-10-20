@@ -32,143 +32,135 @@ Replace the placeholder images in `/public/images/` with your actual photos:
   - Gallery photos: Use your flyers and event photos
   - Show cards: Add showcase and open mic photos
 
-### 2. Configure Mailchimp
+### 2. Configure Google Sheets for Email Signups (YAMM Integration)
 
-**Step 1: Get your Mailchimp Form Action URL**
-1. Log into [Mailchimp](https://mailchimp.com)
-2. Click **Audience** in the left sidebar
-3. Click **Manage Audience** dropdown (see screenshot) → **Signup forms**
-4. Click **Embedded forms**
-5. You'll see the form builder with:
-   - **Settings** panel on the left
-   - **Form Title** field (e.g., "Subscribe" or "Comedy Show Updates")
-   - Preview of your form on the right
-6. Configure your form settings (optional):
-   - Form Title: Whatever you want
-   - Width: Leave default (600 pixels)
-   - Keep other checkboxes unchecked for now
-7. Click **Continue** button (top right, green button)
-8. On the next page, you'll see **"Copy the code below"** with the embed code
-9. In the embed code, look for this line (usually around line 9-10):
-    ```html
-    <form action="https://YOURDOMAIN.usXX.list-manage.com/subscribe/post?u=XXXXXXXX&amp;id=YYYYYYYY&amp;f_id=ZZZZZZZZ" method="post"
-    ```
-10. Copy the URL from `action="..."` but **replace `&amp;` with `&`**. Your final URL should look like:
-    ```
-    https://YOURDOMAIN.usXX.list-manage.com/subscribe/post?u=XXXXXXXX&id=YYYYYYYY&f_id=ZZZZZZZZ
-    ```
-    
-    The URL contains:
-    - Data center: `usXX` (like us11, us21, etc.)
-    - User ID: The long string after `u=`
-    - List ID: The string after `id=`
+This site uses Google Sheets to collect email signups, which integrates seamlessly with YAMM (Yet Another Mail Merge) for sending newsletters.
 
-**Step 2: Get your Group ID (for interest checkboxes)**
-1. In your Audience, click **Manage Audience** dropdown → **More options** → **Groups**
-2. Click **Create Groups**
-3. Create a new group category:
-   - **Group category name**: "Show Preferences" (or similar)
-   - **Group type**: Select "Checkboxes - subscribers can select one or more"
-   - Click **Save**
-4. Add group options:
-   - Click **Add Group** and enter "Comedy Shows"
-   - Click **Add Group** again and enter "Comedy Open Mics"
-   - Click **Save**
-5. Go back to the main **Forms** page (click Forms in the top navigation)
-6. Find your embedded form in the list and click on it
-7. In the **Form fields** section:
-   - Click **Add a field** 
-   - Select **Show Preferences** (this is your group category)
-   - Your interest groups will now appear in the form preview
-8. Click **Continue** (green button, top right) to get the embed code
-9. In the embed code, search for `group[` - you'll find a section like this:
-   ```html
-   <strong>Show Preferences </strong><ul>
-   <li><input type="checkbox" name="group[XXXXX][1]" id="mce-group[XXXXX]-XXXXX-0" value="">
-   <label for="mce-group[XXXXX]-XXXXX-0">Comedy Shows</label></li>
-   <li><input type="checkbox" name="group[XXXXX][2]" id="mce-group[XXXXX]-XXXXX-1" value="">
-   <label for="mce-group[XXXXX]-XXXXX-1">Comedy Open Mics</label></li>
-   </ul>
-   ```
-10. The number in `group[XXXXX]` is your Group ID (usually a 5-digit number like 12345 or 18523)
-    - Comedy Shows is `group[XXXXX][1]`
-    - Comedy Open Mics is `group[XXXXX][2]`
+**Step 1: Create Your Google Sheet**
 
-**Step 3: Set up Environment Variables Locally**
+1. Go to [Google Sheets](https://sheets.google.com) and create a new spreadsheet
+2. Name it something like "Comedy Newsletter Subscribers"
+3. In the first row, add these column headers:
+   - **Column A**: `Email`
+   - **Column B**: `Shows`
+   - **Column C**: `Open Mics`
+   - **Column D**: `Timestamp`
+   - **Column E**: `Source`
+4. Note the **Sheet ID** from the URL (the long string between `/d/` and `/edit`):
+   - Example: `https://docs.google.com/spreadsheets/d/1abc123XYZ456/edit`
+   - Sheet ID: `1abc123XYZ456`
+5. Note the **tab name** at the bottom of the sheet (e.g., "website-mailing-list")
+
+**Step 2: Set Up Google Cloud Service Account**
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a new project:
+   - Click the project dropdown at the top
+   - Click "New Project"
+   - Name it (e.g., "website-mailing-list")
+   - Click "Create"
+3. Enable the Google Sheets API:
+   - In the left sidebar, go to **APIs & Services** → **Library**
+   - Search for "Google Sheets API"
+   - Click on it and click **Enable**
+4. Create a service account:
+   - Go to **APIs & Services** → **Credentials**
+   - Click **Create Credentials** → **Service Account**
+   - Enter a name (e.g., "website-mailing-list")
+   - Click **Create and Continue**
+   - Skip the optional permissions (click **Continue** then **Done**)
+5. Create a JSON key:
+   - Click on the service account you just created
+   - Go to the **Keys** tab
+   - Click **Add Key** → **Create new key**
+   - Choose **JSON** format
+   - Click **Create** (this downloads a JSON file to your computer)
+6. Open the downloaded JSON file and copy the `client_email` value
+   - It looks like: `something@project-name.iam.gserviceaccount.com`
+
+**Note on Organization Policies:** If you get an error about service account key creation being disabled, you'll need to either:
+- Disable the `iam.disableServiceAccountKeyCreation` policy in your organization settings, OR
+- Use a personal Gmail account to create the Google Cloud project (recommended for personal projects)
+
+**Step 3: Share Your Sheet with the Service Account**
+
+1. Go back to your Google Sheet
+2. Click the **Share** button (top right)
+3. Paste the service account email address (the `client_email` from the JSON file)
+4. Give it **Editor** permissions
+5. Uncheck "Notify people" (it's a bot account, no need to notify)
+6. Click **Share**
+
+**Step 4: Set Up Environment Variables Locally**
+
 1. In your terminal, copy the example file:
    ```bash
    cp .env.local.example .env.local
    ```
+
 2. Open `.env.local` and add your values:
+   ```bash
+   # Copy the ENTIRE contents of your service account JSON file here
+   # IMPORTANT: Wrap the JSON in SINGLE QUOTES to preserve formatting
+   GOOGLE_SERVICE_ACCOUNT_KEY='{
+     "type": "service_account",
+     "project_id": "your-project",
+     "private_key_id": "...",
+     "private_key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n",
+     "client_email": "something@project.iam.gserviceaccount.com",
+     ...
+   }'
+
+   # Your Google Sheet ID (from Step 1)
+   GOOGLE_SHEET_ID=1abc123XYZ456
+
+   # The tab/worksheet name (from Step 1)
+   GOOGLE_SHEET_NAME=website-mailing-list
    ```
-   NEXT_PUBLIC_MAILCHIMP_ACTION_URL=https://gmail.us21.list-manage.com/subscribe/post?u=a1b2c3d4e5&id=f6g7h8i9j0
-   NEXT_PUBLIC_MAILCHIMP_GROUP_ID=17269
+
+3. Restart your development server:
+   ```bash
+   npm run dev
    ```
-3. Restart your development server for changes to take effect
 
-**Step 4: Deploy to Vercel with Environment Variables**
+**Step 5: Deploy to Vercel with Environment Variables**
 
-When you import your project to Vercel, you'll see the **Configure Project** screen. Here's what to do:
+When deploying to Vercel:
 
-1. **Framework Preset**: Next.js (auto-detected)
-2. **Build and Output Settings**: Leave all defaults
-   - Build Command: `next build` (default)
-   - Output Directory: `.next` (default)
-   - Install Command: `npm install` (default)
-3. **Environment Variables**: Click to expand this section and add:
-   
+1. Go to your Vercel project → **Settings** → **Environment Variables**
+2. Add these three variables:
+
    | Key | Value |
    |-----|-------|
-   | `NEXT_PUBLIC_MAILCHIMP_ACTION_URL` | Your URL from Step 1 (the full https://... URL) |
-   | `NEXT_PUBLIC_MAILCHIMP_GROUP_ID` | Your 5-digit Group ID from Step 2 |
-   | `NEXT_PUBLIC_MAILCHIMP_TAG_WEBSITE` | (Optional) Tag ID for all website signups |
-   | `NEXT_PUBLIC_MAILCHIMP_TAG_COMEDY_SHOWS` | (Optional) Tag ID for comedy show interests |
-   | `NEXT_PUBLIC_MAILCHIMP_TAG_OPEN_MICS` | (Optional) Tag ID for open mic interests |
-   
-4. Click **Deploy**
+   | `GOOGLE_SERVICE_ACCOUNT_KEY` | Paste the entire JSON file contents wrapped in single quotes: `'{"type":"service_account",...}'` (you can minify to one line or keep multi-line) |
+   | `GOOGLE_SHEET_ID` | Your Sheet ID from Step 1 |
+   | `GOOGLE_SHEET_NAME` | Your tab name (e.g., "website-mailing-list") |
 
-**To add/update environment variables after deployment:**
-1. Go to your project in Vercel Dashboard
-2. Click **Settings** → **Environment Variables**
-3. Add or modify variables
-4. Click **Save**
-5. Go to **Deployments** tab → click **Redeploy** on the latest deployment
+3. Click **Save**
+4. Redeploy your site: **Deployments** tab → **Redeploy** on latest deployment
 
-**Using Your Interest Groups & Tags**
+**Step 6: Connect to YAMM**
 
-**Interest Groups** (already configured):
-- Automatically track what subscribers are interested in
-- Create segments: Audience → Segments → Group interests → Comedy Shows/Open Mics
+1. In YAMM, when creating a new mail merge:
+   - Select your Google Sheet as the data source
+   - Map the `Email` column as the recipient email
+   - Use the `Shows` and `Open Mics` columns to filter/segment your sends
+   - The `Timestamp` column shows when they signed up
+   - The `Source` column will show "website" for all signups from this form
 
-**Tags** (optional but powerful):
-1. Create tags in Mailchimp:
-   - Go to Audience → **Tags** → **Create Tag**
-   - Suggested tags: "website-signup", "comedy-shows-interest", "open-mics-interest"
-   
-2. Get tag IDs:
-   - Click on a tag in your Tags list
-   - Look at the URL: `/tags/1234567` → `1234567` is your tag ID
-   
-3. Add tag IDs to your `.env.local`:
-   ```
-   NEXT_PUBLIC_MAILCHIMP_TAG_WEBSITE=1234567
-   NEXT_PUBLIC_MAILCHIMP_TAG_COMEDY_SHOWS=1234568
-   NEXT_PUBLIC_MAILCHIMP_TAG_OPEN_MICS=1234569
-   ```
+**How It Works**
 
-4. How it works:
-   - Everyone gets the "website-signup" tag
-   - If they check "Comedy Shows" → also gets "comedy-shows-interest" tag
-   - If they check "Open Mics" → also gets "open-mics-interest" tag
-   - Multiple tags can be applied to one subscriber
+- When someone signs up, their email and preferences are saved to your Google Sheet
+- If the same email signs up again with different preferences, the row is **updated** (not duplicated)
+- YAMM automatically pulls contacts from this sheet for your mail merges
+- You can manually add contacts to the sheet, and they'll also be included in YAMM
 
-**Troubleshooting Mailchimp Setup**
-- **Can't find embed code?** Make sure you clicked "Continue" after configuring form settings
-- **Form doesn't submit?** Check browser console (F12) for errors, verify your URL is correct
-- **Groups not showing?** Ensure "Show interest group fields" is checked in form builder
-- **Wrong data center?** Your URL must match your account's data center (check your Mailchimp URL)
-- **Test first:** Always test with your own email before going live
-- **Common mistake:** Don't include the entire embed code - only copy the URL from action=""
+**Troubleshooting**
+
+- **"Server configuration error"**: Check that all environment variables are set correctly in Vercel
+- **"Failed to save subscription"**: Verify the service account has Editor access to the sheet
+- **Duplicate entries**: The system should update existing emails, not create duplicates. If you see duplicates, check that the email column (A) doesn't have any hidden formatting
+- **Test first**: Always test with your own email before going live
 
 ### 3. Managing Show Dates and Ticket Sales
 
@@ -258,20 +250,24 @@ For www subdomain (recommended):
 ```
 tavicomedy/
 ├── pages/
-│   ├── _app.js          # Next.js app wrapper
-│   ├── _document.js     # HTML document structure
-│   └── index.js         # Main landing page
+│   ├── api/
+│   │   └── subscribe.js  # API route for Google Sheets integration
+│   ├── _app.js           # Next.js app wrapper
+│   ├── _document.js      # HTML document structure
+│   └── index.js          # Main landing page
 ├── components/
-│   ├── Navigation.js    # Header navigation
-│   ├── ShowCard.js      # Individual show cards
-│   └── EmailSignup.js   # Mailchimp email form
+│   ├── Navigation.js     # Header navigation
+│   ├── ShowCard.js       # Individual show cards
+│   └── EmailSignup.js    # Email signup form (Google Sheets)
 ├── data/
-│   └── shows.js         # Show/event data
+│   └── shows.js          # Show/event data
+├── config/
+│   └── site.js           # Site configuration
 ├── styles/
-│   └── globals.css      # Global styles & Tailwind
+│   └── globals.css       # Global styles & Tailwind
 ├── public/
-│   └── images/          # Image assets
-└── package.json         # Dependencies
+│   └── images/           # Image assets
+└── package.json          # Dependencies
 ```
 
 ## Customization
@@ -297,8 +293,13 @@ Edit `tailwind.config.js` to change the color scheme:
 Required for email signup functionality:
 
 1. Copy `.env.local.example` to `.env.local`
-2. Fill in your Mailchimp values (see Configure Mailchimp section above)
+2. Fill in your Google Sheets API values (see Configure Google Sheets section above)
 3. When deploying to Vercel, add these same variables in your project settings
+
+**Required Variables:**
+- `GOOGLE_SERVICE_ACCOUNT_KEY` - Full JSON credentials from Google Cloud service account
+- `GOOGLE_SHEET_ID` - Your Google Sheet ID
+- `GOOGLE_SHEET_NAME` - The tab name in your sheet (default: "website-mailing-list")
 
 ## Support
 

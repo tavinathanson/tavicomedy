@@ -6,53 +6,40 @@ export default function EmailSignup() {
   const [interestType, setInterestType] = useState('both') // 'shows', 'openmics', or 'both'
   const [status, setStatus] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    
-    const MAILCHIMP_ACTION_URL = process.env.NEXT_PUBLIC_MAILCHIMP_ACTION_URL
-    
-    if (!MAILCHIMP_ACTION_URL) {
-      setStatus('Mailchimp is not configured. Please add NEXT_PUBLIC_MAILCHIMP_ACTION_URL to your environment variables.')
-      return
-    }
-    
+
+    setStatus('Subscribing...')
+
     // Track Meta Pixel Lead event
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'Lead')
     }
-    
-    // Add tag IDs if configured
-    const baseTag = process.env.NEXT_PUBLIC_MAILCHIMP_TAG_WEBSITE
-    const comedyShowTag = process.env.NEXT_PUBLIC_MAILCHIMP_TAG_COMEDY_SHOWS
-    const openMicTag = process.env.NEXT_PUBLIC_MAILCHIMP_TAG_OPEN_MICS
-    
-    const tags = []
-    
-    // Always add base website tag if configured
-    if (baseTag) tags.push(baseTag)
-    
-    // Add specific tags based on interests
-    if ((interestType === 'shows' || interestType === 'both') && comedyShowTag) tags.push(comedyShowTag)
-    if ((interestType === 'openmics' || interestType === 'both') && openMicTag) tags.push(openMicTag)
-    
-    const form = e.target
-    
-    // Add hidden tags field if we have any tags
-    if (tags.length > 0) {
-      const tagsDiv = document.createElement('div')
-      tagsDiv.setAttribute('hidden', '')
-      
-      const tagsInput = document.createElement('input')
-      tagsInput.type = 'hidden'
-      tagsInput.name = 'tags'
-      tagsInput.value = tags.join(',')
-      
-      tagsDiv.appendChild(tagsInput)
-      form.appendChild(tagsDiv)
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          interestType,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setStatus(data.message || 'Thanks for signing up!')
+        setEmail('')
+      } else {
+        setStatus(data.error || 'Something went wrong. Please try again.')
+      }
+    } catch (error) {
+      console.error('Subscription error:', error)
+      setStatus('Failed to subscribe. Please try again.')
     }
-    
-    form.action = MAILCHIMP_ACTION_URL
-    form.submit()
   }
 
   return (
@@ -63,10 +50,8 @@ export default function EmailSignup() {
           <p className="text-lg sm:text-xl mb-8">Get very occasional updates about upcoming shows.</p>
         </div>
 
-        <form 
+        <form
           onSubmit={handleSubmit}
-          method="post"
-          target="_blank"
           className="max-w-md mx-auto"
         >
           <p className="text-white/90 text-center mb-4 text-sm uppercase tracking-wide">I&apos;m interested in hearing about:</p>
@@ -145,22 +130,6 @@ export default function EmailSignup() {
             </label>
           </div>
 
-          {/* Hidden fields for Mailchimp groups - only include when checked */}
-          {(interestType === 'shows' || interestType === 'both') && (
-            <input
-              type="hidden"
-              name={`group[${process.env.NEXT_PUBLIC_MAILCHIMP_GROUP_ID}][1]`}
-              value="1"
-            />
-          )}
-          {(interestType === 'openmics' || interestType === 'both') && (
-            <input
-              type="hidden"
-              name={`group[${process.env.NEXT_PUBLIC_MAILCHIMP_GROUP_ID}][2]`}
-              value="2"
-            />
-          )}
-          
           <div className="flex flex-col sm:flex-row gap-4">
             <input
               type="email"
@@ -181,7 +150,15 @@ export default function EmailSignup() {
         </form>
 
         {status && (
-          <p className="mt-4 text-sm bg-white/20 rounded p-2">{status}</p>
+          <div className={`mt-6 p-4 rounded-lg ${
+            status.includes('Thanks') || status.includes('updated')
+              ? 'bg-green-500/20 border-2 border-green-400/50'
+              : status.includes('Subscribing')
+              ? 'bg-white/10 border-2 border-white/30'
+              : 'bg-red-500/20 border-2 border-red-400/50'
+          }`}>
+            <p className="text-base font-medium text-center">{status}</p>
+          </div>
         )}
 
         {/* Instagram Follow - Below form */}

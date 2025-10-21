@@ -59,7 +59,9 @@ export const upcomingShows = [
       },
       {
         name: "Carla Ulbrich",
-        instagram: "carlaucomedy"
+        instagram: "carlaucomedy",
+        credits: "WSM, BBC, Dr. Demento, SiriusXM Comedy Radio, NPR's Morning Edition",
+        bio: "Carla Ulbrich is a musical comedian whose witty songs cover topics such as Waffle House, Klingons, and psycho exes. Her songs have been aired on WSM, the BBC, Dr. Demento, SiriusXM Comedy Radio, and NPR's Morning Edition."
       }
     ]
   },

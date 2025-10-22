@@ -305,7 +305,13 @@ function PerformerCard({ performer }) {
             )}
           </div>
           {performer.credits && (
-            <p className="text-xs text-gray-600 mt-1">{performer.credits}</p>
+            <p className="text-xs text-gray-600 mt-1">
+              {performer.credits.split(/(\bhttps?:\/\/\S+|\b@\w+)/g).map((part, i) => {
+                if (part.match(/^https?:\/\//)) return <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-comedy-purple hover:underline">{part}</a>
+                if (part.match(/^@(\w+)/)) return <a key={i} href={`https://instagram.com/${part.slice(1)}`} target="_blank" rel="noopener noreferrer" className="text-comedy-purple hover:underline">{part}</a>
+                return part
+              })}
+            </p>
           )}
         </div>
         {performer.bio && (
@@ -318,7 +324,13 @@ function PerformerCard({ performer }) {
         )}
       </div>
       {showBio && performer.bio && (
-        <p className="text-xs text-gray-700 mt-2 leading-relaxed">{performer.bio}</p>
+        <p className="text-xs text-gray-700 mt-2 leading-relaxed">
+          {performer.bio.split(/(\bhttps?:\/\/\S+|\binstagram\.com\/\S+|\b@\w+)/g).map((part, i) => {
+            if (part.match(/^https?:\/\//)) return <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-comedy-purple hover:underline">{part}</a>
+            if (part.match(/^@(\w+)/)) return <a key={i} href={`https://instagram.com/${part.slice(1)}`} target="_blank" rel="noopener noreferrer" className="text-comedy-purple hover:underline">{part}</a>
+            return part
+          })}
+        </p>
       )}
     </div>
   )

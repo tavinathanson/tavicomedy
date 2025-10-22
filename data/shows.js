@@ -55,7 +55,9 @@ export const upcomingShows = [
       },
       {
         name: "Josh Tinley",
-        instagram: "thatsjtcomedy"
+        instagram: "thatsjtcomedy",
+        credits: "One of the Good Ones podcast, badqualityandco",
+        bio: "Josh is a comedian from New Brunswick, NJ. He frequents many of the best clubs in NYC and NJ. He is the host of the podcast \"One of the Good Ones\" and also has a really funny sketch page on Instagram \"badqualityandco.\""
       },
       {
         name: "Carla Ulbrich",

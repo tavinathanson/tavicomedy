@@ -37,7 +37,8 @@ export const upcomingShows = [
       },
       {
         name: "Chelsea Moroski",
-        instagram: "chelseamoroski"
+        instagram: "chelseamoroski",
+        bio: "Chelsea Moroski's a comic who has been terrorizing New Jersey for an unknown amount of time. She is a shy adult."
       },
       {
         name: "Foster Nicholson",

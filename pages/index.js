@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { useEffect } from 'react'
 import Navigation from '@/components/Navigation'
 import ShowCard from '@/components/ShowCard'
 import EmailSignup from '@/components/EmailSignup'
@@ -58,6 +59,48 @@ export default function Home() {
     }
   ]
 
+  // Initialize Eventbrite widget once on page load
+  useEffect(() => {
+    if (primaryCTA.isEventbrite && primaryCTA.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:') {
+      // Wait for EBWidgets to be available
+      const initWidget = () => {
+        if (window.EBWidgets) {
+          try {
+            window.EBWidgets.createWidget({
+              widgetType: 'checkout',
+              eventId: primaryCTA.eventId,
+              modal: true,
+              modalTriggerElementId: 'eb-primary-cta',
+              onOrderComplete: function() {
+                if (typeof window !== 'undefined' && window.fbq) {
+                  window.fbq('track', 'Purchase')
+                }
+              }
+            })
+          } catch (error) {
+            console.error('Eventbrite widget initialization failed:', error)
+          }
+        }
+      }
+
+      // Check if already loaded
+      if (window.EBWidgets) {
+        initWidget()
+      } else {
+        // Wait for script to load
+        const checkInterval = setInterval(() => {
+          if (window.EBWidgets) {
+            clearInterval(checkInterval)
+            initWidget()
+          }
+        }, 100)
+
+        // Clear interval after 5 seconds to prevent infinite checking
+        setTimeout(() => clearInterval(checkInterval), 5000)
+      }
+    }
+  }, [primaryCTA.isEventbrite, primaryCTA.eventId])
+
   return (
     <>
       <Head>
@@ -105,28 +148,11 @@ export default function Home() {
                 if (typeof window !== 'undefined' && window.fbq) {
                   window.fbq('track', 'Lead')
                 }
-                // Eventbrite modal only works on HTTPS
+                // If Eventbrite modal is enabled, prevent default link behavior
+                // The modal is initialized via useEffect and will handle the click automatically
                 if (primaryCTA.isEventbrite && primaryCTA.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
                   e.preventDefault()
-                  try {
-                    window.EBWidgets.createWidget({
-                      widgetType: 'checkout',
-                      eventId: primaryCTA.eventId,
-                      modal: true,
-                      modalTriggerElementId: 'eb-primary-cta',
-                      onOrderComplete: function() {
-                        if (typeof window !== 'undefined' && window.fbq) {
-                          window.fbq('track', 'Purchase')
-                        }
-                      }
-                    })
-                  } catch (error) {
-                    // If widget fails, redirect to Eventbrite page
-                    console.error('Eventbrite widget failed:', error)
-                    window.open(primaryCTA.href, '_blank')
-                  }
                 }
-                // If modal conditions aren't met, the link's href will handle navigation naturally
               }}
               id={primaryCTA.isEventbrite ? 'eb-primary-cta' : undefined}
             >

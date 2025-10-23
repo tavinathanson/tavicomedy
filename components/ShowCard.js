@@ -1,10 +1,52 @@
 import Image from 'next/image'
 import { siteConfig } from '@/config/site'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MdMeetingRoom } from 'react-icons/md'
 
 export default function ShowCard({ show }) {
   const [expanded, setExpanded] = useState(false)
+
+  // Initialize Eventbrite widget once on component mount
+  useEffect(() => {
+    if (show.isShowcase && siteConfig.showcaseTicketsAvailable && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:') {
+      // Wait for EBWidgets to be available
+      const initWidget = () => {
+        if (window.EBWidgets) {
+          try {
+            window.EBWidgets.createWidget({
+              widgetType: 'checkout',
+              eventId: show.eventId,
+              modal: true,
+              modalTriggerElementId: `eb-showcard-${show.id}`,
+              onOrderComplete: function() {
+                if (typeof window !== 'undefined' && window.fbq) {
+                  window.fbq('track', 'Purchase')
+                }
+              }
+            })
+          } catch (error) {
+            console.error('Eventbrite widget initialization failed:', error)
+          }
+        }
+      }
+
+      // Check if already loaded
+      if (window.EBWidgets) {
+        initWidget()
+      } else {
+        // Wait for script to load
+        const checkInterval = setInterval(() => {
+          if (window.EBWidgets) {
+            clearInterval(checkInterval)
+            initWidget()
+          }
+        }, 100)
+
+        // Clear interval after 5 seconds to prevent infinite checking
+        setTimeout(() => clearInterval(checkInterval), 5000)
+      }
+    }
+  }, [show.isShowcase, show.eventId, show.id])
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
@@ -199,28 +241,11 @@ export default function ShowCard({ show }) {
               if (typeof window !== 'undefined' && window.fbq) {
                 window.fbq('track', 'Lead')
               }
-              // Eventbrite modal only works on HTTPS
+              // If Eventbrite modal is enabled, prevent default link behavior
+              // The modal is initialized via useEffect and will handle the click automatically
               if (show.isShowcase && siteConfig.showcaseTicketsAvailable && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
                 e.preventDefault()
-                try {
-                  window.EBWidgets.createWidget({
-                    widgetType: 'checkout',
-                    eventId: show.eventId,
-                    modal: true,
-                    modalTriggerElementId: `eb-showcard-${show.id}`,
-                    onOrderComplete: function() {
-                      if (typeof window !== 'undefined' && window.fbq) {
-                        window.fbq('track', 'Purchase')
-                      }
-                    }
-                  })
-                } catch (error) {
-                  // If widget fails, redirect to Eventbrite page
-                  console.error('Eventbrite widget failed:', error)
-                  window.open(show.ticketLink, '_blank')
-                }
               }
-              // If modal conditions aren't met, the link's href will handle navigation naturally
             }}
             id={show.isShowcase && siteConfig.showcaseTicketsAvailable ? `eb-showcard-${show.id}` : undefined}
           >

@@ -1,14 +1,11 @@
 import { Html, Head, Main, NextScript } from 'next/document'
-import Script from 'next/script'
 
 export default function Document() {
   return (
     <Html lang="en">
       <Head>
         {/* Meta Pixel Code */}
-        <Script
-          id="fb-pixel"
-          strategy="afterInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               !function(f,b,e,v,n,t,s)
@@ -25,9 +22,9 @@ export default function Document() {
           }}
         />
         <noscript>
-          <img 
-            height="1" 
-            width="1" 
+          <img
+            height="1"
+            width="1"
             style={{ display: 'none' }}
             src="https://www.facebook.com/tr?id=1778550536103583&ev=PageView&noscript=1"
             alt=""
@@ -36,17 +33,14 @@ export default function Document() {
         {/* End Meta Pixel Code */}
 
         {/* Eventbrite Widget */}
-        <Script
-          id="eventbrite-widget"
-          strategy="afterInteractive"
+        <script
+          async
           src="https://www.eventbrite.com/static/widgets/eb_widgets.js"
         />
         {/* End Eventbrite Widget */}
 
         {/* Microsoft Clarity */}
-        <Script
-          id="microsoft-clarity"
-          strategy="afterInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               (function(c,l,a,r,i,t,y){

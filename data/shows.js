@@ -48,7 +48,8 @@ export const upcomingShows = [
       },
       {
         name: "Abe Shapiro",
-        instagram: "abeshaps"
+        instagram: "abeshaps",
+        bio: "Abe Shapiro is a 22-year-old comic working out of NYC. He's been working consistently in Manhattan clubs since he started performing at 18."
       },
       {
         name: "John Montague",

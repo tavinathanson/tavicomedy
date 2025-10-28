@@ -53,7 +53,8 @@ export const upcomingShows = [
       },
       {
         name: "John Montague",
-        instagram: "montaguecomedy"
+        instagram: "montaguecomedy",
+        bio: "Philly/South Jersey area comedian John Montague, coming in at a commanding 6'0\" with the tools to really knock it out of the park or rally the troops in the boardroom. You'll leave saying \"what was that guy's name again?!?!\""
       },
       {
         name: "Josh Tinley",

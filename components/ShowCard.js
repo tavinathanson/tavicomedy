@@ -21,6 +21,11 @@ export default function ShowCard({ show }) {
               onOrderComplete: function() {
                 if (typeof window !== 'undefined' && window.fbq) {
                   window.fbq('track', 'Purchase')
+                  // Also track as conversion event for unified tracking with mailing list signups
+                  window.fbq('track', 'CompleteRegistration', {
+                    content_name: 'Ticket Purchase',
+                    status: 'completed'
+                  })
                 }
               }
             })

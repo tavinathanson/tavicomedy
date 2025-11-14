@@ -16,6 +16,7 @@ export const upcomingShows = [
     ticketLink: "https://cravelaughs.eventbrite.com",
     eventId: siteConfig.tickets?.eventId, // For Eventbrite modal
     isShowcase: true,
+    almostSoldOut: true, // Set to true to show "almost sold out" indicator
     highlights: {
       duration: "90 minutes",
       ages: "Ages 18+",
@@ -23,7 +24,7 @@ export const upcomingShows = [
       parking: "Free street parking nearby"
     },
     additionalInfo: [
-      "Tickets are <strong>$20 online or at the door—no extra taxes or fees!</strong> Refundable up to 2 days before the show.",
+      "Tickets are <strong>$20 online, or at the door if available—no extra taxes or fees!</strong> Refundable up to 2 days before the show.",
       "Seating is limited, so pre-purchase is highly recommended.",
       "<strong>BYOB!</strong> There is a one item minimum purchase at Crave, and you are welcome to bring your own beverages.",
       "<strong>Parking at Crave is limited.</strong> Free street parking is available on nearby residential streets within a block or two. Please allow extra time to find a spot."

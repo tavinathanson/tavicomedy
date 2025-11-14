@@ -95,10 +95,16 @@ export default function ShowCard({ show }) {
         <div className="mb-4">
           <span className="text-3xl sm:text-4xl font-bold text-comedy-purple">{show.price}</span>
           {show.price !== "Free" && siteConfig.showcaseTicketsAvailable && (
-            <span className="text-sm text-gray-600 block mt-1">online or at door • no extra taxes or fees</span>
+            <span className="text-sm text-gray-600 block mt-1">online • at door (if available) • no extra taxes or fees</span>
           )}
           {show.isShowcase && !siteConfig.showcaseTicketsAvailable && (
             <span className="text-sm text-gray-600 block mt-1">Tickets coming soon</span>
+          )}
+          {show.almostSoldOut && siteConfig.showcaseTicketsAvailable && (
+            <div className="mt-2 inline-flex items-center gap-1.5 bg-orange-50 text-orange-700 px-3 py-1.5 rounded-md text-sm font-medium border border-orange-200">
+              <span className="text-base">🔥</span>
+              <span>Almost Sold Out</span>
+            </div>
           )}
         </div>
 

@@ -33,14 +33,18 @@ export default function Home() {
     return dateA - dateB
   })
 
+  // Get the primary showcase show to check soldOut status
+  const primaryShowcase = upcomingShows.find(show => show.isShowcase)
+  const isShowcaseSoldOut = primaryShowcase?.soldOut || false
+
   // Primary CTA - Show tickets
   const primaryCTA = {
-    href: siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink,
-    target: siteConfig.showcaseTicketsAvailable ? "_blank" : "_self",
-    rel: siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined,
-    text: siteConfig.showcaseTicketsAvailable ? `${siteConfig.tickets.buttonText} for ${showDate}` : siteConfig.noTickets.buttonText,
-    isEventbrite: siteConfig.showcaseTicketsAvailable,
-    eventId: siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.eventId : null
+    href: isShowcaseSoldOut ? '#updates' : (siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink),
+    target: isShowcaseSoldOut ? "_self" : (siteConfig.showcaseTicketsAvailable ? "_blank" : "_self"),
+    rel: isShowcaseSoldOut ? undefined : (siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined),
+    text: isShowcaseSoldOut ? 'Sold Out - Join Mailing List' : (siteConfig.showcaseTicketsAvailable ? `${siteConfig.tickets.buttonText} for ${showDate}` : siteConfig.noTickets.buttonText),
+    isEventbrite: siteConfig.showcaseTicketsAvailable && !isShowcaseSoldOut,
+    eventId: (siteConfig.showcaseTicketsAvailable && !isShowcaseSoldOut) ? siteConfig.tickets.eventId : null
   }
 
   // Secondary CTAs
@@ -61,7 +65,7 @@ export default function Home() {
 
   // Initialize Eventbrite widget once on page load
   useEffect(() => {
-    if (primaryCTA.isEventbrite && primaryCTA.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:') {
+    if (primaryCTA.isEventbrite && primaryCTA.eventId && !isShowcaseSoldOut && typeof window !== 'undefined' && window.location.protocol === 'https:') {
       // Wait for EBWidgets to be available
       const initWidget = () => {
         if (window.EBWidgets) {
@@ -99,7 +103,7 @@ export default function Home() {
         setTimeout(() => clearInterval(checkInterval), 5000)
       }
     }
-  }, [primaryCTA.isEventbrite, primaryCTA.eventId])
+  }, [primaryCTA.isEventbrite, primaryCTA.eventId, isShowcaseSoldOut])
 
   return (
     <>
@@ -148,9 +152,15 @@ export default function Home() {
                 if (typeof window !== 'undefined' && window.fbq) {
                   window.fbq('track', 'Lead')
                 }
+                // If sold out, scroll to updates section
+                if (isShowcaseSoldOut) {
+                  e.preventDefault()
+                  document.querySelector('#updates')?.scrollIntoView({ behavior: 'smooth' })
+                  return
+                }
                 // If Eventbrite modal is enabled, prevent default link behavior
                 // The modal is initialized via useEffect and will handle the click automatically
-                if (primaryCTA.isEventbrite && primaryCTA.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
+                if (primaryCTA.isEventbrite && primaryCTA.eventId && !isShowcaseSoldOut && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
                   e.preventDefault()
                 }
               }}
@@ -190,7 +200,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          {siteConfig.showcaseTicketsAvailable && (
+          {siteConfig.showcaseTicketsAvailable && !isShowcaseSoldOut && (
             <div className="mt-6 text-center">
               <a
                 href="#updates"
@@ -198,6 +208,13 @@ export default function Home() {
               >
                 Stay in the Loop: Get Updates →
               </a>
+            </div>
+          )}
+          {isShowcaseSoldOut && (
+            <div className="mt-6 text-center">
+              <p className="text-white/90 text-base sm:text-lg">
+                Limited tickets may be available at the door (not guaranteed)
+              </p>
             </div>
           )}
         </div>

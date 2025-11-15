@@ -17,6 +17,7 @@ export const upcomingShows = [
     eventId: siteConfig.tickets?.eventId, // For Eventbrite modal
     isShowcase: true,
     almostSoldOut: true, // Set to true to show "almost sold out" indicator
+    soldOut: true, // Set to true when show is sold out
     highlights: {
       duration: "90 minutes",
       ages: "Ages 18+",

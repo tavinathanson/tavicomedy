@@ -8,7 +8,7 @@ export default function ShowCard({ show }) {
 
   // Initialize Eventbrite widget once on component mount
   useEffect(() => {
-    if (show.isShowcase && siteConfig.showcaseTicketsAvailable && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:') {
+    if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:') {
       // Wait for EBWidgets to be available
       const initWidget = () => {
         if (window.EBWidgets) {
@@ -51,7 +51,7 @@ export default function ShowCard({ show }) {
         setTimeout(() => clearInterval(checkInterval), 5000)
       }
     }
-  }, [show.isShowcase, show.eventId, show.id])
+  }, [show.isShowcase, show.eventId, show.id, show.soldOut])
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
@@ -100,7 +100,16 @@ export default function ShowCard({ show }) {
           {show.isShowcase && !siteConfig.showcaseTicketsAvailable && (
             <span className="text-sm text-gray-600 block mt-1">Tickets coming soon</span>
           )}
-          {show.almostSoldOut && siteConfig.showcaseTicketsAvailable && (
+          {show.soldOut && siteConfig.showcaseTicketsAvailable && (
+            <div className="mt-2 inline-flex items-center gap-1.5 bg-red-50 text-red-700 px-3 py-1.5 rounded-md text-sm font-medium border border-red-200">
+              <span className="text-base">⛔</span>
+              <span>Sold Out Online</span>
+            </div>
+          )}
+          {show.soldOut && siteConfig.showcaseTicketsAvailable && (
+            <span className="text-sm text-gray-600 block mt-2">Limited tickets may be available at the door (not guaranteed)</span>
+          )}
+          {show.almostSoldOut && !show.soldOut && siteConfig.showcaseTicketsAvailable && (
             <div className="mt-2 inline-flex items-center gap-1.5 bg-orange-50 text-orange-700 px-3 py-1.5 rounded-md text-sm font-medium border border-orange-200">
               <span className="text-base">🔥</span>
               <span>Almost Sold Out</span>
@@ -244,23 +253,29 @@ export default function ShowCard({ show }) {
         {/* CTA Button - Full width at bottom */}
         <div className="mt-auto pt-6">
           <a
-            href={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : show.ticketLink}
-            target={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '_self' : '_blank'}
-            rel={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? undefined : 'noopener noreferrer'}
+            href={show.soldOut ? '#updates' : (show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : show.ticketLink)}
+            target={show.soldOut ? '_self' : (show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '_self' : '_blank')}
+            rel={show.soldOut ? undefined : (show.isShowcase && !siteConfig.showcaseTicketsAvailable ? undefined : 'noopener noreferrer')}
             className={`${show.isOpenMic ? 'btn-secondary' : 'btn-primary'} w-full !py-4 text-base sm:text-lg font-semibold`}
             onClick={(e) => {
               if (typeof window !== 'undefined' && window.fbq) {
                 window.fbq('track', 'Lead')
               }
+              // If sold out, scroll to updates section
+              if (show.soldOut) {
+                e.preventDefault()
+                document.querySelector('#updates')?.scrollIntoView({ behavior: 'smooth' })
+                return
+              }
               // If Eventbrite modal is enabled, prevent default link behavior
               // The modal is initialized via useEffect and will handle the click automatically
-              if (show.isShowcase && siteConfig.showcaseTicketsAvailable && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
+              if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
                 e.preventDefault()
               }
             }}
-            id={show.isShowcase && siteConfig.showcaseTicketsAvailable ? `eb-showcard-${show.id}` : undefined}
+            id={show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut ? `eb-showcard-${show.id}` : undefined}
           >
-            {show.isOpenMic ? 'Sign Up →' : (siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonText : siteConfig.noTickets.buttonText)}
+            {show.isOpenMic ? 'Sign Up →' : (show.soldOut ? 'Sold Out - Join Mailing List →' : (siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonText : siteConfig.noTickets.buttonText))}
           </a>
         </div>
       </div>

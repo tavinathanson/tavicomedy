@@ -143,31 +143,38 @@ export default function Home() {
 
           {/* Primary CTA - Full width on mobile, centered */}
           <div className="flex flex-col items-center gap-4 max-w-2xl mx-auto w-full px-2">
-            <a
-              href={primaryCTA.href}
-              target={primaryCTA.target}
-              rel={primaryCTA.rel}
-              className="btn-primary text-lg sm:text-xl md:text-2xl w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 backdrop-blur-sm font-semibold"
-              onClick={(e) => {
-                if (typeof window !== 'undefined' && window.fbq) {
-                  window.fbq('track', 'Lead')
-                }
-                // If sold out, scroll to updates section
-                if (isShowcaseSoldOut) {
-                  e.preventDefault()
-                  document.querySelector('#updates')?.scrollIntoView({ behavior: 'smooth' })
-                  return
-                }
-                // If Eventbrite modal is enabled, prevent default link behavior
-                // The modal is initialized via useEffect and will handle the click automatically
-                if (primaryCTA.isEventbrite && primaryCTA.eventId && !isShowcaseSoldOut && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
-                  e.preventDefault()
-                }
-              }}
-              id={primaryCTA.isEventbrite ? 'eb-primary-cta' : undefined}
-            >
-              {primaryCTA.text} →
-            </a>
+            <div className="w-full sm:w-auto flex flex-col items-center">
+              <a
+                href={primaryCTA.href}
+                target={primaryCTA.target}
+                rel={primaryCTA.rel}
+                className="btn-primary text-lg sm:text-xl md:text-2xl w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 backdrop-blur-sm font-semibold"
+                onClick={(e) => {
+                  if (typeof window !== 'undefined' && window.fbq) {
+                    window.fbq('track', 'Lead')
+                  }
+                  // If sold out, scroll to updates section
+                  if (isShowcaseSoldOut) {
+                    e.preventDefault()
+                    document.querySelector('#updates')?.scrollIntoView({ behavior: 'smooth' })
+                    return
+                  }
+                  // If Eventbrite modal is enabled, prevent default link behavior
+                  // The modal is initialized via useEffect and will handle the click automatically
+                  if (primaryCTA.isEventbrite && primaryCTA.eventId && !isShowcaseSoldOut && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
+                    e.preventDefault()
+                  }
+                }}
+                id={primaryCTA.isEventbrite ? 'eb-primary-cta' : undefined}
+              >
+                {primaryCTA.text} →
+              </a>
+              {isShowcaseSoldOut && (
+                <p className="text-white/90 text-sm sm:text-base mt-2 text-center backdrop-blur-sm bg-white/10 px-4 py-2 rounded-lg border border-white/20">
+                  Limited tickets may be available at the door (not guaranteed)
+                </p>
+              )}
+            </div>
 
             {/* Secondary CTAs */}
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -208,13 +215,6 @@ export default function Home() {
               >
                 Stay in the Loop: Get Updates →
               </a>
-            </div>
-          )}
-          {isShowcaseSoldOut && (
-            <div className="mt-6 text-center">
-              <p className="text-white/90 text-base sm:text-lg">
-                Limited tickets may be available at the door (not guaranteed)
-              </p>
             </div>
           )}
         </div>

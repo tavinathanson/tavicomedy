@@ -237,7 +237,7 @@ export default function Home() {
                 document.querySelector('#feedback')?.scrollIntoView({ behavior: 'smooth' })
               }}
             >
-              Share feedback ↓
+              Been to a show? Share feedback ↓
             </a>
           </div>
         </div>

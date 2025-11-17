@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { testimonial } = req.body
+    const { testimonial, name } = req.body
 
     // Validate input
     if (!testimonial || testimonial.trim().length === 0) {
@@ -16,6 +16,10 @@ export default async function handler(req, res) {
 
     if (testimonial.length > 500) {
       return res.status(400).json({ error: 'Testimonial must be 500 characters or less' })
+    }
+
+    if (name && name.length > 50) {
+      return res.status(400).json({ error: 'Name must be 50 characters or less' })
     }
 
     // Get credentials from environment variables
@@ -49,13 +53,14 @@ export default async function handler(req, res) {
     const rowData = [
       timestamp,
       testimonial.trim(),
+      name ? name.trim() : '',
       'website'
     ]
 
     // Append to sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: `${sheetName}!A:C`,
+      range: `${sheetName}!A:D`,
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       resource: {

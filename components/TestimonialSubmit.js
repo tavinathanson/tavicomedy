@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 export default function TestimonialSubmit() {
   const [testimonial, setTestimonial] = useState('')
+  const [name, setName] = useState('')
   const [status, setStatus] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -24,6 +25,7 @@ export default function TestimonialSubmit() {
         },
         body: JSON.stringify({
           testimonial: testimonial.trim(),
+          name: name.trim() || null,
         }),
       })
 
@@ -32,6 +34,7 @@ export default function TestimonialSubmit() {
       if (response.ok) {
         setStatus(data.message || 'Thanks for sharing!')
         setTestimonial('')
+        setName('')
       } else {
         setStatus(data.error || 'Something went wrong. Please try again.')
       }
@@ -47,7 +50,7 @@ export default function TestimonialSubmit() {
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-6">
         <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">Been to a show?</h3>
-        <p className="text-gray-600">Share your experience anonymously</p>
+        <p className="text-gray-600">Share your experience. We may use it as a testimonial!</p>
       </div>
 
       <form onSubmit={handleSubmit} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 sm:p-8 shadow-sm border border-purple-100">
@@ -60,6 +63,23 @@ export default function TestimonialSubmit() {
           disabled={isSubmitting}
           className="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-comedy-purple focus:ring-2 focus:ring-comedy-purple/20 focus:outline-none resize-none text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed transition-all bg-white shadow-sm"
         />
+
+        <div className="mt-4 pt-3 border-t border-purple-100">
+          <label htmlFor="name-input" className="block text-xs text-gray-500 mb-1.5 text-center">
+            Want to add your name? (completely optional)
+          </label>
+          <input
+            id="name-input"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Sarah J."
+            maxLength="50"
+            disabled={isSubmitting}
+            className="w-full px-3 py-2 text-sm rounded-lg border border-purple-200 focus:border-comedy-purple focus:ring-1 focus:ring-comedy-purple/20 focus:outline-none text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed transition-all bg-white"
+          />
+        </div>
+
         <div className="flex items-center justify-between mt-4">
           <span className="text-sm text-gray-500 font-medium">
             {testimonial.length}/500

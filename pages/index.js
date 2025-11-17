@@ -5,7 +5,9 @@ import Navigation from '@/components/Navigation'
 import ShowCard from '@/components/ShowCard'
 import EmailSignup from '@/components/EmailSignup'
 import TestimonialSubmit from '@/components/TestimonialSubmit'
+import ComedianGrid from '@/components/ComedianGrid'
 import { upcomingShows } from '@/data/shows'
+import { comedians } from '@/data/comedians'
 import { siteConfig } from '@/config/site'
 import { FaInstagram } from 'react-icons/fa'
 
@@ -289,13 +291,24 @@ export default function Home() {
           <h2 className="text-3xl md:text-5xl font-display uppercase tracking-tight text-center mb-8 md:mb-12">About Tavi Comedy Lab</h2>
           <div className="prose prose-lg mx-auto text-gray-700">
             <p className="text-xl leading-relaxed">
-              <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text">Tavi Nathanson</a> produces live comedy shows in the Lawrenceville/Princeton area. <span className="italic">Crave Laughs</span> has grown into one of the most popular comedy shows in the area, 
-              regularly selling out with 80+ attendees. 
+              <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text">Tavi Nathanson</a> produces live comedy shows in the Lawrenceville/Princeton area. <span className="italic">Crave Laughs</span> has grown into one of the most popular comedy shows in the area,
+              regularly selling out with 80+ attendees.
             </p>
             <p className="text-xl leading-relaxed mt-6">
               <span className="italic">Tavi Comedy Lab</span> is about creating a fun, supportive space for comedy in the Lawrenceville/Princeton area.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Comedians Section */}
+      <section id="comedians" className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto section-padding">
+          <h2 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-center mb-3">Past Performers</h2>
+          <p className="text-gray-600 text-center mb-8 text-sm md:text-base">
+            Check out some of the talented comedians who have performed at our shows
+          </p>
+          <ComedianGrid comedians={comedians} />
         </div>
       </section>
 

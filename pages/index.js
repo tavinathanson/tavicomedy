@@ -282,6 +282,18 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          {/* Single Testimonial */}
+          <div className="mt-12 max-w-3xl mx-auto">
+            <blockquote className="text-center">
+              <p className="text-base md:text-lg text-gray-700 italic leading-relaxed">
+                &ldquo;Really enjoyed the show Saturday night. Great choice of talent. High quality and pace the whole evening.&rdquo;
+              </p>
+              <footer className="mt-2 text-sm text-gray-600 font-medium">
+                &mdash; Martin A.
+              </footer>
+            </blockquote>
+          </div>
         </div>
       </section>
 

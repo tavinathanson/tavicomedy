@@ -44,43 +44,45 @@ export default function TestimonialSubmit() {
   }
 
   return (
-    <div className="bg-white border-2 border-gray-200 rounded-xl p-6 max-w-2xl mx-auto">
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">Been to the show before?</h3>
-      <p className="text-gray-600 mb-4">Leave an anonymous testimonial</p>
+    <div className="max-w-2xl mx-auto">
+      <div className="text-center mb-6">
+        <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">Been to a show?</h3>
+        <p className="text-gray-600">Share your experience anonymously</p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 sm:p-8 shadow-sm border border-purple-100">
         <textarea
           value={testimonial}
           onChange={(e) => setTestimonial(e.target.value)}
-          placeholder="Share your experience..."
-          rows="3"
+          placeholder="What did you think of the show?"
+          rows="4"
           maxLength="500"
           disabled={isSubmitting}
-          className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-comedy-purple focus:outline-none resize-none text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed"
+          className="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-comedy-purple focus:ring-2 focus:ring-comedy-purple/20 focus:outline-none resize-none text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed transition-all bg-white shadow-sm"
         />
-        <div className="flex items-center justify-between mt-3">
-          <span className="text-sm text-gray-500">
+        <div className="flex items-center justify-between mt-4">
+          <span className="text-sm text-gray-500 font-medium">
             {testimonial.length}/500
           </span>
           <button
             type="submit"
             disabled={isSubmitting || !testimonial.trim()}
-            className="px-6 py-2 bg-comedy-purple text-white font-medium rounded-lg hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-comedy-purple focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="px-8 py-3 bg-comedy-purple text-white font-semibold rounded-xl hover:bg-purple-700 hover:shadow-lg transition-all focus:outline-none focus:ring-4 focus:ring-comedy-purple/30 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-105 active:scale-95"
           >
             {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
         </div>
-      </form>
 
-      {status && !status.includes('Submitting') && (
-        <div className={`mt-4 p-3 rounded-lg text-sm ${
-          status.includes('Thanks')
-            ? 'bg-green-50 border border-green-200 text-green-800'
-            : 'bg-red-50 border border-red-200 text-red-800'
-        }`}>
-          <p>{status}</p>
-        </div>
-      )}
+        {status && !status.includes('Submitting') && (
+          <div className={`mt-4 p-4 rounded-xl text-sm font-medium ${
+            status.includes('Thanks')
+              ? 'bg-green-100 text-green-800 border border-green-200'
+              : 'bg-red-100 text-red-800 border border-red-200'
+          }`}>
+            <p className="text-center">{status}</p>
+          </div>
+        )}
+      </form>
     </div>
   )
 }

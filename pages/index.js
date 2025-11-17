@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import Navigation from '@/components/Navigation'
 import ShowCard from '@/components/ShowCard'
 import EmailSignup from '@/components/EmailSignup'
+import TestimonialSubmit from '@/components/TestimonialSubmit'
 import { upcomingShows } from '@/data/shows'
 import { siteConfig } from '@/config/site'
 import { FaInstagram } from 'react-icons/fa'
@@ -217,6 +218,20 @@ export default function Home() {
               </a>
             </div>
           )}
+
+          {/* Testimonial link - subtle and separate */}
+          <div className="mt-4 text-center">
+            <a
+              href="#feedback"
+              className="text-white/60 hover:text-white/90 text-sm transition-colors inline-flex items-center gap-1"
+              onClick={(e) => {
+                e.preventDefault()
+                document.querySelector('#feedback')?.scrollIntoView({ behavior: 'smooth' })
+              }}
+            >
+              Share feedback ↓
+            </a>
+          </div>
         </div>
       </section>
 
@@ -338,6 +353,13 @@ export default function Home() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Testimonial Section */}
+      <section id="feedback" className="py-16 bg-white">
+        <div className="section-padding">
+          <TestimonialSubmit />
         </div>
       </section>
 

@@ -4,20 +4,18 @@ export const upcomingShows = [
   {
     id: 1,
     name: "Crave Laughs Standup Comedy Show",
-    date: siteConfig.showcaseTicketsAvailable ? siteConfig.nextShowDate : siteConfig.noTickets.dateText,
+    date: siteConfig.nextShowDate,
     time: "7:00 PM",
     doors: "5:30 PM",
     price: "$20",
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
-    description: "A standup comedy show in Lawrenceville! See talented comedians at a great neighborhood venue. BYOB!",
-    vibe: "Our shows regularly sell out with 80+ attendees! Don't wait to get your ticket!",
+    description: "A standup comedy show in Lawrenceville! Lineup coming soon. BYOB!",
+    vibe: "Our shows regularly sell out with 80+ attendees! Mark your calendar and join the mailing list to get notified when tickets are available.",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     ticketLink: "https://cravelaughs.eventbrite.com",
     eventId: siteConfig.tickets?.eventId, // For Eventbrite modal
     isShowcase: true,
-    almostSoldOut: true, // Set to true to show "almost sold out" indicator
-    soldOut: true, // Set to true when show is sold out
     highlights: {
       duration: "90 minutes",
       ages: "Ages 18+",
@@ -25,51 +23,10 @@ export const upcomingShows = [
       parking: "Free street parking nearby"
     },
     additionalInfo: [
-      "Tickets are <strong>$20 online, or at the door if available—no extra taxes or fees!</strong> Refundable up to 2 days before the show.",
+      "Tickets will be <strong>$20 online, or at the door if available—no extra taxes or fees!</strong> Refundable up to 2 days before the show.",
       "Seating is limited, so pre-purchase is highly recommended.",
       "<strong>BYOB!</strong> There is a one item minimum purchase at Crave, and you are welcome to bring your own beverages.",
       "<strong>Parking at Crave is limited.</strong> Free street parking is available on nearby residential streets within a block or two. Please allow extra time to find a spot."
-    ],
-    performers: [
-      {
-        name: "Steve Schwarz",
-        instagram: "steve_schwarz_nj",
-        credits: "Willie McBride's",
-        bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
-      },
-      {
-        name: "Chelsea Moroski",
-        instagram: "chelseamoroski",
-        bio: "Chelsea Moroski's a comic who has been terrorizing New Jersey for an unknown amount of time. She is a shy adult."
-      },
-      {
-        name: "Foster Nicholson",
-        instagram: "thegeniusfos",
-        credits: "Apollo Theater",
-        bio: "Foster Nicholson is a comedian and actor born out of Brooklyn, NY and raised in Howell, NJ. Foster has been performing stand-up comedy for over 20 years and was most recently seen performing at the world-renowned Apollo."
-      },
-      {
-        name: "Abe Shapiro",
-        instagram: "abeshaps",
-        bio: "Abe Shapiro is a 22-year-old comic working out of NYC. He's been working consistently in Manhattan clubs since he started performing at 18."
-      },
-      {
-        name: "John Montague",
-        instagram: "montaguecomedy",
-        bio: "Philly/South Jersey area comedian John Montague, coming in at a commanding 6'0\" with the tools to really knock it out of the park or rally the troops in the boardroom. You'll leave saying \"what was that guy's name again?!?!\""
-      },
-      {
-        name: "Josh Tinley",
-        instagram: "thatsjtcomedy",
-        credits: "One of the Good Ones podcast, @badqualityandco",
-        bio: "Josh is a comedian from New Brunswick, NJ. He frequents many of the best clubs in NYC and NJ. He is the host of the podcast \"One of the Good Ones\" and also has a really funny sketch page on Instagram @badqualityandco."
-      },
-      {
-        name: "Carla Ulbrich",
-        instagram: "carlaucomedy",
-        credits: "WSM, BBC, Dr. Demento, SiriusXM Comedy Radio, NPR's Morning Edition",
-        bio: "Carla Ulbrich is a musical comedian whose witty songs cover topics such as Waffle House, Klingons, and psycho exes. Her songs have been aired on WSM, the BBC, Dr. Demento, SiriusXM Comedy Radio, and NPR's Morning Edition."
-      }
     ]
   },
   {

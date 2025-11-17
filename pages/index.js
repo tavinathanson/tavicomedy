@@ -39,11 +39,17 @@ export default function Home() {
   const isShowcaseSoldOut = primaryShowcase?.soldOut || false
 
   // Primary CTA - Show tickets
+  // Check if we have a real date (contains a comma, indicating a formatted date)
+  const hasNextShowDate = siteConfig.nextShowDate.includes(',')
+  const nextShowButtonText = !siteConfig.showcaseTicketsAvailable && hasNextShowDate
+    ? `${siteConfig.noTickets.buttonText}: Next Show ${showDate}`
+    : siteConfig.noTickets.buttonText
+
   const primaryCTA = {
     href: isShowcaseSoldOut ? '#updates' : (siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonLink : siteConfig.noTickets.buttonLink),
     target: isShowcaseSoldOut ? "_self" : (siteConfig.showcaseTicketsAvailable ? "_blank" : "_self"),
     rel: isShowcaseSoldOut ? undefined : (siteConfig.showcaseTicketsAvailable ? "noopener noreferrer" : undefined),
-    text: isShowcaseSoldOut ? 'Sold Out - Join Mailing List' : (siteConfig.showcaseTicketsAvailable ? `${siteConfig.tickets.buttonText} for ${showDate}` : siteConfig.noTickets.buttonText),
+    text: isShowcaseSoldOut ? 'Sold Out - Join Mailing List' : (siteConfig.showcaseTicketsAvailable ? `${siteConfig.tickets.buttonText} for ${showDate}` : nextShowButtonText),
     isEventbrite: siteConfig.showcaseTicketsAvailable && !isShowcaseSoldOut,
     eventId: (siteConfig.showcaseTicketsAvailable && !isShowcaseSoldOut) ? siteConfig.tickets.eventId : null
   }

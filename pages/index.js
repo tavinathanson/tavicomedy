@@ -283,16 +283,36 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Single Testimonial */}
-          <div className="mt-12 max-w-3xl mx-auto">
-            <blockquote className="text-center">
-              <p className="text-base md:text-lg text-gray-700 italic leading-relaxed">
-                &ldquo;Really enjoyed the show Saturday night. Great choice of talent. High quality and pace the whole evening.&rdquo;
-              </p>
-              <footer className="mt-2 text-sm text-gray-600 font-medium">
-                &mdash; Martin A.
-              </footer>
-            </blockquote>
+          {/* Testimonials */}
+          <div className="mt-12 max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-8">
+              <blockquote className="text-center">
+                <p className="text-base md:text-lg text-gray-700 italic leading-relaxed">
+                  &ldquo;Really enjoyed the show Saturday night. Great choice of talent. High quality and pace the whole evening.&rdquo;
+                </p>
+                <footer className="mt-3 text-sm text-gray-600 font-medium">
+                  &mdash; Martin A.
+                </footer>
+              </blockquote>
+
+              <blockquote className="text-center">
+                <p className="text-base md:text-lg text-gray-700 italic leading-relaxed">
+                  &ldquo;Both shows that I&apos;ve been to were defined by joy and consistent belly laughter! [...] A diverse plethora of delightful personalities who know how to tell a story and make us erupt in laughter.&rdquo;
+                </p>
+                <footer className="mt-3 text-sm text-gray-600 font-medium">
+                  &mdash; Angel M.
+                </footer>
+              </blockquote>
+
+              <blockquote className="text-center">
+                <p className="text-base md:text-lg text-gray-700 italic leading-relaxed">
+                  &ldquo;Comedians and host were amazing. I love that it&apos;s easy to order food ahead of time. [...] Wish you had shows twice a month.&rdquo;
+                </p>
+                <footer className="mt-3 text-sm text-gray-600 font-medium">
+                  &mdash; Amber W.
+                </footer>
+              </blockquote>
+            </div>
           </div>
         </div>
       </section>

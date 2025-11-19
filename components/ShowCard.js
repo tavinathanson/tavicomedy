@@ -3,6 +3,48 @@ import { siteConfig } from '@/config/site'
 import { useState, useEffect } from 'react'
 import { MdMeetingRoom } from 'react-icons/md'
 
+// Convert 12h time to 24h format (e.g., "7:00 PM" -> "19:00")
+function to24Hour(time12h) {
+  const match = time12h.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i)
+  if (!match) return null
+
+  let hours = parseInt(match[1])
+  const minutes = match[2]
+  const isPM = match[3].toUpperCase() === 'PM'
+
+  if (isPM && hours !== 12) hours += 12
+  if (!isPM && hours === 12) hours = 0
+
+  return `${String(hours).padStart(2, '0')}:${minutes}`
+}
+
+// Generate Google Calendar URL for a show
+function generateCalendarUrl(show) {
+  if (!show.calendarDate || !show.time) return null
+
+  const time24 = to24Hour(show.time)
+  if (!time24) return null
+
+  // Format for Google Calendar
+  const date = show.calendarDate.replace(/-/g, '')
+  const time = time24.replace(':', '') + '00'
+
+  // End time: 2 hours after start
+  const [h, m] = time24.split(':').map(Number)
+  const endTime = `${String(h + 2).padStart(2, '0')}${String(m).padStart(2, '0')}00`
+
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: show.name,
+    dates: `${date}T${time}/${date}T${endTime}`,
+    details: show.description,
+    location: `${show.venue}, ${show.location}`,
+    ctz: 'America/New_York'
+  })
+
+  return `https://www.google.com/calendar/render?${params.toString()}`
+}
+
 export default function ShowCard({ show }) {
   const [expanded, setExpanded] = useState(false)
 
@@ -125,7 +167,13 @@ export default function ShowCard({ show }) {
         {/* Key Info */}
         <div className="space-y-2 text-sm sm:text-base text-gray-600 mb-4">
           <p className="flex items-center">
-            <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 mr-2 flex-shrink-0 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span className="font-medium">{show.date}</span>
+          </p>
+          <p className="flex items-center">
+            <svg className="w-5 h-5 mr-2 flex-shrink-0 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="font-medium">{show.time}</span>
@@ -134,7 +182,7 @@ export default function ShowCard({ show }) {
             )}
           </p>
           <p className="flex items-center">
-            <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 mr-2 flex-shrink-0 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
@@ -147,6 +195,22 @@ export default function ShowCard({ show }) {
               {show.venue}, {show.location}
             </a>
           </p>
+          {/* Add to Calendar link */}
+          {generateCalendarUrl(show) && (
+            <p className="flex items-center">
+              <svg className="w-5 h-5 mr-2 flex-shrink-0 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <a
+                href={generateCalendarUrl(show)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-comedy-purple hover:text-comedy-purple/80 transition-colors hover:underline font-medium"
+              >
+                Add to Google Calendar
+              </a>
+            </p>
+          )}
         </div>
 
         {/* Description */}

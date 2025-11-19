@@ -1,14 +1,28 @@
 // Site configuration - easily toggle between modes
 
+// Format date for display (e.g., "2026-02-07" -> "Saturday, February 7, 2026")
+function formatDisplayDate(dateStr) {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  const date = new Date(year, month - 1, day)
+  return date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
 export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
   showcaseTicketsAvailable: false,
 
-  // When showcaseTicketsAvailable is true, set the show date
-  nextShowDate: "Saturday, February 7, 2026", // Update this when you have a date!
+  // Show date in YYYY-MM-DD format (single source of truth)
+  nextShowDateISO: "2026-02-07",
+  get nextShowDate() { return formatDisplayDate(this.nextShowDateISO) },
 
-  // Open mic date
-  nextOpenMicDate: "Thursday, November 20, 2025",
+  // Open mic date in YYYY-MM-DD format
+  nextOpenMicDateISO: "2025-11-20",
+  get nextOpenMicDate() { return formatDisplayDate(this.nextOpenMicDateISO) },
 
   // No tickets available mode (when showcaseTicketsAvailable is false)
   noTickets: {

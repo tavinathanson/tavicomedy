@@ -388,19 +388,15 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <h3 className="text-xl font-bold text-comedy-dark mb-3">I can&apos;t make this one but I&apos;m interested in the next one!</h3>
               <p className="text-gray-700">
-                Want to stay updated about shows and open mics? Email{' '}
-                <a href="mailto:tavi@tavicomedy.com" className="link-text">
-                  tavi@tavicomedy.com
+                Want to stay updated about shows and open mics?{' '}
+                <a href="#updates" className="link-text">
+                  Join the mailing list
                 </a>
                 {' '}or follow{' '}
                 <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text">
                   @tavinathanson
                 </a>
-                {' '}on Instagram, or{' '}
-                <a href="#updates" className="link-text">
-                  join the mailing list
-                </a>
-                .
+                {' '}on Instagram.
               </p>
             </div>
           </div>

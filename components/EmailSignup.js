@@ -4,6 +4,7 @@ import { FaInstagram } from 'react-icons/fa'
 export default function EmailSignup() {
   const [email, setEmail] = useState('')
   const [interestType, setInterestType] = useState('both') // 'shows', 'openmics', or 'both'
+  const [howFound, setHowFound] = useState('')
   const [status, setStatus] = useState('')
 
   const handleSubmit = async (e) => {
@@ -25,6 +26,7 @@ export default function EmailSignup() {
         body: JSON.stringify({
           email,
           interestType,
+          howFound,
         }),
       })
 
@@ -33,6 +35,7 @@ export default function EmailSignup() {
       if (response.ok) {
         setStatus(data.message || 'Thanks for signing up!')
         setEmail('')
+        setHowFound('')
 
         // Track Meta Pixel conversion event for successful mailing list signup
         if (typeof window !== 'undefined' && window.fbq) {
@@ -155,6 +158,14 @@ export default function EmailSignup() {
               Subscribe
             </button>
           </div>
+
+          <input
+            type="text"
+            value={howFound}
+            onChange={(e) => setHowFound(e.target.value)}
+            placeholder="How'd you find this? (optional)"
+            className="mt-3 w-full px-4 py-2 rounded-lg text-white/90 bg-white/10 placeholder-white/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/15 text-sm"
+          />
         </form>
 
         {status && (

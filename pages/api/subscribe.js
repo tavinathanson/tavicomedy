@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, interestType } = req.body
+    const { email, interestType, howFound } = req.body
 
     // Validate input
     if (!email || !email.includes('@')) {
@@ -66,7 +66,8 @@ export default async function handler(req, res) {
       showsInterest,
       openMicsInterest,
       timestamp,
-      'website'
+      'website',
+      howFound || ''
     ]
 
     if (emailIndex > 0) {
@@ -74,7 +75,7 @@ export default async function handler(req, res) {
       const rowNumber = emailIndex + 1
       await sheets.spreadsheets.values.update({
         spreadsheetId,
-        range: `${sheetName}!A${rowNumber}:E${rowNumber}`,
+        range: `${sheetName}!A${rowNumber}:F${rowNumber}`,
         valueInputOption: 'RAW',
         resource: {
           values: [rowData],
@@ -90,7 +91,7 @@ export default async function handler(req, res) {
       // New email, append to sheet
       await sheets.spreadsheets.values.append({
         spreadsheetId,
-        range: `${sheetName}!A:E`,
+        range: `${sheetName}!A:F`,
         valueInputOption: 'RAW',
         insertDataOption: 'INSERT_ROWS',
         resource: {

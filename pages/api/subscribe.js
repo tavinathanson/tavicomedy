@@ -1,4 +1,5 @@
 import { google } from 'googleapis'
+import { sendSubscriptionConfirmation } from '../../lib/resend'
 
 export default async function handler(req, res) {
   // Only allow POST requests
@@ -98,6 +99,12 @@ export default async function handler(req, res) {
           values: [rowData],
         },
       })
+
+      // Send confirmation email (don't fail the request if this fails)
+      const emailResult = await sendSubscriptionConfirmation(email, interestType)
+      if (!emailResult.success) {
+        console.error('Failed to send confirmation email:', emailResult.error)
+      }
 
       return res.status(200).json({
         success: true,

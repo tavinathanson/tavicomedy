@@ -47,59 +47,50 @@ export default function TestimonialSubmit() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-md mx-auto">
       <div className="text-center mb-6">
-        <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">Been to a show?</h3>
-        <p className="text-gray-600">Share your experience. We may use it as a testimonial!</p>
+        <h3 className="text-xl font-semibold text-gray-900 mb-1">Been to a show?</h3>
+        <p className="text-gray-500 text-sm">Share your experience. We may use it as a testimonial.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 sm:p-8 shadow-sm border border-purple-100">
+      <form onSubmit={handleSubmit}>
         <textarea
           value={testimonial}
           onChange={(e) => setTestimonial(e.target.value)}
-          placeholder="What did you think of the show?"
-          rows="4"
+          placeholder="What did you think?"
+          rows="3"
           maxLength="500"
           disabled={isSubmitting}
-          className="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-comedy-purple focus:ring-2 focus:ring-comedy-purple/20 focus:outline-none resize-none text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed transition-all bg-white shadow-sm"
+          className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-comedy-purple focus:ring-1 focus:ring-comedy-purple/20 focus:outline-none resize-none text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed transition-all text-sm"
         />
 
-        <div className="mt-4 pt-3 border-t border-purple-100">
-          <label htmlFor="name-input" className="block text-xs text-gray-500 mb-1.5 text-center">
-            Want to add your name? (completely optional)
-          </label>
+        <div className="mt-3 flex items-center gap-3">
           <input
             id="name-input"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Sarah J."
+            placeholder="Name (optional)"
             maxLength="50"
             disabled={isSubmitting}
-            className="w-full px-3 py-2 text-sm rounded-lg border border-purple-200 focus:border-comedy-purple focus:ring-1 focus:ring-comedy-purple/20 focus:outline-none text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed transition-all bg-white"
+            className="flex-1 px-3 py-2 text-sm rounded-lg border border-gray-200 focus:border-comedy-purple focus:ring-1 focus:ring-comedy-purple/20 focus:outline-none text-gray-900 placeholder-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed transition-all"
           />
-        </div>
-
-        <div className="flex items-center justify-between mt-4">
-          <span className="text-sm text-gray-500 font-medium">
-            {testimonial.length}/500
-          </span>
           <button
             type="submit"
             disabled={isSubmitting || !testimonial.trim()}
-            className="px-8 py-3 bg-comedy-purple text-white font-semibold rounded-xl hover:bg-purple-700 hover:shadow-lg transition-all focus:outline-none focus:ring-4 focus:ring-comedy-purple/30 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-105 active:scale-95"
+            className="px-5 py-2 bg-comedy-purple text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-comedy-purple/30 disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+            {isSubmitting ? '...' : 'Submit'}
           </button>
         </div>
 
         {status && !status.includes('Submitting') && (
-          <div className={`mt-4 p-4 rounded-xl text-sm font-medium ${
+          <div className={`mt-3 p-2 rounded text-sm text-center ${
             status.includes('Thanks')
-              ? 'bg-green-100 text-green-800 border border-green-200'
-              : 'bg-red-100 text-red-800 border border-red-200'
+              ? 'bg-green-50 text-green-700'
+              : 'bg-red-50 text-red-700'
           }`}>
-            <p className="text-center">{status}</p>
+            {status}
           </div>
         )}
       </form>

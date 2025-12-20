@@ -260,7 +260,7 @@ export default function Home() {
       </section>
 
       {/* Photo Gallery / Vibe Section */}
-      <section className="py-20">
+      <section className="py-20 bg-gradient-to-b from-white via-purple-50/30 to-white">
         <div className="max-w-7xl mx-auto section-padding">
           <h2 className="text-3xl md:text-5xl font-display uppercase tracking-tight text-center mb-4">The Vibe</h2>
           <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
@@ -318,84 +318,67 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto section-padding">
-          <h2 className="text-3xl md:text-5xl font-display uppercase tracking-tight text-center mb-8 md:mb-12">About Tavi Comedy Lab</h2>
-          <div className="prose prose-lg mx-auto text-gray-700">
-            <p className="text-xl leading-relaxed">
-              <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text">Tavi Nathanson</a> produces live comedy shows in the Lawrenceville/Princeton area. <span className="italic">Crave Laughs</span> has grown into one of the most popular comedy shows in the area,
-              regularly selling out with 80+ attendees.
-            </p>
-            <p className="text-xl leading-relaxed mt-6">
-              <span className="italic">Tavi Comedy Lab</span> is about creating a fun, supportive space for comedy in the Lawrenceville/Princeton area.
-            </p>
-          </div>
+      <section id="about" className="py-24 bg-gray-50">
+        <div className="max-w-2xl mx-auto section-padding">
+          <h2 className="text-sm font-medium uppercase tracking-widest mb-6 text-gray-400 text-center">About</h2>
+          <p className="text-gray-600 leading-relaxed">
+            <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text font-medium">Tavi Nathanson</a> produces live comedy shows in the Lawrenceville/Princeton area. <span className="italic">Crave Laughs</span> has grown into one of the most popular comedy shows in the area, regularly selling out with 80+ attendees.
+          </p>
+          <p className="text-gray-600 leading-relaxed mt-4">
+            <span className="italic">Tavi Comedy Lab</span> is about creating a fun, supportive space for comedy in the Lawrenceville/Princeton area.
+          </p>
         </div>
       </section>
 
       {/* Comedians Section */}
       <section id="comedians" className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto section-padding">
-          <h2 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-center mb-3">Past Performers</h2>
-          <p className="text-gray-600 text-center mb-8 text-sm md:text-base">
-            Check out some of the talented comedians who have performed at our shows
-          </p>
+        <div className="max-w-2xl mx-auto section-padding">
+          <h2 className="text-sm font-medium uppercase tracking-widest text-center mb-6 text-gray-400">Past Performers</h2>
           <ComedianGrid comedians={comedians} />
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 bg-purple-50">
-        <div className="max-w-4xl mx-auto section-padding">
-          <h2 className="text-3xl md:text-5xl font-display uppercase tracking-tight text-center mb-8 md:mb-12">Frequently Asked Questions</h2>
-          <div className="space-y-6">
-            {/* FAQ Item */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-comedy-dark mb-3">Are ticketed shows BYOB?</h3>
-              <p className="text-gray-700">Yes! BYOB is welcome at shows you buy a ticket for. Your purchase of food/drink from Crave keeps our BYOB policy possible!</p>
+      <section id="faq" className="py-24 bg-gray-50">
+        <div className="max-w-2xl mx-auto section-padding">
+          <h2 className="text-3xl md:text-4xl font-display uppercase tracking-tight text-center mb-12">FAQ</h2>
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-base font-semibold text-gray-900 mb-1">Are ticketed shows BYOB?</h3>
+              <p className="text-gray-500">Yes! BYOB is welcome at shows you buy a ticket for. Your purchase of food/drink from Crave keeps our BYOB policy possible.</p>
             </div>
 
-            {/* FAQ Item */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-comedy-dark mb-3">Is there a minimum purchase?</h3>
-              <p className="text-gray-700">Yes, there&apos;s a 1-item minimum per person at ticketed shows. Anything from the cafe menu counts! For free events like open mics, a purchase is highly encouraged to support the venue.</p>
+            <div>
+              <h3 className="text-base font-semibold text-gray-900 mb-1">Is there a minimum purchase?</h3>
+              <p className="text-gray-500">Yes, there&apos;s a 1-item minimum per person at ticketed shows. Anything from the cafe menu counts! For free events like open mics, a purchase is highly encouraged to support the venue.</p>
             </div>
 
-            {/* FAQ Item */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-comedy-dark mb-3">Are tickets refundable?</h3>
-              <p className="text-gray-700">Yes! Tickets for the standup show are refundable until two days before the show.</p>
+            <div>
+              <h3 className="text-base font-semibold text-gray-900 mb-1">Are tickets refundable?</h3>
+              <p className="text-gray-500">Yes! Tickets for the standup show are refundable until two days before the show.</p>
             </div>
 
-            {/* FAQ Item */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-comedy-dark mb-3">Where can I park?</h3>
-              <p className="text-gray-700">Parking at Crave is limited. Free street parking is also available on nearby residential streets within a block or two of the venue. Please allow a few extra minutes to find a spot.</p>
+            <div>
+              <h3 className="text-base font-semibold text-gray-900 mb-1">Where can I park?</h3>
+              <p className="text-gray-500">Parking at Crave is limited. Free street parking is available on nearby residential streets. Please allow a few extra minutes to find a spot.</p>
             </div>
 
-            {/* FAQ Item */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-comedy-dark mb-3">What sort of place is Crave?</h3>
-              <p className="text-gray-700">
-                Crave is a healthy cafe with a great setting for events and shows like this one. Check out their menu at{' '}
+            <div>
+              <h3 className="text-base font-semibold text-gray-900 mb-1">What sort of place is Crave?</h3>
+              <p className="text-gray-500">
+                A healthy cafe with a great setting for events. Check out their menu at{' '}
                 <a href="https://www.cravenatureseatery.com/menu-2023" target="_blank" rel="noopener noreferrer" className="link-text">
                   cravenatureseatery.com
                 </a>
               </p>
             </div>
 
-            {/* FAQ Item */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-comedy-dark mb-3">I can&apos;t make this one but I&apos;m interested in the next one!</h3>
-              <p className="text-gray-700">
-                Want to stay updated about shows and open mics?{' '}
-                <a href="#updates" className="link-text">
-                  Join the mailing list
-                </a>
+            <div>
+              <h3 className="text-base font-semibold text-gray-900 mb-1">I can&apos;t make this one but I&apos;m interested in the next one!</h3>
+              <p className="text-gray-500">
+                <a href="#updates" className="link-text">Join the mailing list</a>
                 {' '}or follow{' '}
-                <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text">
-                  @tavinathanson
-                </a>
+                <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text">@tavinathanson</a>
                 {' '}on Instagram.
               </p>
             </div>
@@ -404,14 +387,14 @@ export default function Home() {
       </section>
 
       {/* Testimonial Section */}
-      <section id="feedback" className="py-16 bg-white">
+      <section id="feedback" className="py-20 bg-white">
         <div className="section-padding">
           <TestimonialSubmit />
         </div>
       </section>
 
       {/* Email Updates Section */}
-      <section id="updates" className="py-20 bg-gray-50">
+      <section id="updates" className="py-20 bg-gradient-to-br from-purple-700 to-comedy-purple">
         <div className="section-padding">
           <EmailSignup />
         </div>

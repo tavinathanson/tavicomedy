@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { siteConfig } from '@/config/site'
 import { useState, useEffect } from 'react'
-import { MdMeetingRoom } from 'react-icons/md'
 
 // Convert 12h time to 24h format (e.g., "7:00 PM" -> "19:00")
 function to24Hour(time12h) {
@@ -96,8 +95,8 @@ export default function ShowCard({ show }) {
   }, [show.isShowcase, show.eventId, show.id, show.soldOut])
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
-      <div className="relative h-48 bg-gray-200">
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col h-full">
+      <div className="relative h-44 bg-gray-100">
         {/* Replace src with actual show images */}
         <Image
           src={show.image}
@@ -130,59 +129,33 @@ export default function ShowCard({ show }) {
         )}
       </div>
 
-      <div className="p-4 sm:p-6 flex flex-col flex-grow">
-        <h3 className="text-lg sm:text-xl font-bold text-comedy-dark mb-3">{show.name}</h3>
-
-        {/* Price prominently displayed */}
-        <div className="mb-4">
-          <span className="text-3xl sm:text-4xl font-bold text-comedy-purple">{show.price}</span>
-          {show.price !== "Free" && siteConfig.showcaseTicketsAvailable && (
-            <span className="text-sm text-gray-600 block mt-1">online • at door (if available) • no extra taxes or fees</span>
-          )}
-          {show.isShowcase && !siteConfig.showcaseTicketsAvailable && (
-            <span className="text-sm text-gray-600 block mt-1">Tickets coming soon</span>
-          )}
-          {show.soldOut && siteConfig.showcaseTicketsAvailable && (
-            <div className="mt-2 inline-flex items-center gap-1.5 bg-red-50 text-red-700 px-3 py-1.5 rounded-md text-sm font-medium border border-red-200">
-              <span className="text-base">⛔</span>
-              <span>Sold Out Online</span>
-            </div>
-          )}
-          {show.soldOut && siteConfig.showcaseTicketsAvailable && (
-            <span className="text-sm text-gray-600 block mt-2">Limited tickets may be available at the door (not guaranteed)</span>
-          )}
-          {show.almostSoldOut && !show.soldOut && siteConfig.showcaseTicketsAvailable && (
-            <div className="mt-2 inline-flex items-center gap-1.5 bg-orange-50 text-orange-700 px-3 py-1.5 rounded-md text-sm font-medium border border-orange-200">
-              <span className="text-base">🔥</span>
-              <span>Almost Sold Out</span>
-            </div>
-          )}
+      <div className="p-5 flex flex-col flex-grow">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-base font-semibold text-gray-900">{show.name}</h3>
+          <span className="text-lg font-semibold text-comedy-purple ml-3">{show.price}</span>
         </div>
 
-        {/* Event Details Section Header */}
-        <div className="border-t border-gray-200 pt-4 mb-4">
-          <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Event Details</h4>
-        </div>
+        {/* Status badges */}
+        {show.soldOut && siteConfig.showcaseTicketsAvailable && (
+          <p className="text-sm text-red-600 mb-3">Sold out online · limited door tickets may be available</p>
+        )}
+        {show.almostSoldOut && !show.soldOut && siteConfig.showcaseTicketsAvailable && (
+          <p className="text-sm text-orange-600 mb-3">Almost sold out</p>
+        )}
+        {show.isShowcase && !siteConfig.showcaseTicketsAvailable && (
+          <p className="text-sm text-gray-500 mb-3">Tickets coming soon</p>
+        )}
 
-        {/* Key Info */}
-        <div className="space-y-2 text-sm sm:text-base text-gray-600 mb-4">
-          <p className="flex items-center">
-            <svg className="w-5 h-5 mr-2 flex-shrink-0 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* Key Info with icons */}
+        <div className="space-y-2 text-sm mb-4">
+          <p className="flex items-center text-gray-700">
+            <svg className="w-4 h-4 mr-2 text-comedy-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <span className="font-medium">{show.date}</span>
+            <strong>{show.date}</strong><span className="mx-1">·</span>{show.time}{show.doors && <span className="text-gray-500 ml-1">· Doors {show.doors}</span>}
           </p>
-          <p className="flex items-center">
-            <svg className="w-5 h-5 mr-2 flex-shrink-0 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="font-medium">{show.time}</span>
-            {show.doors && (
-              <span className="text-xs text-gray-500 ml-2">• Doors {show.doors}</span>
-            )}
-          </p>
-          <p className="flex items-center">
-            <svg className="w-5 h-5 mr-2 flex-shrink-0 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <p className="flex items-center text-gray-700">
+            <svg className="w-4 h-4 mr-2 text-comedy-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
@@ -190,156 +163,132 @@ export default function ShowCard({ show }) {
               href="https://share.google/9tb5seashzWDsVGOr"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-comedy-purple transition-colors hover:underline"
+              className="hover:text-comedy-purple transition-colors"
             >
               {show.venue}, {show.location}
             </a>
           </p>
-          {/* Add to Calendar link */}
           {generateCalendarUrl(show) && (
             <p className="flex items-center">
-              <svg className="w-5 h-5 mr-2 flex-shrink-0 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 mr-2 text-comedy-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <a
                 href={generateCalendarUrl(show)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-comedy-purple hover:text-comedy-purple/80 transition-colors hover:underline font-medium"
+                className="text-comedy-purple hover:underline font-medium"
               >
-                Add to Google Calendar
+                Add to calendar
               </a>
             </p>
           )}
         </div>
 
         {/* Description */}
-        <p className="text-sm sm:text-base text-gray-700 mb-3">{show.description}</p>
+        <p className="text-sm text-gray-600 mb-4">{show.description}</p>
 
-        {/* Vibe/What to Expect */}
+        {/* Vibe */}
         {show.vibe && (
-          <div className="bg-gray-50 rounded-lg p-3 mb-4">
-            <p className="text-xs sm:text-sm text-gray-700 font-medium">{show.vibe}</p>
-          </div>
+          <p className="text-sm text-gray-500 italic mb-4">{show.vibe}</p>
         )}
 
-        {/* Highlights - Important Details */}
+        {/* Highlights - readable with icons */}
         {show.highlights && (
-          <div className="mb-4">
-            <h4 className="text-sm font-semibold text-gray-800 mb-2">Good to know:</h4>
-            <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
-              {show.highlights.duration && (
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>{show.highlights.duration}</span>
-                </div>
-              )}
-              {show.highlights.ages && (
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                  <span>{show.highlights.ages}</span>
-                </div>
-              )}
-              {show.highlights.format && (
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  <span>{show.highlights.format}</span>
-                </div>
-              )}
-              {show.highlights.doors && (
-                <div className="flex items-center">
-                  <MdMeetingRoom className="w-4 h-4 mr-1.5 flex-shrink-0" />
-                  <span>{show.highlights.doors}</span>
-                </div>
-              )}
-              {show.highlights.parking && (
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                  </svg>
-                  <span>{show.highlights.parking}</span>
-                </div>
-              )}
-            </div>
+          <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-4">
+            {show.highlights.duration && (
+              <span className="flex items-center">
+                <svg className="w-4 h-4 mr-1.5 text-comedy-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {show.highlights.duration}
+              </span>
+            )}
+            {show.highlights.ages && (
+              <span className="flex items-center">
+                <svg className="w-4 h-4 mr-1.5 text-comedy-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                {show.highlights.ages}
+              </span>
+            )}
+            {show.highlights.format && (
+              <span className="flex items-center">
+                <svg className="w-4 h-4 mr-1.5 text-comedy-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                {show.highlights.format}
+              </span>
+            )}
+            {show.highlights.parking && (
+              <span className="flex items-center">
+                <svg className="w-4 h-4 mr-1.5 text-comedy-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                </svg>
+                {show.highlights.parking}
+              </span>
+            )}
           </div>
         )}
 
         {/* Additional Info - Collapsible */}
         {show.additionalInfo && (
-          <div className="mb-4 border-t border-gray-200 pt-3">
+          <div className="mb-4">
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-sm font-medium text-comedy-purple hover:text-comedy-purple/80 flex items-center gap-1 transition-colors"
+              className="text-sm text-comedy-purple hover:underline font-medium"
             >
-              {expanded ? 'Less info' : 'More info'}
-              <svg
-                className={`w-4 h-4 transition-transform ${expanded ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+              {expanded ? '− Hide details' : '+ Show details'}
             </button>
             {expanded && (
-              <ul className="mt-3 text-xs sm:text-sm text-gray-700 space-y-2 list-disc pl-5">
+              <div className="mt-3 bg-gray-50 rounded-lg p-3 space-y-3">
                 {show.additionalInfo.map((info, index) => {
-                  // Simple safe HTML rendering - only allow <strong> tags
-                  const parts = info.split(/(<strong>.*?<\/strong>)/g)
+                  // Strip <strong> tags and just use the text
+                  const cleanText = info.replace(/<\/?strong>/g, '')
                   return (
-                    <li key={index}>
-                      {parts.map((part, i) => {
-                        if (part.startsWith('<strong>')) {
-                          const text = part.replace(/<\/?strong>/g, '')
-                          return <strong key={i}>{text}</strong>
-                        }
-                        return part
-                      })}
-                    </li>
+                    <div key={index} className="flex items-start gap-2 text-sm">
+                      <span className="text-comedy-purple mt-0.5">›</span>
+                      <span className="text-gray-700">{cleanText}</span>
+                    </div>
                   )
                 })}
-              </ul>
+              </div>
             )}
           </div>
         )}
 
-        {/* Performers - Show names, click to expand - only show when tickets available */}
+        {/* Performers - compact */}
         {show.performers && show.performers.length > 0 && siteConfig.showcaseTicketsAvailable && show.isShowcase && (
           <LineupSection performers={show.performers} />
         )}
 
-        {/* CTA Button - Full width at bottom */}
-        <div className="mt-auto pt-6">
+        {/* CTA Button */}
+        <div className="mt-auto pt-4">
           <a
             href={show.soldOut ? '#updates' : (show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : show.ticketLink)}
             target={show.soldOut ? '_self' : (show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '_self' : '_blank')}
             rel={show.soldOut ? undefined : (show.isShowcase && !siteConfig.showcaseTicketsAvailable ? undefined : 'noopener noreferrer')}
-            className={`${show.isOpenMic ? 'btn-secondary' : 'btn-primary'} w-full !py-4 text-base sm:text-lg font-semibold`}
+            className={`block w-full text-center py-3 rounded-lg font-medium transition-colors ${
+              show.isOpenMic
+                ? 'bg-comedy-green text-white hover:bg-green-700'
+                : 'bg-comedy-purple text-white hover:bg-purple-700'
+            }`}
             onClick={(e) => {
               if (typeof window !== 'undefined' && window.fbq) {
                 window.fbq('track', 'Lead')
               }
-              // If sold out, scroll to updates section
               if (show.soldOut) {
                 e.preventDefault()
                 document.querySelector('#updates')?.scrollIntoView({ behavior: 'smooth' })
                 return
               }
-              // If Eventbrite modal is enabled, prevent default link behavior
-              // The modal is initialized via useEffect and will handle the click automatically
               if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
                 e.preventDefault()
               }
             }}
             id={show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut ? `eb-showcard-${show.id}` : undefined}
           >
-            {show.isOpenMic ? 'Sign Up →' : (show.soldOut ? 'Sold Out - Join Mailing List →' : (siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.buttonText : siteConfig.noTickets.buttonText))}
+            {show.isOpenMic ? 'Sign Up' : (show.soldOut ? 'Join Mailing List' : (siteConfig.showcaseTicketsAvailable ? 'Get Tickets' : 'Get Updates'))}
           </a>
         </div>
       </div>
@@ -347,48 +296,40 @@ export default function ShowCard({ show }) {
   )
 }
 
-// Lineup section with collapsible performer details
+// Lineup section - simplified
 function LineupSection({ performers }) {
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <div className="border-t border-gray-200 pt-3 mb-6">
-      <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-semibold text-gray-800">
-          Lineup ({performers.length} comedians):
-        </h4>
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="text-sm text-comedy-purple hover:text-comedy-purple/80 font-semibold px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded transition-colors flex-shrink-0"
-        >
-          {expanded ? 'Hide Comedian Bios' : 'Show Comedian Bios'}
-        </button>
-      </div>
-
-      {!expanded && (
-        <p className="text-xs sm:text-sm text-gray-600 mb-3">
-          {performers.map((performer, index) => (
-            <span key={index}>
-              {performer.instagram ? (
-                <a
-                  href={`https://instagram.com/${performer.instagram}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-comedy-purple hover:text-comedy-purple/80 hover:underline"
-                >
-                  {performer.name}
-                </a>
-              ) : (
-                performer.name
-              )}
-              {index < performers.length - 1 && ', '}
-            </span>
-          ))}
-        </p>
-      )}
-
+    <div className="mb-4">
+      <p className="text-sm text-gray-600 mb-2">
+        <span className="text-gray-500">Lineup:</span>{' '}
+        {performers.map((performer, index) => (
+          <span key={index}>
+            {performer.instagram ? (
+              <a
+                href={`https://instagram.com/${performer.instagram}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-comedy-purple hover:underline"
+              >
+                {performer.name}
+              </a>
+            ) : (
+              performer.name
+            )}
+            {index < performers.length - 1 && ', '}
+          </span>
+        ))}
+      </p>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="text-sm text-comedy-purple hover:underline"
+      >
+        {expanded ? 'Hide bios' : 'Show bios'}
+      </button>
       {expanded && (
-        <div className="space-y-3 mt-3">
+        <div className="space-y-2 mt-3">
           {performers.map((performer, index) => (
             <PerformerCard key={index} performer={performer} />
           ))}
@@ -398,54 +339,28 @@ function LineupSection({ performers }) {
   )
 }
 
-// Performer card component with collapsible bio
+// Performer card - simplified
 function PerformerCard({ performer }) {
-  const [showBio, setShowBio] = useState(false)
-
   return (
-    <div className="bg-gray-50 rounded-lg p-3">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex-grow">
-          <div className="flex items-baseline gap-2 flex-wrap">
-            <h5 className="font-semibold text-sm text-gray-900">{performer.name}</h5>
-            {performer.instagram && (
-              <a
-                href={`https://instagram.com/${performer.instagram}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-comedy-purple hover:text-comedy-purple/80 hover:underline py-1"
-              >
-                @{performer.instagram}
-              </a>
-            )}
-          </div>
-          {performer.credits && (
-            <p className="text-xs text-gray-600 mt-1">
-              {performer.credits.split(/(https?:\/\/\S+|@\w+)/g).map((part, i) => {
-                if (part.match(/^https?:\/\//)) return <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-comedy-purple hover:underline">{part}</a>
-                if (part.match(/^@(\w+)/)) return <a key={i} href={`https://instagram.com/${part.slice(1)}`} target="_blank" rel="noopener noreferrer" className="text-comedy-purple hover:underline">{part}</a>
-                return part
-              })}
-            </p>
-          )}
-        </div>
-        {performer.bio && (
-          <button
-            onClick={() => setShowBio(!showBio)}
-            className="text-xs text-comedy-purple hover:text-comedy-purple/80 font-medium flex-shrink-0 py-1 px-2"
+    <div className="text-sm">
+      <p className="text-gray-900">
+        <span className="font-medium">{performer.name}</span>
+        {performer.instagram && (
+          <a
+            href={`https://instagram.com/${performer.instagram}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-comedy-purple hover:underline ml-2"
           >
-            {showBio ? 'Less' : 'Bio'}
-          </button>
+            @{performer.instagram}
+          </a>
         )}
-      </div>
-      {showBio && performer.bio && (
-        <p className="text-xs text-gray-700 mt-2 leading-relaxed">
-          {performer.bio.split(/(https?:\/\/\S+|@\w+)/g).map((part, i) => {
-            if (part.match(/^https?:\/\//)) return <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-comedy-purple hover:underline">{part}</a>
-            if (part.match(/^@(\w+)/)) return <a key={i} href={`https://instagram.com/${part.slice(1)}`} target="_blank" rel="noopener noreferrer" className="text-comedy-purple hover:underline">{part}</a>
-            return part
-          })}
-        </p>
+      </p>
+      {performer.credits && (
+        <p className="text-xs text-gray-500 mt-0.5">{performer.credits}</p>
+      )}
+      {performer.bio && (
+        <p className="text-xs text-gray-600 mt-1">{performer.bio}</p>
       )}
     </div>
   )

@@ -54,12 +54,9 @@ export default function EmailSignup() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-purple-700 to-comedy-purple rounded-2xl p-8 md:p-12 text-white max-w-4xl mx-auto">
-      <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display uppercase tracking-tight mb-4">Stay in the Loop</h2>
-        <div className="max-w-md mx-auto">
-          <p className="text-lg sm:text-xl mb-8">Get very occasional updates about upcoming shows.</p>
-        </div>
+    <div className="max-w-2xl mx-auto text-center text-white">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-display uppercase tracking-tight mb-4">Stay in the Loop</h2>
+      <p className="text-lg sm:text-xl mb-8 text-white/90">Get very occasional updates about upcoming shows.</p>
 
         <form
           onSubmit={handleSubmit}
@@ -195,7 +192,6 @@ export default function EmailSignup() {
             </a>
           </p>
         </div>
-      </div>
     </div>
   )
 }

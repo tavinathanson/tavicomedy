@@ -14,7 +14,7 @@ function formatDisplayDate(dateStr) {
 
 export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
-  showcaseTicketsAvailable: false,
+  showcaseTicketsAvailable: true,
 
   // Show date in YYYY-MM-DD format (single source of truth)
   nextShowDateISO: "2026-02-07",

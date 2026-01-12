@@ -11,7 +11,27 @@ export const upcomingShows = [
     price: "$20",
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
-    description: "A standup comedy show in Lawrenceville! Lineup coming soon. BYOB!",
+    description: "A standup comedy show in Lawrenceville! BYOB!",
+    performers: [
+      {
+        name: "Steve Schwarz",
+        instagram: "steve_schwarz_nj",
+        credits: "Willie McBride's",
+        bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
+      },
+      { name: "Aaron Bell", instagram: "aaronbellcomedy" },
+      { name: "Tim Lowe", instagram: "thetimlowe" },
+      {
+        name: "Andy Glaser",
+        instagram: "andreaglaser3",
+        credits: "Gotham Comedy, Levity Live",
+        bio: "Andy Glaser is a New Jersey native who has been a finalist in the Bud Light Ladies of Laughter. She performs at Gotham Comedy, Levity Live and Tommy Fox's and has been seen on the reality show \"The People's Court.\""
+      },
+      { name: "Waldo Maldonado", instagram: "filthuponfilth" },
+      { name: "Asha McDowell", instagram: "queenofzamunda2" },
+      { name: "Emily Paige", instagram: "emilypaigecomedy" },
+      { name: "Mike Sicoli", instagram: "themikesicoli" },
+    ],
     vibe: "Our shows regularly sell out with 80+ attendees! Mark your calendar and join the mailing list to get notified when tickets are available.",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     ticketLink: "https://cravelaughs.eventbrite.com",

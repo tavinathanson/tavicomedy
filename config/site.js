@@ -16,6 +16,10 @@ export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
   showcaseTicketsAvailable: true,
 
+  // ⚠️  WHEN UPDATING SHOW DATE, ALSO UPDATE:
+  //     1. eventId below (from Eventbrite dashboard URL)
+  //     2. performers array in data/shows.js
+
   // Show date in YYYY-MM-DD format (single source of truth)
   nextShowDateISO: "2026-02-07",
   get nextShowDate() { return formatDisplayDate(this.nextShowDateISO) },
@@ -35,6 +39,6 @@ export const siteConfig = {
   tickets: {
     buttonText: "Buy Tickets",
     buttonLink: "https://cravelaughs.eventbrite.com",
-    eventId: "1799746753989"
+    eventId: "1980411162097"  // ⚠️ Update this when creating new Eventbrite event!
   }
 }

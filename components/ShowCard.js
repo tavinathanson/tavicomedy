@@ -236,9 +236,10 @@ export default function ShowCard({ show }) {
           <div className="mb-4">
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-sm text-comedy-purple hover:underline font-medium"
+              className="text-sm text-comedy-purple font-medium"
             >
-              {expanded ? '− Hide details' : '+ Show details'}
+              <span>{expanded ? '−' : '+'}</span>{' '}
+              <span className="hover:underline">{expanded ? 'Hide details' : 'Show details'}</span>
             </button>
             {expanded && (
               <div className="mt-3 bg-gray-50 rounded-lg p-3 space-y-3">
@@ -296,42 +297,55 @@ export default function ShowCard({ show }) {
   )
 }
 
-// Lineup section - simplified
+// Lineup section - comma-separated names with clear bio expand
 function LineupSection({ performers }) {
   const [expanded, setExpanded] = useState(false)
+  const hasBios = performers.some(p => p.bio)
 
   return (
-    <div className="mb-4">
-      <p className="text-sm text-gray-600 mb-2">
-        <span className="text-gray-500">Lineup:</span>{' '}
+    <div className="mb-4 border border-gray-200 rounded-lg p-3 bg-gray-50/50">
+      <p className="text-sm text-gray-600">
+        <span className="text-gray-500 font-medium">Lineup:</span>{' '}
         {performers.map((performer, index) => (
           <span key={index}>
-            {performer.instagram ? (
-              <a
-                href={`https://instagram.com/${performer.instagram}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-comedy-purple hover:underline"
-              >
-                {performer.name}
-              </a>
-            ) : (
-              performer.name
-            )}
+            {performer.name}
             {index < performers.length - 1 && ', '}
           </span>
         ))}
       </p>
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="text-sm text-comedy-purple hover:underline"
-      >
-        {expanded ? 'Hide bios' : 'Show bios'}
-      </button>
+      {hasBios && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-sm text-comedy-purple font-medium mt-2"
+        >
+          <span>{expanded ? '−' : '+'}</span>{' '}
+          <span className="hover:underline">{expanded ? 'Hide bios' : 'Meet the comics'}</span>
+        </button>
+      )}
       {expanded && (
-        <div className="space-y-2 mt-3">
+        <div className="space-y-3 mt-3 bg-white rounded-lg p-3 border border-gray-100">
           {performers.map((performer, index) => (
-            <PerformerCard key={index} performer={performer} />
+            <div key={index} className="text-sm">
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-gray-900">{performer.name}</span>
+                {performer.instagram && (
+                  <a
+                    href={`https://instagram.com/${performer.instagram}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-comedy-purple hover:underline text-xs"
+                  >
+                    @{performer.instagram}
+                  </a>
+                )}
+              </div>
+              {performer.credits && (
+                <p className="text-xs text-gray-400 italic mt-1">{performer.credits}</p>
+              )}
+              {performer.bio && (
+                <p className="text-xs text-gray-600 mt-1">{performer.bio}</p>
+              )}
+            </div>
           ))}
         </div>
       )}

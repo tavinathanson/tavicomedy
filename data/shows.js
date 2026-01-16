@@ -28,9 +28,23 @@ export const upcomingShows = [
         bio: "Andy Glaser is a New Jersey native who has been a finalist in the Bud Light Ladies of Laughter. She performs at Gotham Comedy, Levity Live and Tommy Fox's and has been seen on the reality show \"The People's Court.\""
       },
       { name: "Waldo Maldonado", instagram: "filthuponfilth" },
-      { name: "Asha McDowell", instagram: "queenofzamunda2" },
-      { name: "Emily Paige", instagram: "emilypaigecomedy" },
-      { name: "Mike Sicoli", instagram: "themikesicoli" },
+      {
+        name: "Asha McDowell",
+        instagram: "queenofzamunda2",
+        bio: "A Lawrence local, Asha is new to the standup stage. She enjoys tomfoolery, shenanigans, and hijinks... preferably in that order."
+      },
+      {
+        name: "Emily Paige",
+        instagram: "emilypaigecomedy",
+        credits: "Wisecrackers, Uncle Vinnie's, Asheville Comedy Festival",
+        bio: "Emily Paige is a Jersey-based comedian and regular at Wisecrackers and Uncle Vinnie's Comedy Club. She hosts the podcast If You Would've Told Me."
+      },
+      {
+        name: "Mike Sicoli",
+        instagram: "themikesicoli",
+        credits: "Levity Live, FunnyBone, Stress Factory, The Dojo",
+        bio: "Mike performs regularly at clubs all over the country. His comedy album debuted at #1 on iTunes and you can watch his comedy special Prom King on YouTube."
+      },
     ],
     vibe: "Our shows regularly sell out with 80+ attendees! Mark your calendar and join the mailing list to get notified when tickets are available.",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended

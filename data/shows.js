@@ -19,7 +19,12 @@ export const upcomingShows = [
         credits: "Willie McBride's",
         bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
       },
-      { name: "Aaron Bell", instagram: "aaronbellcomedy" },
+      {
+        name: "Aaron Bell",
+        instagram: "aaronbellcomedy",
+        credits: "Punchline Philly, Windy City Comedy Festival, Rip City Comedy Festival",
+        bio: "Aaron Bell has been a regular in the Philadelphia comedy scene since 2017 and has performed at over a dozen festivals around the country. He hosts Stand-Up at the Studio, a quarterly showcase at Studio 34 Yoga in West Philly. Known for his dark, observational humor and laid back style, his act focuses on life in the suburbs and as an adult in Philly."
+      },
       { name: "Tim Lowe", instagram: "thetimlowe" },
       {
         name: "Andy Glaser",

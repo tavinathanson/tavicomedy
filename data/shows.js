@@ -24,8 +24,8 @@ export const upcomingShows = [
       {
         name: "Andy Glaser",
         instagram: "andreaglaser3",
-        credits: "Gotham Comedy, Levity Live",
-        bio: "Andy Glaser is a New Jersey native who has been a finalist in the Bud Light Ladies of Laughter. She performs at Gotham Comedy, Levity Live and Tommy Fox's and has been seen on the reality show \"The People's Court.\""
+        credits: "Levity Live, Gotham Comedy, Broadway Comedy Club",
+        bio: "Andrea \"Andy\" Glaser is an international comic who regularly performs at fundraisers and such places as Levity Live, Gotham Comedy and Broadway Comedy Club. She was a finalist in the Bud Light Ladies of Laughter comedy competition and has appeared on the television show \"The People's Court.\""
       },
       { name: "Waldo Maldonado", instagram: "filthuponfilth" },
       {

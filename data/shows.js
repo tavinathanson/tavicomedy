@@ -37,13 +37,13 @@ export const upcomingShows = [
         name: "Emily Paige",
         instagram: "emilypaigecomedy",
         credits: "Wisecrackers, Uncle Vinnie's, Asheville Comedy Festival",
-        bio: "Emily Paige is a Jersey-based comedian and regular at Wisecrackers and Uncle Vinnie's Comedy Club. She hosts the podcast If You Would've Told Me."
+        bio: "Emily Paige is a Jersey-based comedian who is a regular at Wisecrackers and Uncle Vinnie's Comedy Club. She has performed in the Asheville Comedy Festival and has a podcast called If You Would've Told Me."
       },
       {
         name: "Mike Sicoli",
         instagram: "themikesicoli",
         credits: "Levity Live, FunnyBone, Stress Factory, The Dojo",
-        bio: "Mike performs regularly at clubs all over the country. His comedy album debuted at #1 on iTunes and you can watch his comedy special Prom King on YouTube."
+        bio: "Mike performs regularly at clubs all over the country including Levity Live, FunnyBone, The Stress Factory, and The Dojo. His comedy album debuted at #1 on iTunes and you can watch his comedy special Prom King on YouTube."
       },
     ],
     vibe: "Our shows regularly sell out with 80+ attendees! Mark your calendar and join the mailing list to get notified when tickets are available.",

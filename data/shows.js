@@ -25,14 +25,22 @@ export const upcomingShows = [
         credits: "Punchline Philly, Windy City Comedy Festival, Rip City Comedy Festival",
         bio: "Aaron Bell has been a regular in the Philadelphia comedy scene since 2017 and has performed at over a dozen festivals around the country. He hosts Stand-Up at the Studio, a quarterly showcase at Studio 34 Yoga in West Philly. Known for his dark, observational humor and laid back style, his act focuses on life in the suburbs and as an adult in Philly."
       },
-      { name: "Tim Lowe", instagram: "thetimlowe" },
+      {
+        name: "Tim Lowe",
+        instagram: "thetimlowe",
+        bio: "Tim is an author, improviser, poet, and licensed therapist. Whether his comedy is thought-provoking or crude, it's always funny."
+      },
       {
         name: "Andy Glaser",
         instagram: "andreaglaser3",
         credits: "Levity Live, Gotham Comedy, Broadway Comedy Club",
         bio: "Andrea \"Andy\" Glaser is an international comic who regularly performs at fundraisers and such places as Levity Live, Gotham Comedy and Broadway Comedy Club. She was a finalist in the Bud Light Ladies of Laughter comedy competition and has appeared on the television show \"The People's Court.\""
       },
-      { name: "Waldo Maldonado", instagram: "filthuponfilth" },
+      {
+        name: "Waldo Maldonado",
+        instagram: "filthuponfilth",
+        bio: "Waldo Maldonado is a stand-up comedian and content creator from the New Jersey/New York area. His everything will probably make you uncomfortable, but he's a nice lad and has been called \"pretty funny\" by someone other than his own mother."
+      },
       {
         name: "Asha McDowell",
         instagram: "queenofzamunda2",

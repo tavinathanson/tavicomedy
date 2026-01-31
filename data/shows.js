@@ -59,7 +59,7 @@ export const upcomingShows = [
         bio: "Mike performs regularly at clubs all over the country including Levity Live, FunnyBone, The Stress Factory, and The Dojo. His comedy album debuted at #1 on iTunes and you can watch his comedy special Prom King on YouTube."
       },
     ],
-    vibe: "Our shows regularly sell out with 80+ attendees! Mark your calendar and join the mailing list to get notified when tickets are available.",
+    vibe: "Our shows regularly sell out with ~100 attendees! Mark your calendar and join the mailing list to get notified when tickets are available.",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     soldOut: true,
     ticketLink: "https://cravelaughs.eventbrite.com",
@@ -72,7 +72,7 @@ export const upcomingShows = [
       parking: "Free street parking nearby"
     },
     additionalInfo: [
-      "Tickets are <strong>$20 online, or at the door if available—no extra taxes or fees!</strong> Refundable up to 2 days before the show.",
+      "Tickets are <strong>$20 online, or at the door if available: no extra taxes or fees!</strong> Refundable up to 2 days before the show.",
       "Seating is limited, so pre-purchase is highly recommended.",
       "<strong>BYOB!</strong> There is a one item minimum purchase at Crave, and you are welcome to bring your own beverages.",
       "<strong>Parking at Crave is limited.</strong> Free street parking is available on nearby residential streets within a block or two. Please allow extra time to find a spot."
@@ -87,8 +87,8 @@ export const upcomingShows = [
     price: "Free",
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
-    description: "Anyone can perform or watch for free! Whether you're brand new to comedy or a pro, everyone is welcome.",
-    vibe: "Expect: Chill cafe setting, ~30 friendly folks",
+    description: "A free monthly comedy open mic! Come perform or just come watch; it's a great time either way. You'll see ~15 comics ranging from fantastic to wonderfully unhinged. Very casual: grab a seat, enjoy the show, and come and go as you please.",
+    vibe: "Expect: Chill cafe setting, a fun mix of comics, audience welcome to drop in anytime",
     image: "/images/photo-for-mic-card.jpg", // 800x600px recommended
     ticketLink: "https://openmic.tavicomedy.com",
     isOpenMic: true,

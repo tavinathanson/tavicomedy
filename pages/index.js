@@ -118,7 +118,7 @@ export default function Home() {
     <>
       <Head>
         <title>Tavi Comedy Lab - Comedy Shows in Lawrenceville/Princeton</title>
-        <meta name="description" content="Packed comedy nights in Lawrenceville/Princeton. Building fun, personal, and creative comedy experiences. Expect 80+ attendees at shows!" />
+        <meta name="description" content="Packed comedy nights in Lawrenceville/Princeton. Building fun, personal, and creative comedy experiences. Expect ~100 attendees at shows!" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -322,7 +322,7 @@ export default function Home() {
         <div className="max-w-2xl mx-auto section-padding">
           <h2 className="text-sm font-medium uppercase tracking-widest mb-6 text-gray-400 text-center">About</h2>
           <p className="text-gray-600 leading-relaxed">
-            <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text font-medium">Tavi Nathanson</a> produces live comedy shows in the Lawrenceville/Princeton area. <span className="italic">Crave Laughs</span> has grown into one of the most popular comedy shows in the area, regularly selling out with 80+ attendees.
+            <a href="https://instagram.com/tavinathanson" target="_blank" rel="noopener noreferrer" className="link-text font-medium">Tavi Nathanson</a> produces live comedy shows in the Lawrenceville/Princeton area. <span className="italic">Crave Laughs</span> has grown into one of the most popular comedy shows in the area, regularly selling out with ~100 attendees.
           </p>
           <p className="text-gray-600 leading-relaxed mt-4">
             <span className="italic">Tavi Comedy Lab</span> is about creating a fun, supportive space for comedy in the Lawrenceville/Princeton area.

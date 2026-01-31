@@ -41,7 +41,7 @@ export default function WaitlistSignup({ showDate }) {
         Join the waitlist for this show
       </p>
       <p className="text-xs text-gray-500 mt-1 mb-2">
-        We'll let you know if spots open up
+        We&apos;ll let you know if spots open up
       </p>
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input

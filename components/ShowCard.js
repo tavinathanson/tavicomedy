@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { siteConfig } from '@/config/site'
 import { useState, useEffect } from 'react'
+import WaitlistSignup from './WaitlistSignup'
 
 // Convert 12h time to 24h format (e.g., "7:00 PM" -> "19:00")
 function to24Hour(time12h) {
@@ -127,6 +128,12 @@ export default function ShowCard({ show }) {
             Open Mic
           </div>
         )}
+        {/* Sold out banner across image */}
+        {show.soldOut && siteConfig.showcaseTicketsAvailable && (
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <span className="text-white text-3xl font-display uppercase tracking-widest">Sold Out</span>
+          </div>
+        )}
       </div>
 
       <div className="p-5 flex flex-col flex-grow">
@@ -136,9 +143,6 @@ export default function ShowCard({ show }) {
         </div>
 
         {/* Status badges */}
-        {show.soldOut && siteConfig.showcaseTicketsAvailable && (
-          <p className="text-sm text-red-600 mb-3">Sold out online · limited door tickets may be available</p>
-        )}
         {show.almostSoldOut && !show.soldOut && siteConfig.showcaseTicketsAvailable && (
           <p className="text-sm text-orange-600 mb-3">Almost sold out</p>
         )}
@@ -263,35 +267,39 @@ export default function ShowCard({ show }) {
           <LineupSection performers={show.performers} />
         )}
 
-        {/* CTA Button */}
-        <div className="mt-auto pt-4">
-          <a
-            href={show.soldOut ? '#updates' : (show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : show.ticketLink)}
-            target={show.soldOut ? '_self' : (show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '_self' : '_blank')}
-            rel={show.soldOut ? undefined : (show.isShowcase && !siteConfig.showcaseTicketsAvailable ? undefined : 'noopener noreferrer')}
-            className={`block w-full text-center py-3 rounded-lg font-medium transition-colors ${
-              show.isOpenMic
-                ? 'bg-comedy-green text-white hover:bg-green-700'
-                : 'bg-comedy-purple text-white hover:bg-purple-700'
-            }`}
-            onClick={(e) => {
-              if (typeof window !== 'undefined' && window.fbq) {
-                window.fbq('track', 'Lead')
-              }
-              if (show.soldOut) {
-                e.preventDefault()
-                document.querySelector('#updates')?.scrollIntoView({ behavior: 'smooth' })
-                return
-              }
-              if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
-                e.preventDefault()
-              }
-            }}
-            id={show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut ? `eb-showcard-${show.id}` : undefined}
-          >
-            {show.isOpenMic ? 'Sign Up' : (show.soldOut ? 'Join Mailing List' : (siteConfig.showcaseTicketsAvailable ? 'Get Tickets' : 'Get Updates'))}
-          </a>
-        </div>
+        {/* Waitlist form for sold-out shows */}
+        {show.soldOut && show.isShowcase && siteConfig.showcaseTicketsAvailable && (
+          <div className="mt-auto pt-4">
+            <WaitlistSignup showDate={show.date} />
+          </div>
+        )}
+
+        {/* CTA Button (hidden when sold-out showcase with waitlist) */}
+        {!(show.soldOut && show.isShowcase && siteConfig.showcaseTicketsAvailable) && (
+          <div className="mt-auto pt-4">
+            <a
+              href={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : show.ticketLink}
+              target={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '_self' : '_blank'}
+              rel={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? undefined : 'noopener noreferrer'}
+              className={`block w-full text-center py-3 rounded-lg font-medium transition-colors ${
+                show.isOpenMic
+                  ? 'bg-comedy-green text-white hover:bg-green-700'
+                  : 'bg-comedy-purple text-white hover:bg-purple-700'
+              }`}
+              onClick={(e) => {
+                if (typeof window !== 'undefined' && window.fbq) {
+                  window.fbq('track', 'Lead')
+                }
+                if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
+                  e.preventDefault()
+                }
+              }}
+              id={show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut ? `eb-showcard-${show.id}` : undefined}
+            >
+              {show.isOpenMic ? 'Sign Up' : (siteConfig.showcaseTicketsAvailable ? 'Get Tickets' : 'Get Updates')}
+            </a>
+          </div>
+        )}
       </div>
     </div>
   )

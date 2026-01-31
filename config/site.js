@@ -25,7 +25,7 @@ export const siteConfig = {
   get nextShowDate() { return formatDisplayDate(this.nextShowDateISO) },
 
   // Open mic date in YYYY-MM-DD format
-  nextOpenMicDateISO: "2026-01-29",
+  nextOpenMicDateISO: "2026-02-26",
   get nextOpenMicDate() { return formatDisplayDate(this.nextOpenMicDateISO) },
 
   // No tickets available mode (when showcaseTicketsAvailable is false)

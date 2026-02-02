@@ -454,6 +454,13 @@ export default function Home() {
           </div>
           
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <p className="mb-3">
+              Comedian in NJ, NYC, or PA?{' '}
+              <a href="mailto:tavi@tavicomedy.com?subject=Performing at Tavi Comedy Lab" className="text-gray-300 hover:text-white transition-colors underline underline-offset-2">
+                Send a tape or clips
+              </a>
+              . Always looking for comics at all levels.
+            </p>
             <p>&copy; {new Date().getFullYear()} Tavi Comedy Lab. All rights reserved.</p>
           </div>
         </div>

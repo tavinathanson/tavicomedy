@@ -59,7 +59,7 @@ export const upcomingShows = [
         bio: "Mike performs regularly at clubs all over the country including Levity Live, FunnyBone, The Stress Factory, and The Dojo. His comedy album debuted at #1 on iTunes and you can watch his comedy special Prom King on YouTube."
       },
     ],
-    vibe: "Our shows regularly sell out with ~100 attendees! Mark your calendar and join the mailing list to get notified when tickets are available.",
+    vibe: "Our shows regularly sell out with ~100 attendees! Next show is April 25. Join the mailing list to get notified when tickets are available.",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     soldOut: true,
     ticketLink: "https://cravelaughs.eventbrite.com",

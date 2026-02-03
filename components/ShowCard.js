@@ -130,8 +130,11 @@ export default function ShowCard({ show }) {
         )}
         {/* Sold out banner across image */}
         {show.soldOut && siteConfig.showcaseTicketsAvailable && (
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center">
             <span className="text-white text-3xl font-display uppercase tracking-widest">Sold Out</span>
+            {siteConfig.nextUpcomingShowDate && (
+              <span className="text-white/90 text-sm mt-2 bg-black/40 px-3 py-1 rounded-full">Next show: {siteConfig.nextUpcomingShowDate}</span>
+            )}
           </div>
         )}
       </div>
@@ -267,9 +270,17 @@ export default function ShowCard({ show }) {
           <LineupSection performers={show.performers} />
         )}
 
-        {/* Waitlist form for sold-out shows */}
+        {/* Next show callout + waitlist for sold-out shows */}
         {show.soldOut && show.isShowcase && siteConfig.showcaseTicketsAvailable && (
-          <div className="mt-auto pt-4">
+          <div className="mt-auto pt-4 space-y-3">
+            {siteConfig.nextUpcomingShowDate && (
+              <div className="bg-comedy-purple/10 border border-comedy-purple/20 rounded-lg p-3 text-center">
+                <p className="text-sm font-semibold text-gray-900">Next show: {siteConfig.nextUpcomingShowDate}</p>
+                <p className="text-xs text-gray-600 mt-1">
+                  <a href="#updates" className="text-comedy-purple hover:underline font-medium">Join the mailing list</a> to get notified when tickets are available
+                </p>
+              </div>
+            )}
             <WaitlistSignup showDate={show.date} />
           </div>
         )}

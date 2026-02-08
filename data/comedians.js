@@ -2,10 +2,12 @@
 // Sorted alphabetically by first name
 
 export const comedians = [
+  { name: "Aaron Bell", instagram: "aaronbellcomedy" },
   { name: "Abe Shapiro", instagram: "abeshaps" },
   { name: "Alex Aversano", instagram: "alexaversano_" },
   { name: "Andre Mitchell", instagram: "_comedyconnoisseur" },
   { name: "Andy Glaser", instagram: "andreaglaser3" },
+  { name: "Asha McDowell", instagram: "queenofzamunda2" },
   { name: "Ashia McRae", instagram: "ashistenacious" },
   { name: "Bob Grundfest", instagram: "bobgrundfest" },
   { name: "Carla Ulbrich", instagram: "carlaucomedy" },
@@ -13,6 +15,7 @@ export const comedians = [
   { name: "Chelsea Moroski", instagram: "chelseamoroski" },
   { name: "David Burrows", instagram: "dbcomedy14" },
   { name: "Dennis Voj", instagram: "dennisvojcomedy" },
+  { name: "Emily Paige", instagram: "emilypaigecomedy" },
   { name: "Foster Nicholson", instagram: "thegeniusfos" },
   { name: "Gina DiMaggio", instagram: "fortunecookiegina" },
   { name: "Greg Rapport", youtube: "rapportcomedy" },
@@ -33,6 +36,7 @@ export const comedians = [
   { name: "Lucas Connolly", instagram: "lovablelucas1" },
   { name: "Michael Beavers", instagram: "leave_it.to_beavers" },
   { name: "Mike Mar", instagram: "mike_mar_comedy" },
+  { name: "Mike Sicoli", instagram: "themikesicoli" },
   { name: "Paul Carson", instagram: "silly_boy_paul" },
   { name: "Raph Hernandez", instagram: "phatinthehat" },
   { name: "Rey Pinder", instagram: "pinderrey" },
@@ -41,5 +45,6 @@ export const comedians = [
   { name: "Steve Schwarz", instagram: "steve_schwarz_nj" },
   { name: "Tim Lowe", instagram: "thetimlowe" },
   { name: "Tim Rager", instagram: "timothyrager" },
+  { name: "Waldo Maldonado", instagram: "filthuponfilth" },
   { name: "Zach McMahon", instagram: "zachmcmahon1" },
 ]

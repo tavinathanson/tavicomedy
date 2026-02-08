@@ -14,19 +14,19 @@ function formatDisplayDate(dateStr) {
 
 export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
-  showcaseTicketsAvailable: true,
+  showcaseTicketsAvailable: false,
 
   // ⚠️  WHEN UPDATING SHOW DATE, ALSO UPDATE:
   //     1. eventId below (from Eventbrite dashboard URL)
   //     2. performers array in data/shows.js
 
   // Show date in YYYY-MM-DD format (single source of truth)
-  nextShowDateISO: "2026-02-07",
+  nextShowDateISO: "2026-04-25",
   get nextShowDate() { return formatDisplayDate(this.nextShowDateISO) },
 
   // Next upcoming show date (when known, even before tickets are on sale)
   // Set to null if the next date is not yet determined
-  nextUpcomingShowDateISO: "2026-04-25",
+  nextUpcomingShowDateISO: null,
   get nextUpcomingShowDate() { return this.nextUpcomingShowDateISO ? formatDisplayDate(this.nextUpcomingShowDateISO) : null },
 
   // Open mic date in YYYY-MM-DD format

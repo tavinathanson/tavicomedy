@@ -12,56 +12,10 @@ export const upcomingShows = [
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
     description: "A standup comedy show in Lawrenceville! BYOB!",
-    performers: [
-      {
-        name: "Steve Schwarz",
-        instagram: "steve_schwarz_nj",
-        credits: "Willie McBride's",
-        bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
-      },
-      {
-        name: "Aaron Bell",
-        instagram: "aaronbellcomedy",
-        credits: "Punchline Philly, Windy City Comedy Festival, Rip City Comedy Festival",
-        bio: "Aaron Bell has been a regular in the Philadelphia comedy scene since 2017 and has performed at over a dozen festivals around the country. He hosts Stand-Up at the Studio, a quarterly showcase at Studio 34 Yoga in West Philly. Known for his dark, observational humor and laid back style, his act focuses on life in the suburbs and as an adult in Philly."
-      },
-      {
-        name: "Tim Lowe",
-        instagram: "thetimlowe",
-        bio: "Tim is an author, improviser, poet, and licensed therapist. Whether his comedy is thought-provoking or crude, it's always funny."
-      },
-      {
-        name: "Andy Glaser",
-        instagram: "andreaglaser3",
-        credits: "Levity Live, Gotham Comedy, Broadway Comedy Club",
-        bio: "Andrea \"Andy\" Glaser is an international comic who regularly performs at fundraisers and such places as Levity Live, Gotham Comedy and Broadway Comedy Club. She was a finalist in the Bud Light Ladies of Laughter comedy competition and has appeared on the television show \"The People's Court.\""
-      },
-      {
-        name: "Waldo Maldonado",
-        instagram: "filthuponfilth",
-        bio: "Waldo Maldonado is a stand-up comedian and content creator from the New Jersey/New York area. His everything will probably make you uncomfortable, but he's a nice lad and has been called \"pretty funny\" by someone other than his own mother."
-      },
-      {
-        name: "Asha McDowell",
-        instagram: "queenofzamunda2",
-        bio: "A Lawrence local, Asha is new to the standup stage. She enjoys tomfoolery, shenanigans, and hijinks... preferably in that order."
-      },
-      {
-        name: "Emily Paige",
-        instagram: "emilypaigecomedy",
-        credits: "Wisecrackers, Uncle Vinnie's, Asheville Comedy Festival",
-        bio: "Emily Paige is a Jersey-based comedian who is a regular at Wisecrackers and Uncle Vinnie's Comedy Club. She has performed in the Asheville Comedy Festival and has a podcast called If You Would've Told Me."
-      },
-      {
-        name: "Mike Sicoli",
-        instagram: "themikesicoli",
-        credits: "Levity Live, FunnyBone, Stress Factory, The Dojo",
-        bio: "Mike performs regularly at clubs all over the country including Levity Live, FunnyBone, The Stress Factory, and The Dojo. His comedy album debuted at #1 on iTunes and you can watch his comedy special Prom King on YouTube."
-      },
-    ],
-    vibe: "Our shows regularly sell out with ~100 attendees! Next show is April 25. Join the mailing list to get notified when tickets are available.",
+    performers: [],
+    vibe: "Our shows regularly sell out with ~100 attendees! Join the mailing list to get notified when tickets are available.",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
-    soldOut: true,
+    soldOut: false,
     ticketLink: "https://cravelaughs.eventbrite.com",
     eventId: siteConfig.tickets?.eventId, // For Eventbrite modal
     isShowcase: true,

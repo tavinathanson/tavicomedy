@@ -4,6 +4,7 @@ import { FaInstagram } from 'react-icons/fa'
 export default function EmailSignup() {
   const [email, setEmail] = useState('')
   const [interestType, setInterestType] = useState('both') // 'shows', 'openmics', or 'both'
+  const [role, setRole] = useState('') // 'comic' or 'fan'
   const [howFound, setHowFound] = useState('')
   const [status, setStatus] = useState('')
 
@@ -26,6 +27,7 @@ export default function EmailSignup() {
         body: JSON.stringify({
           email,
           interestType,
+          role,
           howFound,
         }),
       })
@@ -35,6 +37,7 @@ export default function EmailSignup() {
       if (response.ok) {
         setStatus(data.message || 'Thanks for signing up!')
         setEmail('')
+        setRole('')
         setHowFound('')
 
         // Track Meta Pixel conversion event for successful mailing list signup
@@ -135,6 +138,40 @@ export default function EmailSignup() {
                 )}
               </div>
               <span className="font-medium">Open mics only</span>
+            </label>
+          </div>
+
+          <p className="text-white/90 text-center mb-3 text-sm uppercase tracking-wide">I am a:</p>
+          <div className="flex gap-2 max-w-sm mx-auto mb-8">
+            <label className={`flex-1 flex items-center justify-center cursor-pointer px-3 py-2.5 rounded-lg transition-all border-2 text-sm ${
+              role === 'comic'
+                ? 'bg-white border-white text-comedy-purple shadow-lg'
+                : 'bg-white/10 border-white/30 hover:bg-white/20 hover:border-white/50 text-white'
+            }`}>
+              <input
+                type="radio"
+                name="role"
+                value="comic"
+                checked={role === 'comic'}
+                onChange={(e) => setRole(e.target.value)}
+                className="sr-only"
+              />
+              <span className="font-medium whitespace-nowrap text-xs sm:text-sm">Comic / aspiring comic</span>
+            </label>
+            <label className={`flex-1 flex items-center justify-center cursor-pointer px-3 py-2.5 rounded-lg transition-all border-2 text-sm ${
+              role === 'fan'
+                ? 'bg-white border-white text-comedy-purple shadow-lg'
+                : 'bg-white/10 border-white/30 hover:bg-white/20 hover:border-white/50 text-white'
+            }`}>
+              <input
+                type="radio"
+                name="role"
+                value="fan"
+                checked={role === 'fan'}
+                onChange={(e) => setRole(e.target.value)}
+                className="sr-only"
+              />
+              <span className="font-medium">Comedy fan</span>
             </label>
           </div>
 

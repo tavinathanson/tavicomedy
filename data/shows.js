@@ -12,7 +12,38 @@ export const upcomingShows = [
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
     description: "A standup comedy show in Lawrenceville! BYOB!",
-    performers: [],
+    performers: [
+      {
+        name: "Steve Schwarz",
+        instagram: "steve_schwarz_nj",
+        credits: "Willie McBride's",
+        bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
+      },
+      {
+        name: "Becky Z",
+        instagram: "beckycomedy",
+      },
+      {
+        name: "Paul Carson",
+        instagram: "silly_boy_paul",
+      },
+      {
+        name: "Michael Beavers",
+        instagram: "leave_it.to_beavers",
+      },
+      {
+        name: "Megan Goetz",
+        instagram: "meggoetzmoney",
+      },
+      {
+        name: "Becky Veduccio",
+        instagram: "beckyveduccio",
+      },
+      {
+        name: "Laz Vic",
+        instagram: "justlazvic",
+      },
+    ],
     vibe: "Our shows regularly sell out with ~100 attendees! Join the mailing list to get notified when tickets are available.",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     ticketLink: siteConfig.tickets?.checkoutPath,

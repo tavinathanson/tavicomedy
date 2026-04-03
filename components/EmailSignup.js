@@ -156,6 +156,15 @@ export default function EmailSignup() {
                 onChange={(e) => setRole(e.target.value)}
                 className="sr-only"
               />
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mr-2 flex-shrink-0 ${
+                role === 'comic'
+                  ? 'border-comedy-purple bg-comedy-purple'
+                  : 'border-white bg-transparent'
+              }`}>
+                {role === 'comic' && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
+                )}
+              </div>
               <span className="font-medium whitespace-nowrap text-xs sm:text-sm">Comic / aspiring comic</span>
             </label>
             <label className={`flex-1 flex items-center justify-center cursor-pointer px-3 py-2.5 rounded-lg transition-all border-2 text-sm ${
@@ -171,6 +180,15 @@ export default function EmailSignup() {
                 onChange={(e) => setRole(e.target.value)}
                 className="sr-only"
               />
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mr-2 flex-shrink-0 ${
+                role === 'fan'
+                  ? 'border-comedy-purple bg-comedy-purple'
+                  : 'border-white bg-transparent'
+              }`}>
+                {role === 'fan' && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
+                )}
+              </div>
               <span className="font-medium">Comedy fan</span>
             </label>
           </div>

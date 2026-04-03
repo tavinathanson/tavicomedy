@@ -26,6 +26,7 @@ export const upcomingShows = [
       {
         name: "Paul Carson",
         instagram: "silly_boy_paul",
+        bio: "Paul Carson is a stand-up and sketch comedian based in the Philadelphia area. He has performed in comedy festivals all over the country and regularly performs up and down the East coast. His style is energetic, silly, and highly-physical."
       },
       {
         name: "Michael Beavers",

@@ -51,12 +51,17 @@ export default function Success() {
             <h1 className="text-4xl sm:text-5xl font-display uppercase tracking-tight text-comedy-purple mb-4">
               You&apos;re In!
             </h1>
-            <p className="text-lg text-gray-700 mb-2">
-              Your tickets for the Crave Laughs comedy show are confirmed!
-            </p>
-            <p className="text-base text-gray-600 mb-8">
-              No ticket needed. Just give your name at the door! You&apos;ll get an email receipt shortly from Tavi Comedy Lab (via Stripe secure payments).
-            </p>
+            <div className="text-left mb-8">
+              <p className="text-lg text-gray-700 mb-2">
+                Your tickets for the Crave Laughs comedy show are confirmed!
+              </p>
+              <p className="text-base text-gray-600">
+                No ticket needed. Just give your name at the door!
+              </p>
+              <p className="text-sm text-gray-400 mt-2">
+                You&apos;ll get an email receipt shortly from Tavi Comedy Lab (via Stripe secure payments).
+              </p>
+            </div>
 
             <div className="text-left space-y-4 mb-8">
               <div className="bg-gray-50 rounded-lg p-4 space-y-3">

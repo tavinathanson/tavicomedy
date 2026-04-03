@@ -53,6 +53,7 @@ export default async function handler(req, res) {
 
     const showDate = session.metadata?.showDate
     const ticketCount = Number(session.metadata?.ticketCount) || 0
+    const hearAbout = session.metadata?.hearAbout
 
     if (showDate && ticketCount > 0) {
       const totalSold = await getTicketsSold(showDate)
@@ -62,6 +63,7 @@ export default async function handler(req, res) {
         ticketCount,
         totalSold,
         showDate,
+        hearAbout,
       })
     }
 

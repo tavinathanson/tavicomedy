@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
 import { siteConfig } from '@/config/site'
+import WaitlistSignup from './WaitlistSignup'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
@@ -134,34 +135,14 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
         </button>
 
         {step === 'soldout' ? (
-          <div className="p-8 text-center">
-            <h2 className="text-2xl font-display uppercase tracking-tight text-comedy-purple mb-4">
+          <div className="p-8">
+            <h2 className="text-2xl font-display uppercase tracking-tight text-comedy-purple mb-4 text-center">
               Sold Out
             </h2>
-            <p className="text-gray-600 mb-6">
-              This show is sold out! Join the mailing list to get notified about future shows and be first in line for tickets.
+            <p className="text-gray-600 mb-6 text-center">
+              This show is sold out! Join the waitlist and we&apos;ll reach out if spots open up.
             </p>
-            <div className="flex flex-col gap-3">
-              <a
-                href="#updates"
-                onClick={(e) => {
-                  e.preventDefault()
-                  onClose()
-                  setTimeout(() => {
-                    document.querySelector('#updates')?.scrollIntoView({ behavior: 'smooth' })
-                  }, 100)
-                }}
-                className="w-full bg-comedy-purple text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors text-center"
-              >
-                Get Notified About Future Shows
-              </a>
-              <a
-                href="mailto:tavi@tavicomedy.com?subject=Waitlist for sold out show"
-                className="text-comedy-purple hover:underline text-sm font-medium"
-              >
-                Email tavi@tavicomedy.com to get on the waitlist
-              </a>
-            </div>
+            <WaitlistSignup showDate={siteConfig.nextShowDate} />
           </div>
         ) : step === 'error' ? (
           <div className="p-8 text-center">

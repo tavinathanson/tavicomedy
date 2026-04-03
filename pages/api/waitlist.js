@@ -1,5 +1,5 @@
 import { google } from 'googleapis'
-import { sendWaitlistConfirmation } from '../../lib/resend'
+import { sendWaitlistConfirmation, sendCheckoutErrorAlert } from '../../lib/resend'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -10,11 +10,11 @@ export default async function handler(req, res) {
     const { email, showDate, tickets } = req.body
 
     if (!email || !email.includes('@')) {
-      return res.status(400).json({ error: 'Valid email is required' })
+      return res.status(400).json({ error: 'Please enter a valid email address.' })
     }
 
     if (!showDate) {
-      return res.status(400).json({ error: 'Show date is required' })
+      return res.status(400).json({ error: 'Show date is required.' })
     }
 
     const credentialsString = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
@@ -23,7 +23,11 @@ export default async function handler(req, res) {
 
     if (!credentialsString || !spreadsheetId) {
       console.error('Missing Google Sheets configuration')
-      return res.status(500).json({ error: 'Server configuration error' })
+      sendCheckoutErrorAlert('Waitlist: missing Google Sheets config', {
+        email,
+        showDate,
+      }).catch(() => {})
+      return res.status(500).json({ error: 'Something went wrong on our end. Please email tavi@tavicomedy.com to get on the waitlist.' })
     }
 
     let credentials
@@ -31,7 +35,11 @@ export default async function handler(req, res) {
       credentials = JSON.parse(credentialsString)
     } catch (parseError) {
       console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_KEY:', parseError.message)
-      return res.status(500).json({ error: 'Server configuration error' })
+      sendCheckoutErrorAlert(`Waitlist: failed to parse Google credentials: ${parseError.message}`, {
+        email,
+        showDate,
+      }).catch(() => {})
+      return res.status(500).json({ error: 'Something went wrong on our end. Please email tavi@tavicomedy.com to get on the waitlist.' })
     }
 
     const auth = new google.auth.GoogleAuth({
@@ -63,7 +71,7 @@ export default async function handler(req, res) {
     }
 
     const timestamp = new Date().toISOString()
-    const ticketCount = Math.min(Math.max(parseInt(tickets, 10) || 1, 1), 6)
+    const ticketCount = Math.min(Math.max(parseInt(tickets, 10) || 1, 1), 10)
     const rowData = [email, showDate, ticketCount, timestamp, 'website']
 
     await sheets.spreadsheets.values.append({
@@ -80,16 +88,28 @@ export default async function handler(req, res) {
     const emailResult = await sendWaitlistConfirmation(email, showDate, ticketCount)
     if (!emailResult.success) {
       console.error('Failed to send waitlist confirmation email:', emailResult.error)
+      sendCheckoutErrorAlert(`Waitlist confirmation email failed: ${emailResult.error}`, {
+        customerEmail: email,
+        showDate,
+        tickets: ticketCount,
+        note: 'Customer was added to the waitlist sheet successfully, but did not receive a confirmation email.',
+      }).catch(() => {})
     }
 
     return res.status(200).json({
       success: true,
-      message: "You're on the waitlist!",
+      message: "You're on the waitlist! We'll reach out if spots open up.",
     })
   } catch (error) {
-    console.error('Error saving to Google Sheets:', error)
+    console.error('Waitlist error:', error)
+    const { email, showDate, tickets } = req.body || {}
+    sendCheckoutErrorAlert(`Waitlist failed: ${error.message}`, {
+      customerEmail: email || 'unknown',
+      showDate: showDate || 'unknown',
+      tickets: tickets || 'unknown',
+    }).catch(() => {})
     return res.status(500).json({
-      error: 'Failed to join waitlist. Please try again.',
+      error: 'Something went wrong joining the waitlist. Please try again, or email tavi@tavicomedy.com directly.',
     })
   }
 }

@@ -14,7 +14,7 @@ function formatDisplayDate(dateStr) {
 
 export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
-  showcaseTicketsAvailable: false,
+  showcaseTicketsAvailable: true,
 
   // ⚠️  WHEN UPDATING SHOW DATE, ALSO UPDATE:
   //     1. performers array in data/shows.js

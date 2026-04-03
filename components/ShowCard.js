@@ -45,7 +45,7 @@ function generateCalendarUrl(show) {
   return `https://www.google.com/calendar/render?${params.toString()}`
 }
 
-export default function ShowCard({ show }) {
+export default function ShowCard({ show, onCheckout }) {
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -242,7 +242,7 @@ export default function ShowCard({ show }) {
         {!(show.soldOut && show.isShowcase && siteConfig.showcaseTicketsAvailable) && (
           <div className="mt-auto pt-4">
             <a
-              href={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : show.ticketLink}
+              href={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : (show.isOpenMic ? show.ticketLink : '#')}
               target={show.isOpenMic ? '_blank' : '_self'}
               rel={show.isOpenMic ? 'noopener noreferrer' : undefined}
               className={`block w-full text-center py-3 rounded-lg font-medium transition-colors ${
@@ -250,9 +250,13 @@ export default function ShowCard({ show }) {
                   ? 'bg-comedy-green text-white hover:bg-green-700'
                   : 'bg-comedy-purple text-white hover:bg-purple-700'
               }`}
-              onClick={() => {
+              onClick={(e) => {
                 if (typeof window !== 'undefined' && window.fbq) {
                   window.fbq('track', 'Lead')
+                }
+                if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut && onCheckout) {
+                  e.preventDefault()
+                  onCheckout()
                 }
               }}
             >

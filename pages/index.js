@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import Navigation from '@/components/Navigation'
@@ -5,12 +6,14 @@ import ShowCard from '@/components/ShowCard'
 import EmailSignup from '@/components/EmailSignup'
 import TestimonialSubmit from '@/components/TestimonialSubmit'
 import ComedianGrid from '@/components/ComedianGrid'
+import CheckoutModal from '@/components/CheckoutModal'
 import { upcomingShows } from '@/data/shows'
 import { comedians } from '@/data/comedians'
 import { siteConfig } from '@/config/site'
 import { FaInstagram } from 'react-icons/fa'
 
 export default function Home() {
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
   const galleryImages = [
     { src: '/images/packed-room-placeholder.jpg', alt: 'Packed comedy show audience' }, // Replace with Copy of Crave Show Photos.png
     { src: '/images/performer-stage-placeholder.jpg', alt: 'Comedian performing on stage' }, // Replace with 823 45 Ratio Photo (2).png
@@ -50,10 +53,10 @@ export default function Home() {
     ? `${siteConfig.noTickets.buttonText}: Next Show ${showDate}`
     : siteConfig.noTickets.buttonText
 
+  const canBuyTickets = siteConfig.showcaseTicketsAvailable && !isShowcaseSoldOut
+
   const primaryCTA = {
-    href: isShowcaseSoldOut ? '#shows' : (siteConfig.showcaseTicketsAvailable ? siteConfig.tickets.checkoutPath : siteConfig.noTickets.buttonLink),
-    target: isShowcaseSoldOut ? "_self" : (siteConfig.showcaseTicketsAvailable ? "_self" : "_self"),
-    rel: undefined,
+    href: isShowcaseSoldOut ? '#shows' : (siteConfig.showcaseTicketsAvailable ? '#' : siteConfig.noTickets.buttonLink),
     text: isShowcaseSoldOut
       ? `${showDate} Show Sold Out`
       : (siteConfig.showcaseTicketsAvailable ? `${siteConfig.tickets.buttonText} for ${showDate}` : nextShowButtonText),
@@ -116,18 +119,19 @@ export default function Home() {
             <div className="w-full sm:w-auto flex flex-col items-center">
               <a
                 href={primaryCTA.href}
-                target={primaryCTA.target}
-                rel={primaryCTA.rel}
                 className="btn-primary text-lg sm:text-xl md:text-2xl w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 backdrop-blur-sm font-semibold"
                 onClick={(e) => {
                   if (typeof window !== 'undefined' && window.fbq) {
                     window.fbq('track', 'Lead')
                   }
-                  // If sold out, scroll to shows section (show card has waitlist)
                   if (isShowcaseSoldOut) {
                     e.preventDefault()
                     document.querySelector('#shows')?.scrollIntoView({ behavior: 'smooth' })
                     return
+                  }
+                  if (canBuyTickets) {
+                    e.preventDefault()
+                    setCheckoutOpen(true)
                   }
                 }}
               >
@@ -210,7 +214,7 @@ export default function Home() {
           
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {sortedShows.map(show => (
-              <ShowCard key={show.id} show={show} />
+              <ShowCard key={show.id} show={show} onCheckout={() => setCheckoutOpen(true)} />
             ))}
           </div>
         </div>
@@ -373,7 +377,7 @@ export default function Home() {
               <ul className="space-y-2">
                 {siteConfig.showcaseTicketsAvailable && (
                   <li>
-                    <a href={siteConfig.tickets.checkoutPath} className="text-gray-400 hover:text-white transition-colors">
+                    <a href="#" onClick={(e) => { e.preventDefault(); setCheckoutOpen(true) }} className="text-gray-400 hover:text-white transition-colors">
                       Buy Tickets
                     </a>
                   </li>
@@ -422,6 +426,15 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      <CheckoutModal
+        open={checkoutOpen}
+        onClose={() => setCheckoutOpen(false)}
+        onSoldOut={() => {
+          setCheckoutOpen(false)
+          window.location.href = '/#updates'
+        }}
+      />
     </>
   )
 }

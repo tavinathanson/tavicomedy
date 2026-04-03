@@ -39,6 +39,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    const { quantity } = req.body || {}
+    const ticketCount = Math.max(1, Math.floor(Number(quantity) || 1))
+
     const showDate = siteConfig.nextShowDateISO
     const ticketsSold = await getTicketsSold(showDate)
     const remaining = siteConfig.tickets.capacity - ticketsSold
@@ -47,30 +50,29 @@ export default async function handler(req, res) {
       return res.status(200).json({ soldOut: true })
     }
 
+    if (ticketCount > remaining) {
+      return res.status(200).json({ remaining })
+    }
+
     const session = await stripe.checkout.sessions.create({
-      ui_mode: 'embedded',
+      ui_mode: 'embedded_page',
       line_items: [
         {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Crave Laughs Standup Comedy Show',
+              name: `Crave Laughs Comedy Show: ${ticketCount} ${ticketCount === 1 ? 'Ticket' : 'Tickets'}`,
               description: 'Standup comedy at Crave Nature\'s Eatery, Lawrenceville, NJ. BYOB! Doors at 5:30 PM, show at 7:00 PM.',
             },
             unit_amount: 2000,
           },
-          adjustable_quantity: {
-            enabled: true,
-            minimum: 1,
-            maximum: remaining,
-          },
-          quantity: 1,
+          quantity: ticketCount,
         },
       ],
       mode: 'payment',
-      metadata: { showDate },
+      metadata: { showDate, ticketCount: String(ticketCount) },
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
-      return_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+      return_url: `${req.headers.origin || `https://${req.headers.host}`}/success?session_id={CHECKOUT_SESSION_ID}`,
     })
 
     res.status(200).json({ clientSecret: session.client_secret })

@@ -103,6 +103,11 @@ export default async function handler(req, res) {
       mode: 'payment',
       payment_intent_data: {
         description: 'No ticket needed! Just give your name at the door.',
+        metadata: {
+          showDate,
+          ticketCount: String(ticketCount),
+          ...(hearAbout && { hearAbout: String(hearAbout).slice(0, 500) }),
+        },
       },
       custom_text: {
         after_submit: {

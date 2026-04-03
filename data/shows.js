@@ -31,6 +31,8 @@ export const upcomingShows = [
       {
         name: "Michael Beavers",
         instagram: "leave_it.to_beavers",
+        credits: "Helium Comedy Club's Philly's Phunniest (2nd Place)",
+        bio: "Michael Beavers started doing stand-up comedy in July 2021 and came in 2nd place out of over 300 comics in Helium Comedy Club's prestigious Philadelphia's Phunniest Person Contest in 2023. He can be seen all over the tri-state area performing for places including Punchline Comedy Club, Next-in-Line Comedy and Don't Tell Comedy."
       },
       {
         name: "Megan Goetz",

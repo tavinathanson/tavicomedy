@@ -60,7 +60,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { quantity } = req.body || {}
+    const { quantity, hearAbout } = req.body || {}
     const ticketCount = Math.max(1, Math.floor(Number(quantity) || 1))
     const showDate = siteConfig.nextShowDateISO
 
@@ -101,7 +101,19 @@ export default async function handler(req, res) {
         },
       ],
       mode: 'payment',
-      metadata: { showDate, ticketCount: String(ticketCount) },
+      payment_intent_data: {
+        description: 'No ticket needed. Just give your name at the door.',
+      },
+      custom_text: {
+        after_submit: {
+          message: 'No ticket needed. Just give your name at the door!',
+        },
+      },
+      metadata: {
+        showDate,
+        ticketCount: String(ticketCount),
+        ...(hearAbout && { hearAbout: String(hearAbout).slice(0, 500) }),
+      },
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
       return_url: `${req.headers.origin || `https://${req.headers.host}`}/success?session_id={CHECKOUT_SESSION_ID}`,
     })

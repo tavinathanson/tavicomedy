@@ -14,6 +14,8 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
   const [step, setStep] = useState('pick') // 'pick', 'pay', 'error', or 'soldout'
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [minimumAcknowledged, setMinimumAcknowledged] = useState(false)
+  const [hearAbout, setHearAbout] = useState('')
 
   // Fetch remaining capacity and reset state when modal opens
   useEffect(() => {
@@ -47,6 +49,8 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
     setError('')
     setRemaining(null)
     setLoading(true)
+    setMinimumAcknowledged(false)
+    setHearAbout('')
     fetch('/api/create-checkout-session')
       .then(res => res.json())
       .then(data => {
@@ -75,7 +79,7 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity }),
+        body: JSON.stringify({ quantity, hearAbout }),
       })
       const data = await res.json()
       if (data.soldOut) {
@@ -100,7 +104,7 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
       setStep('error')
       return ''
     }
-  }, [quantity])
+  }, [quantity, hearAbout])
 
   // Lock body scroll when open
   useEffect(() => {
@@ -226,9 +230,49 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
                   Total: ${quantity * 20}
                 </p>
 
+                <label className="flex items-start gap-3 text-left mb-5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={minimumAcknowledged}
+                    onChange={(e) => setMinimumAcknowledged(e.target.checked)}
+                    className="mt-1 w-4 h-4 accent-comedy-purple flex-shrink-0"
+                  />
+                  <span>
+                    <span className="text-sm text-gray-700">
+                      I understand there&apos;s a 1-item minimum per person
+                    </span>
+                    <span className="block text-xs text-gray-400 mt-1">
+                      Anything from the cafe menu counts! BYOB is welcome but doesn&apos;t count toward the minimum. Your purchase keeps our BYOB policy possible!
+                    </span>
+                  </span>
+                </label>
+
+                <div className="mb-6 text-left">
+                  <label htmlFor="hear-about" className="block text-sm text-gray-600 mb-1">
+                    How did you hear about the show?
+                  </label>
+                  <select
+                    id="hear-about"
+                    value={hearAbout}
+                    onChange={(e) => setHearAbout(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-comedy-purple focus:border-transparent"
+                  >
+                    <option value="">Select one...</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Friend or family">Friend or family</option>
+                    <option value="From Crave">From Crave</option>
+                    <option value="Saw a flyer">Saw a flyer</option>
+                    <option value="Google search">Google search</option>
+                    <option value="Been to a previous show">Been to a previous show</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
                 <button
                   onClick={() => setStep('pay')}
-                  className="w-full bg-comedy-purple text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors text-lg"
+                  disabled={!minimumAcknowledged}
+                  className="w-full bg-comedy-purple text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors text-lg disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Continue to Payment
                 </button>

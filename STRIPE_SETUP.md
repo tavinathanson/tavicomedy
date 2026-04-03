@@ -180,6 +180,19 @@ tickets: {
 
 ---
 
+## Receipts
+
+Customers receive an email receipt after every successful payment. This is handled by two things working together:
+
+1. **Stripe Dashboard toggle:** Settings > Business > Customer emails > "Successful payments" is turned ON. This tells Stripe to email a receipt to the customer after each charge.
+2. **Code (`create-checkout-session.js`):** The checkout session sets `payment_intent_data.description` to "No ticket needed. Just give your name at the door." This message appears on the emailed receipt so customers know they don't need a physical ticket.
+
+Additionally, `custom_text.after_submit` is set on the checkout session so the same "no ticket needed" message appears on the Stripe confirmation page right after payment.
+
+If the dashboard toggle is off, no receipts are sent (unless `receipt_email` is explicitly set on the payment intent via the API, which we don't do). The toggle setting is ignored when `receipt_email` is provided in the API, but since we rely on the toggle, just keep it on.
+
+---
+
 ## Tax and Fees
 
 The site advertises "$20, no extra taxes or fees." Tax is absorbed into the $20 price:

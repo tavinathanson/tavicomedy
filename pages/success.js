@@ -1,10 +1,14 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Navigation from '@/components/Navigation'
 import { siteConfig } from '@/config/site'
 
 export default function Success() {
+  const router = useRouter()
+  const { session_id } = router.query
+
   // Fire Meta Pixel Purchase event on page load
   useEffect(() => {
     if (typeof window !== 'undefined' && window.fbq) {
@@ -15,6 +19,16 @@ export default function Success() {
       })
     }
   }, [])
+
+  // Notify about the purchase
+  useEffect(() => {
+    if (!session_id) return
+    fetch('/api/purchase-complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId: session_id }),
+    }).catch(() => {})
+  }, [session_id])
 
   // Build Google Calendar URL
   const calendarDate = siteConfig.nextShowDateISO.replace(/-/g, '')

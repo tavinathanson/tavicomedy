@@ -16,6 +16,10 @@ export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
   showcaseTicketsAvailable: true,
 
+  // Optional: set to true to force sold out immediately (skips Stripe capacity check)
+  // Leave false/undefined to auto-detect from Stripe
+  showcaseForceSoldOut: false,
+
   // ⚠️  WHEN UPDATING SHOW DATE, ALSO UPDATE:
   //     1. performers array in data/shows.js
 
@@ -44,5 +48,6 @@ export const siteConfig = {
     buttonText: "Buy Tickets",
     checkoutPath: "/checkout",
     capacity: 100,
+    almostSoldOutThreshold: 15,
   }
 }

@@ -1,5 +1,6 @@
 import Stripe from 'stripe'
 import { siteConfig } from '@/config/site'
+import { sendCheckoutErrorAlert } from '@/lib/resend'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -32,19 +33,49 @@ async function getTicketsSold(showDate) {
   return total
 }
 
+async function getRemaining() {
+  const showDate = siteConfig.nextShowDateISO
+  const ticketsSold = await getTicketsSold(showDate)
+  return siteConfig.tickets.capacity - ticketsSold
+}
+
 export default async function handler(req, res) {
+  if (req.method === 'GET') {
+    try {
+      const remaining = await getRemaining()
+      return res.status(200).json({ remaining, soldOut: remaining <= 0 })
+    } catch (err) {
+      console.error('GET checkout error:', err)
+      sendCheckoutErrorAlert(err.message, {
+        method: 'GET',
+        showDate: siteConfig.nextShowDateISO,
+      }).catch(() => {})
+      return res.status(200).json({ error: 'Something went wrong loading ticket availability. Please try again in a moment.' })
+    }
+  }
+
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST')
+    res.setHeader('Allow', 'GET, POST')
     return res.status(405).end('Method Not Allowed')
   }
 
   try {
     const { quantity } = req.body || {}
     const ticketCount = Math.max(1, Math.floor(Number(quantity) || 1))
-
     const showDate = siteConfig.nextShowDateISO
-    const ticketsSold = await getTicketsSold(showDate)
-    const remaining = siteConfig.tickets.capacity - ticketsSold
+
+    let remaining
+    try {
+      remaining = await getRemaining()
+    } catch (err) {
+      console.error('Failed to check capacity:', err)
+      sendCheckoutErrorAlert(`Failed to check capacity: ${err.message}`, {
+        method: 'POST',
+        requestedQuantity: ticketCount,
+        showDate,
+      }).catch(() => {})
+      return res.status(200).json({ error: 'Something went wrong checking ticket availability. Please try again in a moment.' })
+    }
 
     if (remaining <= 0) {
       return res.status(200).json({ soldOut: true })
@@ -77,6 +108,14 @@ export default async function handler(req, res) {
 
     res.status(200).json({ clientSecret: session.client_secret })
   } catch (err) {
-    res.status(500).json({ error: err.message })
+    console.error('POST checkout error:', err)
+    const { quantity } = req.body || {}
+    sendCheckoutErrorAlert(`Session creation failed: ${err.message}`, {
+      method: 'POST',
+      requestedQuantity: quantity,
+      showDate: siteConfig.nextShowDateISO,
+      stripeErrorType: err.type || 'unknown',
+    }).catch(() => {})
+    res.status(200).json({ error: 'Something went wrong setting up checkout. Please try again, or email tavi@tavicomedy.com for help.' })
   }
 }

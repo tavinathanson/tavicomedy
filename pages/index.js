@@ -7,6 +7,7 @@ import EmailSignup from '@/components/EmailSignup'
 import TestimonialSubmit from '@/components/TestimonialSubmit'
 import ComedianGrid from '@/components/ComedianGrid'
 import CheckoutModal from '@/components/CheckoutModal'
+import useTicketAvailability from '@/hooks/useTicketAvailability'
 import { upcomingShows } from '@/data/shows'
 import { comedians } from '@/data/comedians'
 import { siteConfig } from '@/config/site'
@@ -14,6 +15,7 @@ import { FaInstagram } from 'react-icons/fa'
 
 export default function Home() {
   const [checkoutOpen, setCheckoutOpen] = useState(false)
+  const { soldOut: isShowcaseSoldOut, remaining } = useTicketAvailability()
   const galleryImages = [
     { src: '/images/packed-room-placeholder.jpg', alt: 'Packed comedy show audience' }, // Replace with Copy of Crave Show Photos.png
     { src: '/images/performer-stage-placeholder.jpg', alt: 'Comedian performing on stage' }, // Replace with 823 45 Ratio Photo (2).png
@@ -38,9 +40,6 @@ export default function Home() {
     return dateA - dateB
   })
 
-  // Get the primary showcase show to check soldOut status
-  const primaryShowcase = upcomingShows.find(show => show.isShowcase)
-  const isShowcaseSoldOut = primaryShowcase?.soldOut || false
   const hasNextShowDate = siteConfig.nextUpcomingShowDate != null
 
   // Format next upcoming show date for buttons
@@ -214,7 +213,7 @@ export default function Home() {
           
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {sortedShows.map(show => (
-              <ShowCard key={show.id} show={show} onCheckout={() => setCheckoutOpen(true)} />
+              <ShowCard key={show.id} show={show} onCheckout={() => setCheckoutOpen(true)} soldOut={show.isShowcase && isShowcaseSoldOut} remaining={show.isShowcase ? remaining : null} />
             ))}
           </div>
         </div>
@@ -430,10 +429,6 @@ export default function Home() {
       <CheckoutModal
         open={checkoutOpen}
         onClose={() => setCheckoutOpen(false)}
-        onSoldOut={() => {
-          setCheckoutOpen(false)
-          window.location.href = '/#updates'
-        }}
       />
     </>
   )

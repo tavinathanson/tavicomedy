@@ -45,7 +45,7 @@ function generateCalendarUrl(show) {
   return `https://www.google.com/calendar/render?${params.toString()}`
 }
 
-export default function ShowCard({ show, onCheckout }) {
+export default function ShowCard({ show, onCheckout, soldOut, remaining }) {
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -82,7 +82,7 @@ export default function ShowCard({ show, onCheckout }) {
           </div>
         )}
         {/* Sold out banner across image */}
-        {show.soldOut && siteConfig.showcaseTicketsAvailable && (
+        {soldOut && siteConfig.showcaseTicketsAvailable && (
           <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center">
             <span className="text-white text-3xl font-display uppercase tracking-widest">Sold Out</span>
             {siteConfig.nextUpcomingShowDate && (
@@ -99,7 +99,7 @@ export default function ShowCard({ show, onCheckout }) {
         </div>
 
         {/* Status badges */}
-        {show.almostSoldOut && !show.soldOut && siteConfig.showcaseTicketsAvailable && (
+        {remaining != null && remaining > 0 && remaining <= siteConfig.tickets.almostSoldOutThreshold && siteConfig.showcaseTicketsAvailable && (
           <p className="text-sm text-orange-600 mb-3">Almost sold out</p>
         )}
         {show.isShowcase && !siteConfig.showcaseTicketsAvailable && (
@@ -224,7 +224,7 @@ export default function ShowCard({ show, onCheckout }) {
         )}
 
         {/* Next show callout + waitlist for sold-out shows */}
-        {show.soldOut && show.isShowcase && siteConfig.showcaseTicketsAvailable && (
+        {soldOut && show.isShowcase && siteConfig.showcaseTicketsAvailable && (
           <div className="mt-auto pt-4 space-y-3">
             {siteConfig.nextUpcomingShowDate && (
               <div className="bg-comedy-purple/10 border border-comedy-purple/20 rounded-lg p-3 text-center">
@@ -239,7 +239,7 @@ export default function ShowCard({ show, onCheckout }) {
         )}
 
         {/* CTA Button (hidden when sold-out showcase with waitlist) */}
-        {!(show.soldOut && show.isShowcase && siteConfig.showcaseTicketsAvailable) && (
+        {!(soldOut && show.isShowcase && siteConfig.showcaseTicketsAvailable) && (
           <div className="mt-auto pt-4">
             <a
               href={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : (show.isOpenMic ? show.ticketLink : '#')}
@@ -254,7 +254,7 @@ export default function ShowCard({ show, onCheckout }) {
                 if (typeof window !== 'undefined' && window.fbq) {
                   window.fbq('track', 'Lead')
                 }
-                if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut && onCheckout) {
+                if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !soldOut && onCheckout) {
                   e.preventDefault()
                   onCheckout()
                 }

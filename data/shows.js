@@ -43,6 +43,8 @@ export const upcomingShows = [
       {
         name: "Laz Vic",
         instagram: "justlazvic",
+        credits: "5x Meadowlands Comedy Club Champion",
+        bio: "Laz Vic is a New Jersey-based stand-up comedian known for his sharp, relatable humor. A 5-time champion at Meadowlands Comedy Club, he brings high-energy storytelling rooted in his Gen-X upbringing. His latest special, No Wi-Fi, is streaming now."
       },
     ],
     vibe: "Our shows regularly sell out with ~100 attendees! Join the mailing list to get notified when tickets are available.",

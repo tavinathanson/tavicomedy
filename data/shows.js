@@ -41,6 +41,8 @@ export const upcomingShows = [
       {
         name: "Becky Veduccio",
         instagram: "beckyveduccio",
+        credits: "NBC's America's Got Talent, Netflix's Survival of the Thickest",
+        bio: "Becky Veduccio has appeared on NBC's America's Got Talent and Netflix's Survival of the Thickest as well as several feature films. She was a finalist in Ladies Of Laughter as both a newcomer, performing at Madison Square Garden, as well as becoming a finalist in the professional category in 2021."
       },
       {
         name: "Laz Vic",

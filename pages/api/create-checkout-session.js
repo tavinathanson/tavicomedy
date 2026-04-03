@@ -102,7 +102,7 @@ export default async function handler(req, res) {
       ],
       mode: 'payment',
       payment_intent_data: {
-        description: 'No ticket needed. Just give your name at the door.',
+        description: 'No ticket needed! Just give your name at the door.',
       },
       custom_text: {
         after_submit: {

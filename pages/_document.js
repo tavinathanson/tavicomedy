@@ -32,13 +32,6 @@ export default function Document() {
         </noscript>
         {/* End Meta Pixel Code */}
 
-        {/* Eventbrite Widget */}
-        <script
-          async
-          src="https://www.eventbrite.com/static/widgets/eb_widgets.js"
-        />
-        {/* End Eventbrite Widget */}
-
         {/* Microsoft Clarity */}
         <script
           dangerouslySetInnerHTML={{

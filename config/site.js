@@ -14,11 +14,10 @@ function formatDisplayDate(dateStr) {
 
 export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
-  showcaseTicketsAvailable: false,
+  showcaseTicketsAvailable: true,
 
   // ⚠️  WHEN UPDATING SHOW DATE, ALSO UPDATE:
-  //     1. eventId below (from Eventbrite dashboard URL)
-  //     2. performers array in data/shows.js
+  //     1. performers array in data/shows.js
 
   // Show date in YYYY-MM-DD format (single source of truth)
   nextShowDateISO: "2026-04-25",
@@ -43,7 +42,7 @@ export const siteConfig = {
   // Ticket mode settings (when showcaseTicketsAvailable is true)
   tickets: {
     buttonText: "Buy Tickets",
-    buttonLink: "https://cravelaughs.eventbrite.com",
-    eventId: "1980411162097"  // ⚠️ Update this when creating new Eventbrite event!
+    checkoutPath: "/checkout",
+    capacity: 100,
   }
 }

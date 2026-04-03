@@ -10,6 +10,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^6.1.0",
+    "@stripe/stripe-js": "^9.0.1",
     "googleapis": "^164.0.0",
     "html-to-image": "^1.11.13",
     "next": "^14.2.32",
@@ -17,7 +19,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.12.0",
-    "resend": "^6.6.0"
+    "resend": "^6.6.0",
+    "stripe": "^21.0.1"
   },
   "devDependencies": {
     "@types/node": "20.11.5",

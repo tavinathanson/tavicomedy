@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { siteConfig } from '@/config/site'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import WaitlistSignup from './WaitlistSignup'
 
 // Convert 12h time to 24h format (e.g., "7:00 PM" -> "19:00")
@@ -47,53 +47,6 @@ function generateCalendarUrl(show) {
 
 export default function ShowCard({ show }) {
   const [expanded, setExpanded] = useState(false)
-
-  // Initialize Eventbrite widget once on component mount
-  useEffect(() => {
-    if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:') {
-      // Wait for EBWidgets to be available
-      const initWidget = () => {
-        if (window.EBWidgets) {
-          try {
-            window.EBWidgets.createWidget({
-              widgetType: 'checkout',
-              eventId: show.eventId,
-              modal: true,
-              modalTriggerElementId: `eb-showcard-${show.id}`,
-              onOrderComplete: function() {
-                if (typeof window !== 'undefined' && window.fbq) {
-                  window.fbq('track', 'Purchase')
-                  // Also track as conversion event for unified tracking with mailing list signups
-                  window.fbq('track', 'CompleteRegistration', {
-                    content_name: 'Ticket Purchase',
-                    status: 'completed'
-                  })
-                }
-              }
-            })
-          } catch (error) {
-            console.error('Eventbrite widget initialization failed:', error)
-          }
-        }
-      }
-
-      // Check if already loaded
-      if (window.EBWidgets) {
-        initWidget()
-      } else {
-        // Wait for script to load
-        const checkInterval = setInterval(() => {
-          if (window.EBWidgets) {
-            clearInterval(checkInterval)
-            initWidget()
-          }
-        }, 100)
-
-        // Clear interval after 5 seconds to prevent infinite checking
-        setTimeout(() => clearInterval(checkInterval), 5000)
-      }
-    }
-  }, [show.isShowcase, show.eventId, show.id, show.soldOut])
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col h-full">
@@ -290,22 +243,18 @@ export default function ShowCard({ show }) {
           <div className="mt-auto pt-4">
             <a
               href={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '#updates' : show.ticketLink}
-              target={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? '_self' : '_blank'}
-              rel={show.isShowcase && !siteConfig.showcaseTicketsAvailable ? undefined : 'noopener noreferrer'}
+              target={show.isOpenMic ? '_blank' : '_self'}
+              rel={show.isOpenMic ? 'noopener noreferrer' : undefined}
               className={`block w-full text-center py-3 rounded-lg font-medium transition-colors ${
                 show.isOpenMic
                   ? 'bg-comedy-green text-white hover:bg-green-700'
                   : 'bg-comedy-purple text-white hover:bg-purple-700'
               }`}
-              onClick={(e) => {
+              onClick={() => {
                 if (typeof window !== 'undefined' && window.fbq) {
                   window.fbq('track', 'Lead')
                 }
-                if (show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut && show.eventId && typeof window !== 'undefined' && window.location.protocol === 'https:' && window.EBWidgets) {
-                  e.preventDefault()
-                }
               }}
-              id={show.isShowcase && siteConfig.showcaseTicketsAvailable && !show.soldOut ? `eb-showcard-${show.id}` : undefined}
             >
               {show.isOpenMic ? 'Sign Up' : (siteConfig.showcaseTicketsAvailable ? 'Get Tickets' : 'Get Updates')}
             </a>

@@ -16,8 +16,7 @@ export const upcomingShows = [
     vibe: "Our shows regularly sell out with ~100 attendees! Join the mailing list to get notified when tickets are available.",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     soldOut: false,
-    ticketLink: "https://cravelaughs.eventbrite.com",
-    eventId: siteConfig.tickets?.eventId, // For Eventbrite modal
+    ticketLink: siteConfig.tickets?.checkoutPath,
     isShowcase: true,
     highlights: {
       duration: "90 minutes",

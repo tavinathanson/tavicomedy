@@ -37,6 +37,8 @@ export const upcomingShows = [
       {
         name: "Megan Goetz",
         instagram: "meggoetzmoney",
+        credits: "McSweeney's, Reductress",
+        bio: "Meg Goetz is a Philadelphia-based writer and comedian. Her comedy is described as delightfully dark and smart. Her work has been published in McSweeney's and Reductress. She performs standup all over the country and has opened for such headliners as Melissa Villasenor, Natasha Leggero, and Janeane Garofalo."
       },
       {
         name: "Becky Veduccio",

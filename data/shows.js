@@ -22,6 +22,8 @@ export const upcomingShows = [
       {
         name: "Becky Z",
         instagram: "beckycomedy",
+        credits: "Newark Art Festival",
+        bio: "Becky is a Chinese American comedian based on the East Coast, performing across NJ, NY, PA, and recently featured on the Newark Art Festival."
       },
       {
         name: "Paul Carson",

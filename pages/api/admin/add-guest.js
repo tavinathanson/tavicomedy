@@ -1,48 +1,8 @@
-import { google } from 'googleapis'
 import { requireAuth } from '@/lib/admin-auth'
 import { siteConfig } from '@/config/site'
+import { getSheets, getSpreadsheetId, ensureSheetTab } from '@/lib/google-sheets'
 
 const SHEET_NAME = 'admin-guests'
-
-async function getSheets() {
-  const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY)
-  const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-  })
-  return google.sheets({ version: 'v4', auth })
-}
-
-async function ensureSheetExists(sheets, spreadsheetId) {
-  try {
-    const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId })
-    const exists = spreadsheet.data.sheets.some(
-      s => s.properties.title === SHEET_NAME
-    )
-    if (!exists) {
-      await sheets.spreadsheets.batchUpdate({
-        spreadsheetId,
-        resource: {
-          requests: [{
-            addSheet: { properties: { title: SHEET_NAME } }
-          }]
-        }
-      })
-      // Add header row
-      await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: `${SHEET_NAME}!A1:F1`,
-        valueInputOption: 'RAW',
-        resource: {
-          values: [['Name', 'Email', 'Tickets', 'Source', 'ShowDate', 'AddedAt']]
-        }
-      })
-    }
-  } catch (err) {
-    console.error('Error ensuring sheet exists:', err)
-    throw err
-  }
-}
 
 export default requireAuth(async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -62,18 +22,20 @@ export default requireAuth(async function handler(req, res) {
     return res.status(400).json({ error: `Source must be one of: ${validSources.join(', ')}` })
   }
 
-  const spreadsheetId = process.env.GOOGLE_SHEET_ID
+  const spreadsheetId = getSpreadsheetId()
   if (!spreadsheetId) {
     return res.status(500).json({ error: 'Google Sheets not configured' })
   }
 
   try {
-    const sheets = await getSheets()
-    await ensureSheetExists(sheets, spreadsheetId)
+    const sheets = getSheets()
+    await ensureSheetTab(sheets, spreadsheetId, SHEET_NAME,
+      ['Name', 'Email', 'Tickets', 'Source', 'ShowDate', 'AddedAt', 'Skip']
+    )
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: `${SHEET_NAME}!A:F`,
+      range: `${SHEET_NAME}!A:G`,
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       resource: {
@@ -84,6 +46,7 @@ export default requireAuth(async function handler(req, res) {
           source,
           showDate,
           new Date().toISOString(),
+          '', // skip = false by default
         ]]
       }
     })

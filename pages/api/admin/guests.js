@@ -1,12 +1,13 @@
 import Stripe from 'stripe'
-import { google } from 'googleapis'
 import { requireAuth } from '@/lib/admin-auth'
 import { siteConfig } from '@/config/site'
+import { getSheets, getSpreadsheetId } from '@/lib/google-sheets'
+import { getSkippedSessionIds } from '@/lib/capacity'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-const SHEET_NAME = 'admin-guests'
+const GUESTS_SHEET = 'admin-guests'
 
-async function getStripeGuests(showDate) {
+async function getStripeGuests(showDate, skippedIds) {
   const guests = []
   let hasMore = true
   let startingAfter = undefined
@@ -30,6 +31,7 @@ async function getStripeGuests(showDate) {
         email: session.customer_details?.email || '',
         tickets: ticketCount,
         source: 'stripe',
+        skip: skippedIds.has(session.id),
         date: new Date(session.created * 1000).toISOString(),
       })
     }
@@ -44,44 +46,30 @@ async function getStripeGuests(showDate) {
 }
 
 async function getManualGuests(showDate) {
-  const credentialsString = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
-  const spreadsheetId = process.env.GOOGLE_SHEET_ID
-  if (!credentialsString || !spreadsheetId) return []
-
-  let credentials
-  try {
-    credentials = JSON.parse(credentialsString)
-  } catch {
-    return []
-  }
-
-  const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-  })
-  const sheets = google.sheets({ version: 'v4', auth })
+  const sheets = getSheets()
+  const spreadsheetId = getSpreadsheetId()
+  if (!spreadsheetId) return []
 
   try {
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `${SHEET_NAME}!A:F`,
+      range: `${GUESTS_SHEET}!A:G`,
     })
 
     const rows = response.data.values || []
-    // Skip header row
     return rows.slice(1)
-      .filter(row => row[4] === showDate) // column E = showDate
+      .filter(row => row[4] === showDate)
       .map((row, i) => ({
         id: `manual-${i}-${row[0]}`,
         name: row[0] || '',
         email: row[1] || '',
         tickets: parseInt(row[2]) || 1,
         source: row[3] || 'other',
+        skip: row[6] === 'true',
         date: row[5] || '',
         showDate: row[4] || '',
       }))
   } catch (err) {
-    // Sheet tab might not exist yet
     if (err.code === 400 || err.message?.includes('Unable to parse range')) {
       return []
     }
@@ -98,18 +86,23 @@ export default requireAuth(async function handler(req, res) {
   const showDate = req.query.showDate || siteConfig.nextShowDateISO
 
   try {
+    const skippedIds = await getSkippedSessionIds(showDate)
     const [stripeGuests, manualGuests] = await Promise.all([
-      getStripeGuests(showDate),
+      getStripeGuests(showDate, skippedIds),
       getManualGuests(showDate),
     ])
 
     const allGuests = [...stripeGuests, ...manualGuests]
     const totalTickets = allGuests.reduce((sum, g) => sum + g.tickets, 0)
+    const countingTickets = allGuests
+      .filter(g => !g.skip)
+      .reduce((sum, g) => sum + g.tickets, 0)
 
     return res.status(200).json({
       showDate,
       capacity: siteConfig.tickets.capacity,
       totalTickets,
+      countingTickets,
       guests: allGuests,
     })
   } catch (err) {

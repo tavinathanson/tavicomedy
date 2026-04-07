@@ -6,7 +6,6 @@ export default function AdminPage() {
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
 
-  // Check if already authenticated
   useEffect(() => {
     fetch('/api/admin/auth')
       .then(r => r.json())
@@ -36,11 +35,7 @@ export default function AdminPage() {
   }
 
   if (authed === null) {
-    return (
-      <Shell>
-        <p className="text-gray-500">Loading...</p>
-      </Shell>
-    )
+    return <Shell><p className="text-gray-500">Loading...</p></Shell>
   }
 
   if (!authed) {
@@ -70,11 +65,7 @@ export default function AdminPage() {
     )
   }
 
-  return (
-    <Shell>
-      <GuestList onLogout={handleLogout} />
-    </Shell>
-  )
+  return <Shell><GuestList onLogout={handleLogout} /></Shell>
 }
 
 function Shell({ children }) {
@@ -125,10 +116,25 @@ function GuestList({ onLogout }) {
     if (res.ok) fetchGuests()
   }
 
-  const stripeGuests = data?.guests?.filter(g => g.source === 'stripe') || []
-  const manualGuests = data?.guests?.filter(g => g.source !== 'stripe') || []
-  const stripeTickets = stripeGuests.reduce((s, g) => s + g.tickets, 0)
-  const manualTickets = manualGuests.reduce((s, g) => s + g.tickets, 0)
+  const handleToggleSkip = async (guest) => {
+    const res = await fetch('/api/admin/toggle-skip', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: guest.id,
+        source: guest.source,
+        showDate: data.showDate,
+        skip: !guest.skip,
+      }),
+    })
+    if (res.ok) fetchGuests()
+  }
+
+  const counting = data?.guests?.filter(g => !g.skip) || []
+  const skipped = data?.guests?.filter(g => g.skip) || []
+  const countingTickets = counting.reduce((s, g) => s + g.tickets, 0)
+  const skippedTickets = skipped.reduce((s, g) => s + g.tickets, 0)
+  const remaining = data ? data.capacity - countingTickets : 0
 
   return (
     <div>
@@ -155,10 +161,28 @@ function GuestList({ onLogout }) {
       {data && (
         <>
           {/* Summary */}
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            <SummaryCard label="Total Tickets" value={data.totalTickets} sub={`/ ${data.capacity}`} />
-            <SummaryCard label="Stripe" value={stripeTickets} sub={`${stripeGuests.length} orders`} />
-            <SummaryCard label="Manual" value={manualTickets} sub={`${manualGuests.length} entries`} />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <SummaryCard
+              label="Counting"
+              value={countingTickets}
+              sub={`/ ${data.capacity} cap`}
+            />
+            <SummaryCard
+              label="Remaining"
+              value={remaining}
+              sub={remaining <= 0 ? 'sold out' : 'available'}
+              highlight={remaining <= 0}
+            />
+            <SummaryCard
+              label="Total People"
+              value={data.totalTickets}
+              sub="all entries"
+            />
+            <SummaryCard
+              label="Skipped"
+              value={skippedTickets}
+              sub={`${skipped.length} entries`}
+            />
           </div>
 
           {/* Add guest */}
@@ -188,24 +212,43 @@ function GuestList({ onLogout }) {
                   <th className="text-left px-4 py-3 font-medium text-gray-600 hidden sm:table-cell">Email</th>
                   <th className="text-center px-4 py-3 font-medium text-gray-600">Qty</th>
                   <th className="text-center px-4 py-3 font-medium text-gray-600">Source</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">Count</th>
                   <th className="px-4 py-3 w-10"></th>
                 </tr>
               </thead>
               <tbody>
                 {data.guests.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
+                    <td colSpan={6} className="px-4 py-8 text-center text-gray-400">
                       No guests yet
                     </td>
                   </tr>
                 )}
                 {data.guests.map((guest) => (
-                  <tr key={guest.id} className="border-b border-gray-100 last:border-0">
-                    <td className="px-4 py-3">{guest.name || <span className="text-gray-400">No name</span>}</td>
+                  <tr
+                    key={guest.id}
+                    className={`border-b border-gray-100 last:border-0 ${guest.skip ? 'opacity-50' : ''}`}
+                  >
+                    <td className="px-4 py-3">
+                      {guest.name || <span className="text-gray-400">No name</span>}
+                    </td>
                     <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">{guest.email}</td>
                     <td className="px-4 py-3 text-center">{guest.tickets}</td>
                     <td className="px-4 py-3 text-center">
                       <SourceBadge source={guest.source} />
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        onClick={() => handleToggleSkip(guest)}
+                        className={`text-xs font-medium px-2 py-0.5 rounded-full transition-colors ${
+                          guest.skip
+                            ? 'bg-red-100 text-red-600 hover:bg-red-200'
+                            : 'bg-green-100 text-green-600 hover:bg-green-200'
+                        }`}
+                        title={guest.skip ? 'Click to count toward capacity' : 'Click to skip (not count)'}
+                      >
+                        {guest.skip ? 'skipped' : 'yes'}
+                      </button>
                     </td>
                     <td className="px-4 py-3 text-center">
                       {guest.source !== 'stripe' && (
@@ -229,10 +272,10 @@ function GuestList({ onLogout }) {
   )
 }
 
-function SummaryCard({ label, value, sub }) {
+function SummaryCard({ label, value, sub, highlight }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-      <p className="text-2xl font-bold">{value}</p>
+    <div className={`bg-white rounded-lg border p-4 text-center ${highlight ? 'border-red-300' : 'border-gray-200'}`}>
+      <p className={`text-2xl font-bold ${highlight ? 'text-red-600' : ''}`}>{value}</p>
       <p className="text-xs text-gray-500 font-medium">{label}</p>
       {sub && <p className="text-xs text-gray-400">{sub}</p>}
     </div>

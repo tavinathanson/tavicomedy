@@ -1,43 +1,9 @@
 import Stripe from 'stripe'
 import { siteConfig } from '@/config/site'
 import { sendCheckoutErrorAlert } from '@/lib/resend'
+import { getRemaining } from '@/lib/capacity'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-
-async function getTicketsSold(showDate) {
-  let total = 0
-  let hasMore = true
-  let startingAfter = undefined
-
-  while (hasMore) {
-    const sessions = await stripe.checkout.sessions.list({
-      status: 'complete',
-      limit: 100,
-      ...(startingAfter && { starting_after: startingAfter }),
-      expand: ['data.line_items'],
-    })
-
-    for (const session of sessions.data) {
-      if (session.metadata?.showDate !== showDate) continue
-      for (const item of session.line_items?.data || []) {
-        total += item.quantity || 0
-      }
-    }
-
-    hasMore = sessions.has_more
-    if (sessions.data.length > 0) {
-      startingAfter = sessions.data[sessions.data.length - 1].id
-    }
-  }
-
-  return total
-}
-
-async function getRemaining() {
-  const showDate = siteConfig.nextShowDateISO
-  const ticketsSold = await getTicketsSold(showDate)
-  return siteConfig.tickets.capacity - ticketsSold
-}
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {

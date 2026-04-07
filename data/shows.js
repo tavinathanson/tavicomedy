@@ -52,7 +52,7 @@ export const upcomingShows = [
       },
     ],
     vibe: siteConfig.showcaseTicketsAvailable
-      ? "Our shows regularly sell out with ~100 attendees! Don't wait to get your ticket!"
+      ? "Our shows regularly sell out with ~100 attendees! Don't wait to get your tickets!"
       : "Our shows regularly sell out with ~100 attendees! Join the mailing list to get notified when tickets are available.",
     image: "/images/photo-for-show-card.jpg", // 800x600px recommended
     ticketLink: siteConfig.tickets?.checkoutPath,

@@ -53,6 +53,7 @@ export default async function handler(req, res) {
 
     const session = await stripe.checkout.sessions.create({
       ui_mode: 'embedded_page',
+      billing_address_collection: 'required',
       line_items: [
         {
           price_data: {

@@ -5,11 +5,12 @@ import { siteConfig } from '@/config/site'
 import WaitlistSignup from './WaitlistSignup'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+const DEFAULT_QUANTITY = 1
 
 // initialStep: optional, forces the modal into a specific state (for debug/preview).
 // When set, skips the API fetch.
 export default function CheckoutModal({ open, onClose, initialStep }) {
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(DEFAULT_QUANTITY)
   const [remaining, setRemaining] = useState(null)
   const [step, setStep] = useState('pick') // 'pick', 'pay', 'error', or 'soldout'
   const [error, setError] = useState('')
@@ -44,7 +45,7 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
       return
     }
 
-    setQuantity(2)
+    setQuantity(DEFAULT_QUANTITY)
     setStep('pick')
     setError('')
     setRemaining(null)

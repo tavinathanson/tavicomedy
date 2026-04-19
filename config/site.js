@@ -47,7 +47,7 @@ export const siteConfig = {
   tickets: {
     buttonText: "Buy Tickets",
     checkoutPath: "/checkout",
-    capacity: 92,
+    capacity: 96,
     almostSoldOutThreshold: 15,
   }
 }

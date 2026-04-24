@@ -9,7 +9,7 @@ const DEFAULT_QUANTITY = 1
 
 // initialStep: optional, forces the modal into a specific state (for debug/preview).
 // When set, skips the API fetch.
-export default function CheckoutModal({ open, onClose, initialStep }) {
+export default function CheckoutModal({ open, onClose, initialStep, bypass }) {
   const [quantity, setQuantity] = useState(DEFAULT_QUANTITY)
   const [remaining, setRemaining] = useState(null)
   const [step, setStep] = useState('pick') // 'pick', 'pay', 'error', or 'soldout'
@@ -21,6 +21,17 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
   // Fetch remaining capacity and reset state when modal opens
   useEffect(() => {
     if (!open) return
+
+    if (bypass) {
+      setQuantity(DEFAULT_QUANTITY)
+      setStep('pick')
+      setError('')
+      setRemaining(null)
+      setLoading(false)
+      setMinimumAcknowledged(false)
+      setHearAbout('')
+      return
+    }
 
     if (!initialStep && siteConfig.showcaseForceSoldOut) {
       setStep('soldout')
@@ -73,14 +84,14 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
         setStep('error')
       })
       .finally(() => setLoading(false))
-  }, [open, initialStep])
+  }, [open, initialStep, bypass])
 
   const fetchClientSecret = useCallback(async () => {
     try {
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity, hearAbout }),
+        body: JSON.stringify({ quantity, hearAbout, bypass }),
       })
       const data = await res.json()
       if (data.soldOut) {
@@ -105,7 +116,7 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
       setStep('error')
       return ''
     }
-  }, [quantity, hearAbout])
+  }, [quantity, hearAbout, bypass])
 
   // Lock body scroll when open
   useEffect(() => {
@@ -160,6 +171,7 @@ export default function CheckoutModal({ open, onClose, initialStep }) {
                 onClick={() => {
                   setError('')
                   setStep('pick')
+                  if (bypass) return
                   setLoading(true)
                   fetch('/api/create-checkout-session')
                     .then(res => res.json())

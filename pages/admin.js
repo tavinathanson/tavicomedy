@@ -227,6 +227,7 @@ function GuestList({ onLogout }) {
                 >
                   Export CSV
                 </button>
+                <ReservedLinkButton />
               </div>
             )}
           </div>
@@ -297,6 +298,30 @@ function GuestList({ onLogout }) {
         </>
       )}
     </div>
+  )
+}
+
+function ReservedLinkButton() {
+  const [copied, setCopied] = useState(false)
+  const path = '/reserved-r7k9fq2m'
+  const handleCopy = async () => {
+    const url = `${window.location.origin}${path}`
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch {
+      window.prompt('Copy this link:', url)
+    }
+  }
+  return (
+    <button
+      onClick={handleCopy}
+      className="text-sm bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+      title="Secret link that bypasses the ticket cap. Only share with waitlist folks."
+    >
+      {copied ? 'Copied!' : 'Copy reserved link'}
+    </button>
   )
 }
 

@@ -26,29 +26,31 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { quantity, hearAbout } = req.body || {}
+    const { quantity, hearAbout, bypass } = req.body || {}
     const ticketCount = Math.max(1, Math.floor(Number(quantity) || 1))
     const showDate = siteConfig.nextShowDateISO
 
-    let remaining
-    try {
-      remaining = await getRemaining()
-    } catch (err) {
-      console.error('Failed to check capacity:', err)
-      sendCheckoutErrorAlert(`Failed to check capacity: ${err.message}`, {
-        method: 'POST',
-        requestedQuantity: ticketCount,
-        showDate,
-      }).catch(() => {})
-      return res.status(200).json({ error: 'Something went wrong checking ticket availability. Please try again in a moment.' })
-    }
+    if (!bypass) {
+      let remaining
+      try {
+        remaining = await getRemaining()
+      } catch (err) {
+        console.error('Failed to check capacity:', err)
+        sendCheckoutErrorAlert(`Failed to check capacity: ${err.message}`, {
+          method: 'POST',
+          requestedQuantity: ticketCount,
+          showDate,
+        }).catch(() => {})
+        return res.status(200).json({ error: 'Something went wrong checking ticket availability. Please try again in a moment.' })
+      }
 
-    if (remaining <= 0) {
-      return res.status(200).json({ soldOut: true })
-    }
+      if (remaining <= 0) {
+        return res.status(200).json({ soldOut: true })
+      }
 
-    if (ticketCount > remaining) {
-      return res.status(200).json({ remaining })
+      if (ticketCount > remaining) {
+        return res.status(200).json({ remaining })
+      }
     }
 
     const session = await stripe.checkout.sessions.create({

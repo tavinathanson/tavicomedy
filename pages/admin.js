@@ -137,9 +137,9 @@ function GuestList({ onLogout }) {
   const remaining = data ? data.capacity - countingTickets : 0
 
   const handleExportCsv = () => {
-    const rows = [['Name', 'Email']]
+    const rows = [['Name', 'Email', 'Tickets']]
     for (const g of data.guests) {
-      rows.push([g.name || '', g.email || ''])
+      rows.push([g.name || '', g.email || '', g.tickets])
     }
     const csv = rows
       .map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))

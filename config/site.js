@@ -29,7 +29,7 @@ export const siteConfig = {
 
   // Next upcoming show date (when known, even before tickets are on sale)
   // Set to null if the next date is not yet determined
-  nextUpcomingShowDateISO: null,
+  nextUpcomingShowDateISO: "2026-06-20",
   get nextUpcomingShowDate() { return this.nextUpcomingShowDateISO ? formatDisplayDate(this.nextUpcomingShowDateISO) : null },
 
   // Open mic date in YYYY-MM-DD format

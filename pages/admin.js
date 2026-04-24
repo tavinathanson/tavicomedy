@@ -303,9 +303,11 @@ function GuestList({ onLogout }) {
 
 function ReservedLinkButton() {
   const [copied, setCopied] = useState(false)
+  const [max, setMax] = useState(2)
   const path = '/reserved-r7k9fq2m'
   const handleCopy = async () => {
-    const url = `${window.location.origin}${path}`
+    const n = Math.max(1, parseInt(max, 10) || 1)
+    const url = `${window.location.origin}${path}?max=${n}`
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
@@ -315,13 +317,25 @@ function ReservedLinkButton() {
     }
   }
   return (
-    <button
-      onClick={handleCopy}
-      className="text-sm bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
-      title="Secret link that bypasses the ticket cap. Only share with waitlist folks."
-    >
-      {copied ? 'Copied!' : 'Copy reserved link'}
-    </button>
+    <div className="flex items-center gap-2">
+      <label className="text-sm text-gray-500 flex items-center gap-1">
+        Max
+        <input
+          type="number"
+          min="1"
+          value={max}
+          onChange={e => setMax(e.target.value)}
+          className="w-14 text-sm border border-gray-300 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-comedy-purple"
+        />
+      </label>
+      <button
+        onClick={handleCopy}
+        className="text-sm bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+        title="Secret link that bypasses the ticket cap. Only share with waitlist folks."
+      >
+        {copied ? 'Copied!' : 'Copy reserved link'}
+      </button>
+    </div>
   )
 }
 

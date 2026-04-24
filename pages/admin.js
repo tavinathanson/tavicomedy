@@ -136,6 +136,25 @@ function GuestList({ onLogout }) {
   const skippedTickets = skipped.reduce((s, g) => s + g.tickets, 0)
   const remaining = data ? data.capacity - countingTickets : 0
 
+  const handleExportCsv = () => {
+    const rows = [['Name', 'Email']]
+    for (const g of data.guests) {
+      rows.push([g.name || '', g.email || ''])
+    }
+    const csv = rows
+      .map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))
+      .join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `guests-${data.showDate}.csv`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -194,12 +213,21 @@ function GuestList({ onLogout }) {
                 onCancel={() => setShowAddForm(false)}
               />
             ) : (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="text-sm bg-comedy-purple text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-              >
-                + Add Guest
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="text-sm bg-comedy-purple text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  + Add Guest
+                </button>
+                <button
+                  onClick={handleExportCsv}
+                  disabled={!data.guests.length}
+                  className="text-sm bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                >
+                  Export CSV
+                </button>
+              </div>
             )}
           </div>
 

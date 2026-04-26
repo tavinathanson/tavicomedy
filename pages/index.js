@@ -9,7 +9,7 @@ import ComedianGrid from '@/components/ComedianGrid'
 import CheckoutModal from '@/components/CheckoutModal'
 import useTicketAvailability from '@/hooks/useTicketAvailability'
 import { upcomingShows } from '@/data/shows'
-import { comedians } from '@/data/comedians'
+import { comedians, mostRecentShowPerformers } from '@/data/comedians'
 import { siteConfig } from '@/config/site'
 import { FaInstagram } from 'react-icons/fa'
 
@@ -294,7 +294,11 @@ export default function Home() {
       <section id="comedians" className="py-16 bg-white">
         <div className="max-w-2xl mx-auto section-padding">
           <h2 className="text-sm font-medium uppercase tracking-widest text-center mb-6 text-gray-400">Past Performers</h2>
-          <ComedianGrid comedians={comedians} />
+          <ComedianGrid comedians={comedians} recentPerformers={mostRecentShowPerformers} />
+          <p className="text-xs text-gray-400 text-center mt-4 flex items-center justify-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-comedy-purple inline-block" />
+            Performed at the most recent show
+          </p>
         </div>
       </section>
 

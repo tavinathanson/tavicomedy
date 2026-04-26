@@ -1,6 +1,18 @@
 // Comedians who have performed at Crave Laughs
 // Sorted alphabetically by first name
 
+// Names of comedians who performed at the most recent show.
+// Update this list each time a new show happens. Names must match `comedians` entries exactly.
+export const mostRecentShowPerformers = [
+  "Becky Veduccio",
+  "Becky Z",
+  "Laz Vic",
+  "Megan Goetz",
+  "Michael Beavers",
+  "Paul Carson",
+  "Steve Schwarz",
+]
+
 export const comedians = [
   { name: "Aaron Bell", instagram: "aaronbellcomedy" },
   { name: "Abe Shapiro", instagram: "abeshaps" },

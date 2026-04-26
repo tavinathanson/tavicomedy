@@ -1,6 +1,7 @@
 import { FaInstagram, FaYoutube } from 'react-icons/fa'
 
-export default function ComedianGrid({ comedians }) {
+export default function ComedianGrid({ comedians, recentPerformers = [] }) {
+  const recentSet = new Set(recentPerformers)
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-1.5">
       {comedians.map((comedian, index) => {
@@ -8,6 +9,7 @@ export default function ComedianGrid({ comedians }) {
         const link = isYoutube
           ? `https://youtube.com/@${comedian.youtube}`
           : `https://instagram.com/${comedian.instagram}`
+        const isRecent = recentSet.has(comedian.name)
 
         return (
           <a
@@ -23,6 +25,13 @@ export default function ComedianGrid({ comedians }) {
               <FaInstagram className="text-gray-300 group-hover:text-comedy-purple transition-colors text-xs flex-shrink-0" />
             )}
             <span className="text-sm">{comedian.name}</span>
+            {isRecent && (
+              <span
+                title="Performed at the most recent show"
+                aria-label="Performed at the most recent show"
+                className="w-1.5 h-1.5 rounded-full bg-comedy-purple flex-shrink-0"
+              />
+            )}
           </a>
         )
       })}

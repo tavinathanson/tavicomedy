@@ -14,22 +14,22 @@ function formatDisplayDate(dateStr) {
 
 export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
-  showcaseTicketsAvailable: true,
+  showcaseTicketsAvailable: false,
 
   // Optional: set to true to force sold out immediately (skips Stripe capacity check)
   // Leave false/undefined to auto-detect from Stripe
-  showcaseForceSoldOut: true,
+  showcaseForceSoldOut: false,
 
   // ⚠️  WHEN UPDATING SHOW DATE, ALSO UPDATE:
   //     1. performers array in data/shows.js
 
   // Show date in YYYY-MM-DD format (single source of truth)
-  nextShowDateISO: "2026-04-25",
+  nextShowDateISO: "2026-06-20",
   get nextShowDate() { return formatDisplayDate(this.nextShowDateISO) },
 
   // Next upcoming show date (when known, even before tickets are on sale)
   // Set to null if the next date is not yet determined
-  nextUpcomingShowDateISO: "2026-06-20",
+  nextUpcomingShowDateISO: null,
   get nextUpcomingShowDate() { return this.nextUpcomingShowDateISO ? formatDisplayDate(this.nextUpcomingShowDateISO) : null },
 
   // Open mic date in YYYY-MM-DD format

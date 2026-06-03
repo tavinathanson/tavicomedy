@@ -20,39 +20,28 @@ export const upcomingShows = [
         bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
       },
       {
-        name: "Becky Z",
-        instagram: "beckycomedy",
-        credits: "Newark Art Festival",
-        bio: "Becky is a Chinese American comedian based on the East Coast, performing across NJ, NY, PA, and recently featured on the Newark Art Festival."
+        name: "Pdoc",
+        instagram: "thepdocshow",
       },
       {
-        name: "Paul Carson",
-        instagram: "silly_boy_paul",
-        bio: "Paul Carson is a stand-up and sketch comedian based in the Philadelphia area. He has performed in comedy festivals all over the country and regularly performs up and down the East coast. His style is energetic, silly, and highly-physical."
+        name: "Dennis Voj",
+        instagram: "dennisvojcomedy",
       },
       {
-        name: "Michael Beavers",
-        instagram: "leave_it.to_beavers",
-        credits: "Helium Comedy Club's Philly's Phunniest (2nd Place)",
-        bio: "Michael Beavers started doing stand-up comedy in July 2021 and came in 2nd place out of over 300 comics in Helium Comedy Club's prestigious Philadelphia's Phunniest Person Contest in 2023. He can be seen all over the tri-state area performing for places including Punchline Comedy Club, Next-in-Line Comedy and Don't Tell Comedy."
+        name: "Cousin Kenny",
+        instagram: "cousin_kenny_",
       },
       {
-        name: "Megan Goetz",
-        instagram: "meggoetzmoney",
-        credits: "McSweeney's, Reductress",
-        bio: "Meg Goetz is a Philadelphia-based writer and comedian. Her comedy is described as delightfully dark and smart. Her work has been published in McSweeney's and Reductress. She performs standup all over the country and has opened for such headliners as Melissa Villasenor, Natasha Leggero, and Janeane Garofalo."
+        name: "Shana Harton",
+        instagram: "shanaharton",
       },
       {
-        name: "Becky Veduccio",
-        instagram: "beckyveduccio",
-        credits: "NBC's America's Got Talent, Netflix's Survival of the Thickest",
-        bio: "Becky Veduccio has appeared on NBC's America's Got Talent and Netflix's Survival of the Thickest as well as several feature films. She was a finalist in Ladies Of Laughter as both a newcomer, performing at Madison Square Garden, as well as becoming a finalist in the professional category in 2021."
+        name: "Tim Rager",
+        instagram: "timothyrager",
       },
       {
-        name: "Laz Vic",
-        instagram: "justlazvic",
-        credits: "5x Meadowlands Comedy Club Champion",
-        bio: "Laz Vic is a New Jersey-based stand-up comedian known for his sharp, relatable humor. A 5-time champion at Meadowlands Comedy Club, he brings high-energy storytelling rooted in his Gen-X upbringing. His latest special, No Wi-Fi, is streaming now."
+        name: "Belynda Cleare",
+        instagram: "bjcleare",
       },
     ],
     vibe: siteConfig.showcaseTicketsAvailable

@@ -14,7 +14,7 @@ function formatDisplayDate(dateStr) {
 
 export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
-  showcaseTicketsAvailable: false,
+  showcaseTicketsAvailable: true,
 
   // Optional: set to true to force sold out immediately (skips Stripe capacity check)
   // Leave false/undefined to auto-detect from Stripe

@@ -35,6 +35,7 @@ export const upcomingShows = [
       {
         name: "Shana Harton",
         instagram: "shanaharton",
+        bio: "Shana is a Philadelphia-based standup comic and writer who performs frequently across PA, NY, NJ, DE, and MD. She's also performed at the Comedy Store La Jolla and other iconic West Coast clubs, been a semifinalist in the Philly's Phunniest competition, and held a residency at New York City's Greenwich Village Comedy Club."
       },
       {
         name: "Tim Rager",

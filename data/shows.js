@@ -26,6 +26,7 @@ export const upcomingShows = [
       {
         name: "Dennis Voj",
         instagram: "dennisvojcomedy",
+        bio: "Dennis Voj is a dynamic and hilarious stand-up comedian based in the Philadelphia comedy scene. He's been honing his craft on stages across the region, bringing his unique brand of observational humor to audiences across the Tri-state area."
       },
       {
         name: "Cousin Kenny",

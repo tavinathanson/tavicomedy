@@ -95,7 +95,12 @@ export default function ShowCard({ show, onCheckout, soldOut, remaining }) {
       <div className="p-5 flex flex-col flex-grow">
         <div className="flex items-start justify-between mb-2">
           <h3 className="text-base font-semibold text-gray-900">{show.name}</h3>
-          <span className="text-lg font-semibold text-comedy-purple ml-3 shrink-0">{show.price}</span>
+          <div className="ml-3 shrink-0 text-right">
+            <span className="text-lg font-semibold text-comedy-purple">{show.price}</span>
+            {show.isShowcase && (
+              <span className="block text-xs font-medium text-gray-500">no addl. fees</span>
+            )}
+          </div>
         </div>
 
         {/* Status badges */}

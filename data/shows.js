@@ -32,6 +32,7 @@ export const upcomingShows = [
       {
         name: "Cousin Kenny",
         instagram: "cousin_kenny_",
+        bio: "Cousin Kenny performs all over NJ and NY. He's 5'9\" and looking for laughter. He enjoys roasting, joking, and long walks on the beach."
       },
       {
         name: "Shana Harton",

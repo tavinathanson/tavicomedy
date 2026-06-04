@@ -20,8 +20,9 @@ export const upcomingShows = [
         bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
       },
       {
-        name: "Pdoc",
+        name: "P Doc",
         instagram: "thepdocshow",
+        bio: "Representing Trenton, New Jersey, P Doc hits the stage with his unfiltered and sarcastic sense of humor."
       },
       {
         name: "Dennis Voj",
@@ -40,10 +41,14 @@ export const upcomingShows = [
       {
         name: "Tim Rager",
         instagram: "timothyrager",
+        credits: "Jersey Shore Top Comic winner, Mad Funny winner, Good Karma Comedy Festival winner, DC Comedy Fest Top 5, JerseyCityCF Best of Fest",
+        bio: "Tim Rager is a NJ native. He is dark and silly in the same breath. Winner of Jersey Shore Top Comic, Mad Funny, and the Good Karma Comedy Festival. He can be found most nights on stages across the East Coast."
       },
       {
         name: "Belynda Cleare",
         instagram: "bjcleare",
+        credits: "Females in Comedy Convention (LA), Wilmington Fringe, one-woman show \"Staying on the Right Side of Sanity: Diary of a Dirt Road Diva\"",
+        bio: "Belynda Cleare is a comedian and keynote speaker from a quaint fishing village in Nova Scotia. With a background in psychology, her humor is rooted in keen human observations and her lifelong advocacy for mental health awareness. She performs at festivals, theaters, and comedy clubs internationally."
       },
     ],
     vibe: siteConfig.showcaseTicketsAvailable

@@ -4,6 +4,8 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <meta name="facebook-domain-verification" content="kp2fcy4s2fdzf8fcouzqnn42vup4sy" />
+
         {/* Meta Pixel Code */}
         <script
           dangerouslySetInnerHTML={{

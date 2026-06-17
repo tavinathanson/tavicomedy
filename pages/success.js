@@ -13,10 +13,6 @@ export default function Success() {
   useEffect(() => {
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'Purchase')
-      window.fbq('track', 'CompleteRegistration', {
-        content_name: 'Ticket Purchase',
-        status: 'completed'
-      })
     }
   }, [])
 

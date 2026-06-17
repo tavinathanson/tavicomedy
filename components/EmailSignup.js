@@ -39,14 +39,6 @@ export default function EmailSignup() {
         setEmail('')
         setRole('')
         setHowFound('')
-
-        // Track Meta Pixel conversion event for successful mailing list signup
-        if (typeof window !== 'undefined' && window.fbq) {
-          window.fbq('track', 'CompleteRegistration', {
-            content_name: 'Mailing List Signup',
-            status: 'completed'
-          })
-        }
       } else {
         setStatus(data.error || 'Something went wrong. Please try again.')
       }

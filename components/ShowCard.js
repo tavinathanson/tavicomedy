@@ -74,6 +74,9 @@ export default function ShowCard({ show, onCheckout, soldOut, remaining }) {
         {show.isShowcase && (
           <div className="absolute top-2 right-2 bg-comedy-purple text-white px-3 py-1 rounded-full text-sm font-semibold">
             Showcase
+            {show.performers && show.performers.length > 0 && (
+              <span className="font-medium opacity-90"> &bull; {show.performers.length} comics</span>
+            )}
           </div>
         )}
         {show.isOpenMic && (

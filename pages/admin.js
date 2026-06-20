@@ -175,6 +175,19 @@ function GuestList({ onLogout }) {
   const checkedInTickets = counting.reduce((s, g) => s + (g.checkedIn || 0), 0)
   const notArrived = Math.max(0, countingTickets - checkedInTickets)
 
+  // Display guests sorted by last name (last word of the name). Guests with no
+  // name sort to the bottom.
+  const sortedGuests = data?.guests
+    ? [...data.guests].sort((a, b) => {
+        const la = lastName(a.name)
+        const lb = lastName(b.name)
+        if (!la && !lb) return 0
+        if (!la) return 1
+        if (!lb) return -1
+        return la.localeCompare(lb) || (a.name || '').localeCompare(b.name || '')
+      })
+    : []
+
   const handleExportCsv = () => {
     const rows = [['Name', 'Email', 'Tickets']]
     for (const g of data.guests) {
@@ -304,7 +317,7 @@ function GuestList({ onLogout }) {
                     </td>
                   </tr>
                 )}
-                {data.guests.map((guest) => (
+                {sortedGuests.map((guest) => (
                   <tr
                     key={guest.id}
                     className={`border-b border-gray-100 last:border-0 ${guest.skip ? 'opacity-50' : ''} ${(guest.checkedIn || 0) >= guest.tickets && !guest.skip ? 'bg-green-50' : ''}`}
@@ -391,6 +404,11 @@ function ReservedLinkButton() {
       </button>
     </div>
   )
+}
+
+function lastName(name) {
+  const parts = (name || '').trim().split(/\s+/).filter(Boolean)
+  return parts.length ? parts[parts.length - 1].toLowerCase() : ''
 }
 
 function CheckInCell({ guest, onSet }) {

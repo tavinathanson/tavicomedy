@@ -2,7 +2,7 @@ import Stripe from 'stripe'
 import { requireAuth } from '@/lib/admin-auth'
 import { siteConfig } from '@/config/site'
 import { getSheets, getSpreadsheetId } from '@/lib/google-sheets'
-import { getSkippedSessionIds } from '@/lib/capacity'
+import { getSkippedSessionIds, getCheckedInCounts } from '@/lib/capacity'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const GUESTS_SHEET = 'admin-guests'
@@ -86,23 +86,32 @@ export default requireAuth(async function handler(req, res) {
   const showDate = req.query.showDate || siteConfig.nextShowDateISO
 
   try {
-    const skippedIds = await getSkippedSessionIds(showDate)
+    const [skippedIds, checkedInCounts] = await Promise.all([
+      getSkippedSessionIds(showDate),
+      getCheckedInCounts(showDate),
+    ])
     const [stripeGuests, manualGuests] = await Promise.all([
       getStripeGuests(showDate, skippedIds),
       getManualGuests(showDate),
     ])
 
-    const allGuests = [...stripeGuests, ...manualGuests]
+    const allGuests = [...stripeGuests, ...manualGuests].map(g => {
+      const key = g.source === 'stripe' ? g.id : g.name
+      const checkedIn = Math.min(checkedInCounts.get(key) || 0, g.tickets)
+      return { ...g, checkedIn }
+    })
     const totalTickets = allGuests.reduce((sum, g) => sum + g.tickets, 0)
     const countingTickets = allGuests
       .filter(g => !g.skip)
       .reduce((sum, g) => sum + g.tickets, 0)
+    const checkedInTickets = allGuests.reduce((sum, g) => sum + g.checkedIn, 0)
 
     return res.status(200).json({
       showDate,
       capacity: siteConfig.tickets.capacity,
       totalTickets,
       countingTickets,
+      checkedInTickets,
       guests: allGuests,
     })
   } catch (err) {

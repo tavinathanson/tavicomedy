@@ -130,11 +130,35 @@ function GuestList({ onLogout }) {
     if (res.ok) fetchGuests()
   }
 
+  const handleSetCheckedIn = async (guest, count) => {
+    const clamped = Math.max(0, Math.min(guest.tickets, count))
+    if (clamped === (guest.checkedIn || 0)) return
+    // Optimistic local update so the door scanning feels instant
+    setData(d => ({
+      ...d,
+      guests: d.guests.map(g => g.id === guest.id ? { ...g, checkedIn: clamped } : g),
+    }))
+    const res = await fetch('/api/admin/check-in', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: guest.id,
+        source: guest.source,
+        name: guest.name,
+        showDate: data.showDate,
+        checkedIn: clamped,
+      }),
+    })
+    if (!res.ok) fetchGuests()
+  }
+
   const counting = data?.guests?.filter(g => !g.skip) || []
   const skipped = data?.guests?.filter(g => g.skip) || []
   const countingTickets = counting.reduce((s, g) => s + g.tickets, 0)
   const skippedTickets = skipped.reduce((s, g) => s + g.tickets, 0)
   const remaining = data ? data.capacity - countingTickets : 0
+  const checkedInTickets = counting.reduce((s, g) => s + (g.checkedIn || 0), 0)
+  const notArrived = Math.max(0, countingTickets - checkedInTickets)
 
   const handleExportCsv = () => {
     const rows = [['Name', 'Email', 'Tickets']]
@@ -180,7 +204,18 @@ function GuestList({ onLogout }) {
       {data && (
         <>
           {/* Summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+            <SummaryCard
+              label="Checked In"
+              value={checkedInTickets}
+              sub={`/ ${countingTickets} expected`}
+              accent
+            />
+            <SummaryCard
+              label="Not Arrived"
+              value={notArrived}
+              sub="still expected"
+            />
             <SummaryCard
               label="Counting"
               value={countingTickets}
@@ -240,6 +275,7 @@ function GuestList({ onLogout }) {
                   <th className="text-left px-4 py-3 font-medium text-gray-600">Name</th>
                   <th className="text-left px-4 py-3 font-medium text-gray-600 hidden sm:table-cell">Email</th>
                   <th className="text-center px-4 py-3 font-medium text-gray-600">Qty</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">Check In</th>
                   <th className="text-center px-4 py-3 font-medium text-gray-600">Source</th>
                   <th className="text-center px-4 py-3 font-medium text-gray-600">Count</th>
                   <th className="px-4 py-3 w-10"></th>
@@ -248,7 +284,7 @@ function GuestList({ onLogout }) {
               <tbody>
                 {data.guests.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-gray-400">
+                    <td colSpan={7} className="px-4 py-8 text-center text-gray-400">
                       No guests yet
                     </td>
                   </tr>
@@ -256,13 +292,16 @@ function GuestList({ onLogout }) {
                 {data.guests.map((guest) => (
                   <tr
                     key={guest.id}
-                    className={`border-b border-gray-100 last:border-0 ${guest.skip ? 'opacity-50' : ''}`}
+                    className={`border-b border-gray-100 last:border-0 ${guest.skip ? 'opacity-50' : ''} ${(guest.checkedIn || 0) >= guest.tickets && !guest.skip ? 'bg-green-50' : ''}`}
                   >
                     <td className="px-4 py-3">
                       {guest.name || <span className="text-gray-400">No name</span>}
                     </td>
                     <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">{guest.email}</td>
                     <td className="px-4 py-3 text-center">{guest.tickets}</td>
+                    <td className="px-4 py-3 text-center">
+                      <CheckInCell guest={guest} onSet={handleSetCheckedIn} />
+                    </td>
                     <td className="px-4 py-3 text-center">
                       <SourceBadge source={guest.source} />
                     </td>
@@ -339,10 +378,55 @@ function ReservedLinkButton() {
   )
 }
 
-function SummaryCard({ label, value, sub, highlight }) {
+function CheckInCell({ guest, onSet }) {
+  const checkedIn = guest.checkedIn || 0
+  const full = checkedIn >= guest.tickets
+  const partial = checkedIn > 0 && !full
+  const pillStyle = full
+    ? 'bg-green-100 text-green-700 hover:bg-green-200'
+    : partial
+      ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+      : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+  const stepBtn = 'w-6 h-6 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent leading-none'
   return (
-    <div className={`bg-white rounded-lg border p-4 text-center ${highlight ? 'border-red-300' : 'border-gray-200'}`}>
-      <p className={`text-2xl font-bold ${highlight ? 'text-red-600' : ''}`}>{value}</p>
+    <div className="inline-flex items-center gap-1">
+      {guest.tickets > 1 && (
+        <button
+          onClick={() => onSet(guest, checkedIn - 1)}
+          disabled={checkedIn <= 0}
+          className={stepBtn}
+          title="Check in one fewer"
+        >
+          &minus;
+        </button>
+      )}
+      <button
+        onClick={() => onSet(guest, full ? 0 : guest.tickets)}
+        className={`text-xs font-medium px-2 py-0.5 rounded-full transition-colors min-w-[3rem] ${pillStyle}`}
+        title={full ? 'Checked in. Click to undo' : 'Click to check in the whole party'}
+      >
+        {checkedIn}/{guest.tickets}
+      </button>
+      {guest.tickets > 1 && (
+        <button
+          onClick={() => onSet(guest, checkedIn + 1)}
+          disabled={full}
+          className={stepBtn}
+          title="Check in one more"
+        >
+          +
+        </button>
+      )}
+    </div>
+  )
+}
+
+function SummaryCard({ label, value, sub, highlight, accent }) {
+  const border = highlight ? 'border-red-300' : accent ? 'border-comedy-purple' : 'border-gray-200'
+  const valueColor = highlight ? 'text-red-600' : accent ? 'text-comedy-purple' : ''
+  return (
+    <div className={`bg-white rounded-lg border p-4 text-center ${border}`}>
+      <p className={`text-2xl font-bold ${valueColor}`}>{value}</p>
       <p className="text-xs text-gray-500 font-medium">{label}</p>
       {sub && <p className="text-xs text-gray-400">{sub}</p>}
     </div>

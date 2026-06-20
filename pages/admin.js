@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Head from 'next/head'
 
 export default function AdminPage() {
@@ -89,6 +89,8 @@ function GuestList({ onLogout }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
+  const checkinTimers = useRef({})
+  const checkinValues = useRef({})
 
   const fetchGuests = useCallback(async () => {
     setLoading(true)
@@ -130,7 +132,7 @@ function GuestList({ onLogout }) {
     if (res.ok) fetchGuests()
   }
 
-  const handleSetCheckedIn = async (guest, count) => {
+  const handleSetCheckedIn = (guest, count) => {
     const clamped = Math.max(0, Math.min(guest.tickets, count))
     if (clamped === (guest.checkedIn || 0)) return
     // Optimistic local update so the door scanning feels instant
@@ -138,18 +140,31 @@ function GuestList({ onLogout }) {
       ...d,
       guests: d.guests.map(g => g.id === guest.id ? { ...g, checkedIn: clamped } : g),
     }))
-    const res = await fetch('/api/admin/check-in', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id: guest.id,
-        source: guest.source,
-        name: guest.name,
-        showDate: data.showDate,
-        checkedIn: clamped,
-      }),
-    })
-    if (!res.ok) fetchGuests()
+    // Debounce + serialize the write per guest so rapid taps collapse into a
+    // single request with the final value (avoids racing writes to the sheet).
+    checkinValues.current[guest.id] = clamped
+    if (checkinTimers.current[guest.id]) clearTimeout(checkinTimers.current[guest.id])
+    checkinTimers.current[guest.id] = setTimeout(async () => {
+      delete checkinTimers.current[guest.id]
+      const value = checkinValues.current[guest.id]
+      try {
+        const res = await fetch('/api/admin/check-in', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: guest.id,
+            source: guest.source,
+            name: guest.name,
+            showDate: data.showDate,
+            checkedIn: value,
+          }),
+        })
+        if (!res.ok) throw new Error('save failed')
+      } catch {
+        setError('Could not save a check-in. Reloading the latest...')
+        fetchGuests()
+      }
+    }, 300)
   }
 
   const counting = data?.guests?.filter(g => !g.skip) || []

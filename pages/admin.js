@@ -261,6 +261,11 @@ function GuestList({ onLogout }) {
               sub="all entries"
             />
             <SummaryCard
+              label="Returning"
+              value={data.returningParties || 0}
+              sub="been before"
+            />
+            <SummaryCard
               label="Skipped"
               value={skippedTickets}
               sub={`${skipped.length} entries`}
@@ -323,7 +328,17 @@ function GuestList({ onLogout }) {
                     className={`border-b border-gray-100 last:border-0 ${guest.skip ? 'opacity-50' : ''} ${(guest.checkedIn || 0) >= guest.tickets && !guest.skip ? 'bg-green-50' : ''}`}
                   >
                     <td className="px-4 py-3">
-                      {guest.name || <span className="text-gray-400">No name</span>}
+                      <span className="inline-flex items-center gap-2">
+                        {guest.name || <span className="text-gray-400">No name</span>}
+                        {guest.priorVisits > 0 && (
+                          <span
+                            className="text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-comedy-purple"
+                            title={`Been to ${guest.priorVisits} previous show${guest.priorVisits > 1 ? 's' : ''}`}
+                          >
+                            {guest.priorVisits > 1 ? `${guest.priorVisits}× before` : 'returning'}
+                          </span>
+                        )}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">{guest.email}</td>
                     <td className="px-4 py-3 text-center">{guest.tickets}</td>

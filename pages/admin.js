@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import Head from 'next/head'
 
 export default function AdminPage() {
@@ -89,14 +89,18 @@ function GuestList({ onLogout }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
+  const [shows, setShows] = useState([])
+  const [selectedShow, setSelectedShow] = useState(null)
+  const [currentShowDate, setCurrentShowDate] = useState(null)
   const checkinTimers = useRef({})
   const checkinValues = useRef({})
 
-  const fetchGuests = useCallback(async () => {
+  const fetchGuests = useCallback(async (showDate) => {
+    if (!showDate) return
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/admin/guests')
+      const res = await fetch(`/api/admin/guests?showDate=${encodeURIComponent(showDate)}`)
       if (!res.ok) throw new Error('Failed to fetch')
       setData(await res.json())
     } catch {
@@ -106,7 +110,22 @@ function GuestList({ onLogout }) {
     }
   }, [])
 
-  useEffect(() => { fetchGuests() }, [fetchGuests])
+  // Load the list of shows, then default to the most recent one that has data
+  // (falling back to the current configured show if nothing has sold yet).
+  useEffect(() => {
+    fetch('/api/admin/shows')
+      .then(r => r.json())
+      .then(d => {
+        const list = d.shows || []
+        setShows(list)
+        setCurrentShowDate(d.currentShowDate || null)
+        const withData = list.find(s => s.parties > 0)
+        setSelectedShow(withData?.showDate || d.currentShowDate || list[0]?.showDate || null)
+      })
+      .catch(() => setError('Failed to load shows'))
+  }, [])
+
+  useEffect(() => { fetchGuests(selectedShow) }, [selectedShow, fetchGuests])
 
   const handleDelete = async (guest) => {
     if (!confirm(`Remove ${guest.name}?`)) return
@@ -115,7 +134,7 @@ function GuestList({ onLogout }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: guest.name, showDate: data.showDate }),
     })
-    if (res.ok) fetchGuests()
+    if (res.ok) fetchGuests(selectedShow)
   }
 
   const handleToggleSkip = async (guest) => {
@@ -129,7 +148,7 @@ function GuestList({ onLogout }) {
         skip: !guest.skip,
       }),
     })
-    if (res.ok) fetchGuests()
+    if (res.ok) fetchGuests(selectedShow)
   }
 
   const handleSetCheckedIn = (guest, count) => {
@@ -162,7 +181,7 @@ function GuestList({ onLogout }) {
         if (!res.ok) throw new Error('save failed')
       } catch {
         setError('Could not save a check-in. Reloading the latest...')
-        fetchGuests()
+        fetchGuests(selectedShow)
       }
     }, 300)
   }
@@ -209,18 +228,28 @@ function GuestList({ onLogout }) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-start justify-between mb-6 gap-3">
         <div>
           <h1 className="text-2xl font-bold">Guest List</h1>
-          {data && (
-            <p className="text-gray-500 text-sm mt-1">
-              Show: {data.showDate}
-            </p>
+          {shows.length > 0 && (
+            <select
+              value={selectedShow || ''}
+              onChange={e => setSelectedShow(e.target.value)}
+              className="mt-2 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-comedy-purple"
+            >
+              {shows.map(s => (
+                <option key={s.showDate} value={s.showDate}>
+                  {s.showDate}
+                  {s.showDate === currentShowDate ? ' (current)' : ''}
+                  {` — ${s.tickets} ticket${s.tickets === 1 ? '' : 's'}`}
+                </option>
+              ))}
+            </select>
           )}
         </div>
         <button
           onClick={onLogout}
-          className="text-sm text-gray-500 hover:text-gray-700"
+          className="text-sm text-gray-500 hover:text-gray-700 shrink-0"
         >
           Log out
         </button>
@@ -272,12 +301,15 @@ function GuestList({ onLogout }) {
             />
           </div>
 
+          {/* Financials */}
+          <FinancialsPanel guests={data.guests} />
+
           {/* Add guest */}
           <div className="mb-6">
             {showAddForm ? (
               <AddGuestForm
                 showDate={data.showDate}
-                onDone={() => { setShowAddForm(false); fetchGuests() }}
+                onDone={() => { setShowAddForm(false); fetchGuests(selectedShow) }}
                 onCancel={() => setShowAddForm(false)}
               />
             ) : (
@@ -465,6 +497,142 @@ function CheckInCell({ guest, onSet }) {
           +
         </button>
       )}
+    </div>
+  )
+}
+
+const money = (cents) => `$${(cents / 100).toFixed(2)}`
+
+// Live revenue/profit calculator. Reacts to the guest list (add/skip/delete a
+// guest and the numbers update) plus a few editable knobs: whether to count
+// tickets sold vs. only those checked in, the flat door price, and the NJ tax
+// rate that is baked into each ticket. Stripe entries always use their real
+// charged amount and Stripe fee; door entries use the flat price; comps are free.
+function FinancialsPanel({ guests }) {
+  const [open, setOpen] = useState(true)
+  const [basis, setBasis] = useState('sold') // 'sold' | 'checkedin'
+  const [price, setPrice] = useState('20')
+  const [taxRate, setTaxRate] = useState('6.625')
+
+  const fin = useMemo(() => {
+    const priceCents = Math.round((parseFloat(price) || 0) * 100)
+    const rate = (parseFloat(taxRate) || 0) / 100
+    let tickets = 0, grossCents = 0, feeCents = 0
+    let stripeGrossCents = 0, doorGrossCents = 0
+    let stripeCount = 0, doorCount = 0, compCount = 0
+    for (const g of guests) {
+      if (g.skip) continue
+      const count = basis === 'sold' ? g.tickets : (g.checkedIn || 0)
+      if (count <= 0) continue
+      const ratio = g.tickets > 0 ? count / g.tickets : 0
+      if (g.source === 'stripe') {
+        const net = Math.max(0, (g.amount || 0) - (g.refunded || 0))
+        const gg = Math.round(net * ratio)
+        const ff = Math.round((g.fee || 0) * ratio)
+        grossCents += gg; feeCents += ff; stripeGrossCents += gg
+        tickets += count; stripeCount += count
+      } else if (g.source === 'comp') {
+        compCount += count; tickets += count
+      } else {
+        const gg = priceCents * count
+        grossCents += gg; doorGrossCents += gg
+        tickets += count; doorCount += count
+      }
+    }
+    const taxCents = rate > 0 ? Math.round(grossCents - grossCents / (1 + rate)) : 0
+    const netCents = grossCents - feeCents - taxCents
+    return {
+      tickets, grossCents, feeCents, taxCents, netCents,
+      stripeGrossCents, doorGrossCents, stripeCount, doorCount, compCount,
+    }
+  }, [guests, basis, price, taxRate])
+
+  const basisBtn = (key, label) => (
+    <button
+      onClick={() => setBasis(key)}
+      className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${
+        basis === key
+          ? 'bg-comedy-purple text-white'
+          : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50'
+      }`}
+    >
+      {label}
+    </button>
+  )
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 mb-6">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-4 py-3 text-left"
+      >
+        <span className="font-semibold">Financials</span>
+        <span className="flex items-center gap-3">
+          <span className="text-comedy-purple font-bold">{money(fin.netCents)}</span>
+          <span className="text-gray-400 text-sm">{open ? '▲' : '▼'}</span>
+        </span>
+      </button>
+
+      {open && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          {/* Controls */}
+          <div className="flex flex-wrap items-end gap-4 py-4">
+            <div>
+              <p className="text-xs text-gray-500 font-medium mb-1">Based on</p>
+              <div className="flex gap-2">
+                {basisBtn('sold', 'Tickets sold')}
+                {basisBtn('checkedin', 'Checked in')}
+              </div>
+            </div>
+            <label className="text-xs text-gray-500 font-medium">
+              Door price ($)
+              <input
+                type="number" min="0" step="1" value={price}
+                onChange={e => setPrice(e.target.value)}
+                className="block w-24 mt-1 border border-gray-300 rounded-lg px-2 py-1.5 text-sm font-normal text-gray-900 focus:outline-none focus:ring-2 focus:ring-comedy-purple"
+              />
+            </label>
+            <label className="text-xs text-gray-500 font-medium">
+              NJ tax (%)
+              <input
+                type="number" min="0" step="0.001" value={taxRate}
+                onChange={e => setTaxRate(e.target.value)}
+                className="block w-24 mt-1 border border-gray-300 rounded-lg px-2 py-1.5 text-sm font-normal text-gray-900 focus:outline-none focus:ring-2 focus:ring-comedy-purple"
+              />
+            </label>
+          </div>
+
+          {/* Breakdown */}
+          <dl className="text-sm divide-y divide-gray-100">
+            <FinRow label={`Tickets (${basis === 'sold' ? 'sold' : 'checked in'})`} value={fin.tickets} />
+            <FinRow
+              label="Gross revenue"
+              value={money(fin.grossCents)}
+              sub={`Stripe ${money(fin.stripeGrossCents)} (${fin.stripeCount}) · door ${money(fin.doorGrossCents)} (${fin.doorCount}) · comp ${fin.compCount} free`}
+            />
+            <FinRow label="Stripe fees" value={`- ${money(fin.feeCents)}`} negative />
+            <FinRow label={`NJ sales tax (set aside, ${taxRate || 0}%)`} value={`- ${money(fin.taxCents)}`} negative />
+            <FinRow label="Net profit" value={money(fin.netCents)} bold />
+          </dl>
+          <p className="text-xs text-gray-400 mt-3">
+            Net profit = gross revenue minus Stripe fees and NJ sales tax. It does not include venue, comics, or other costs. Skipped entries are excluded.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function FinRow({ label, value, sub, bold, negative }) {
+  return (
+    <div className="flex items-baseline justify-between py-2">
+      <dt className="text-gray-600">
+        {label}
+        {sub && <span className="block text-xs text-gray-400">{sub}</span>}
+      </dt>
+      <dd className={`tabular-nums ${bold ? 'font-bold text-base text-comedy-purple' : negative ? 'text-gray-500' : 'font-medium'}`}>
+        {value}
+      </dd>
     </div>
   )
 }

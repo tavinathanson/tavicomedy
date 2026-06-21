@@ -45,7 +45,7 @@ async function getStripeGuests(showDate, skippedIds, history) {
       status: 'complete',
       limit: 100,
       ...(startingAfter && { starting_after: startingAfter }),
-      expand: ['data.line_items'],
+      expand: ['data.line_items', 'data.payment_intent.latest_charge.balance_transaction'],
     })
 
     for (const session of sessions.data) {
@@ -58,6 +58,13 @@ async function getStripeGuests(showDate, skippedIds, history) {
       const ticketCount = (session.line_items?.data || []).reduce(
         (sum, item) => sum + (item.quantity || 0), 0
       )
+      // Exact amounts/fees from the underlying charge (all in cents). The
+      // balance transaction holds Stripe's real fee; amount_refunded lets us
+      // net out any refunds so revenue reflects what was actually kept.
+      const charge = session.payment_intent?.latest_charge
+      const fee = charge?.balance_transaction?.fee || 0
+      const refunded = charge?.amount_refunded || 0
+      const amount = session.amount_total || 0
       guests.push({
         id: session.id,
         name,
@@ -66,6 +73,9 @@ async function getStripeGuests(showDate, skippedIds, history) {
         source: 'stripe',
         skip: skippedIds.has(session.id),
         date: new Date(session.created * 1000).toISOString(),
+        amount,
+        fee,
+        refunded,
       })
     }
 

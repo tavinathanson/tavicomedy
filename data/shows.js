@@ -12,47 +12,7 @@ export const upcomingShows = [
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
     description: "A standup comedy show in Lawrenceville! BYOB!",
-    performers: [
-      {
-        name: "Steve Schwarz",
-        instagram: "steve_schwarz_nj",
-        credits: "Willie McBride's",
-        bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
-      },
-      {
-        name: "P Doc",
-        instagram: "thepdocshow",
-        bio: "Representing Trenton, New Jersey, P Doc hits the stage with his unfiltered and sarcastic sense of humor."
-      },
-      {
-        name: "Dennis Voj",
-        instagram: "dennisvojcomedy",
-        bio: "Dennis Voj is a dynamic and hilarious stand-up comedian based in the Philadelphia comedy scene. He's been honing his craft on stages across the region, bringing his unique brand of observational humor to audiences across the Tri-state area."
-      },
-      {
-        name: "Cousin Kenny",
-        instagram: "cousin_kenny_",
-        bio: "Cousin Kenny performs all over NJ and NY. He's 5'9\" and looking for laughter. He enjoys roasting, joking, and long walks on the beach."
-      },
-      {
-        name: "Shana Harton",
-        instagram: "shanaharton",
-        credits: "Comedy Store La Jolla, Philly's Phunniest semifinalist, Greenwich Village Comedy Club residency",
-        bio: "Shana is a Philadelphia-based standup comic and writer who performs frequently across PA, NY, NJ, DE, and MD. She's also performed at the Comedy Store La Jolla and other iconic West Coast clubs, been a semifinalist in the Philly's Phunniest competition, and held a residency at New York City's Greenwich Village Comedy Club."
-      },
-      {
-        name: "Tim Rager",
-        instagram: "timothyrager",
-        credits: "Jersey Shore Top Comic winner, Mad Funny winner, Good Karma Comedy Festival winner, DC Comedy Fest Top 5, JerseyCityCF Best of Fest",
-        bio: "Tim Rager is a NJ native. He is dark and silly in the same breath. Winner of Jersey Shore Top Comic, Mad Funny, and the Good Karma Comedy Festival. He can be found most nights on stages across the East Coast."
-      },
-      {
-        name: "Belynda Cleare",
-        instagram: "bjcleare",
-        credits: "Females in Comedy Convention (LA), Wilmington Fringe, one-woman show \"Staying on the Right Side of Sanity: Diary of a Dirt Road Diva\"",
-        bio: "Belynda Cleare is a comedian and keynote speaker from a quaint fishing village in Nova Scotia. With a background in psychology, her humor is rooted in keen human observations and her lifelong advocacy for mental health awareness. She performs at festivals, theaters, and comedy clubs internationally."
-      },
-    ],
+    performers: [],
     vibe: siteConfig.showcaseTicketsAvailable
       ? "Our shows regularly sell out with ~100 attendees! Don't wait to get your tickets!"
       : "Our shows regularly sell out with ~100 attendees! Join the mailing list to get notified when tickets are available.",

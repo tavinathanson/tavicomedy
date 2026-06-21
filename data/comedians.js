@@ -4,13 +4,13 @@
 // Names of comedians who performed at the most recent show.
 // Update this list each time a new show happens. Names must match `comedians` entries exactly.
 export const mostRecentShowPerformers = [
-  "Becky Veduccio",
-  "Becky Z",
-  "Laz Vic",
-  "Megan Goetz",
-  "Michael Beavers",
-  "Paul Carson",
+  "Belynda Cleare",
+  "Cousin Kenny",
+  "Dennis Voj",
+  "P Doc",
+  "Shana Harton",
   "Steve Schwarz",
+  "Tim Rager",
 ]
 
 export const comedians = [
@@ -23,10 +23,12 @@ export const comedians = [
   { name: "Ashia McRae", instagram: "ashistenacious" },
   { name: "Becky Veduccio", instagram: "beckyveduccio" },
   { name: "Becky Z", instagram: "beckycomedy" },
+  { name: "Belynda Cleare", instagram: "bjcleare" },
   { name: "Bob Grundfest", instagram: "bobgrundfest" },
   { name: "Carla Ulbrich", instagram: "carlaucomedy" },
   { name: "Cassidy O'Malley", instagram: "casscomedy" },
   { name: "Chelsea Moroski", instagram: "chelseamoroski" },
+  { name: "Cousin Kenny", instagram: "cousin_kenny_" },
   { name: "David Burrows", instagram: "dbcomedy14" },
   { name: "Dennis Voj", instagram: "dennisvojcomedy" },
   { name: "Emily Paige", instagram: "emilypaigecomedy" },
@@ -53,11 +55,13 @@ export const comedians = [
   { name: "Michael Beavers", instagram: "leave_it.to_beavers" },
   { name: "Mike Mar", instagram: "mike_mar_comedy" },
   { name: "Mike Sicoli", instagram: "themikesicoli" },
+  { name: "P Doc", instagram: "thepdocshow" },
   { name: "Paul Carson", instagram: "silly_boy_paul" },
   { name: "Raph Hernandez", instagram: "phatinthehat" },
   { name: "Rey Pinder", instagram: "pinderrey" },
   { name: "Rohan Mahashabde", instagram: "roshabde1" },
   { name: "Shae Thomas", instagram: "shaethomas_iam" },
+  { name: "Shana Harton", instagram: "shanaharton" },
   { name: "Steve Schwarz", instagram: "steve_schwarz_nj" },
   { name: "Tim Lowe", instagram: "thetimlowe" },
   { name: "Tim Rager", instagram: "timothyrager" },

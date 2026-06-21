@@ -14,7 +14,7 @@ function formatDisplayDate(dateStr) {
 
 export const siteConfig = {
   // Set to true when tickets are on sale, false to show mailing list signup
-  showcaseTicketsAvailable: true,
+  showcaseTicketsAvailable: false,
 
   // Optional: set to true to force sold out immediately (skips Stripe capacity check)
   // Leave false/undefined to auto-detect from Stripe
@@ -24,7 +24,7 @@ export const siteConfig = {
   //     1. performers array in data/shows.js
 
   // Show date in YYYY-MM-DD format (single source of truth)
-  nextShowDateISO: "2026-06-20",
+  nextShowDateISO: "2026-10-24",
   get nextShowDate() { return formatDisplayDate(this.nextShowDateISO) },
 
   // Next upcoming show date (when known, even before tickets are on sale)

@@ -1,5 +1,18 @@
 import { siteConfig } from '@/config/site'
 
+// Subtract minutes from a "h:mm AM/PM" time string (e.g. "7:00 PM" - 15 -> "6:45 PM")
+function subtractMinutes(timeStr, minutes) {
+  const [, h, m, period] = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i)
+  let total = ((Number(h) % 12) + (period.toUpperCase() === 'PM' ? 12 : 0)) * 60 + Number(m) - minutes
+  total = ((total % 1440) + 1440) % 1440
+  const hour24 = Math.floor(total / 60)
+  const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12
+  const mins = String(total % 60).padStart(2, '0')
+  return `${hour12}:${mins} ${hour24 < 12 ? 'AM' : 'PM'}`
+}
+
+const openMicTime = "7:00 PM"
+
 export const upcomingShows = [
   {
     id: 1,
@@ -37,7 +50,7 @@ export const upcomingShows = [
     name: "Crave Laughs Open Mic",
     date: siteConfig.nextOpenMicDate,
     calendarDate: siteConfig.nextOpenMicDateISO,
-    time: "7:30 PM",
+    time: openMicTime,
     price: "Free",
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
@@ -47,7 +60,7 @@ export const upcomingShows = [
     ticketLink: "https://openmic.tavicomedy.com",
     isOpenMic: true,
     additionalInfo: [
-      "Lineup order is determined by lottery. Sign up early and arrive by 7:15 PM for extra entries!",
+      `Lineup order is determined by lottery. Sign up early and arrive by ${subtractMinutes(openMicTime, 15)} for extra entries!`,
       "<strong>5 minutes per comedian</strong>, or 7 minutes if you bring 1+ non-performing guests",
       "This open mic is only possible thanks to our hosts at Crave. To keep the show going, please support them with a purchase if you can. This is not required, but is very much appreciated!"
     ]

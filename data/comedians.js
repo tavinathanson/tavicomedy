@@ -34,7 +34,7 @@ export const comedians = [
   { name: "Jason Thompson", instagram: "jaysooofunny" },
   { name: "Jay Silverberg", instagram: "silverbergcomedy" },
   { name: "Jim Christy", instagram: "jchristy1515" },
-  { name: "Jim Donzi", instagram: "jimmydonz" },
+  { name: "Jimmy Donz", instagram: "jimmydonz" },
   { name: "Joe Flynn", instagram: "joeflynn_01" },
   { name: "John Montague", instagram: "montaguecomedy" },
   { name: "Josh Tinley", instagram: "thatsjtcomedy" },

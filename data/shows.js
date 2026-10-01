@@ -33,7 +33,7 @@ export const upcomingShows = [
         bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
       },
       {
-        name: "Jim Donzi",
+        name: "Jimmy Donz",
         instagram: "jimmydonz",
         credits: "NJ101.5 Standup Contest winner",
         bio: "Jimmy Donz is a previous winner of the NJ101.5 Standup Contest. He's performed across New Jersey and has tens, maybe even possibly dozens of fans across the globe (but mostly in New Jersey)."

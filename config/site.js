@@ -48,6 +48,7 @@ export const siteConfig = {
     buttonText: "Buy Tickets",
     checkoutPath: "/checkout",
     capacity: 100,
+    maxPerOrder: 10, // larger groups email Tavi for a reserved-access link
     almostSoldOutThreshold: 15,
   }
 }

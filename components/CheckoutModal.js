@@ -130,6 +130,10 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
 
   if (!open) return null
 
+  // Reserved-access links skip the per-order cap; they're how larger groups buy.
+  const maxPerOrder = bypass ? Infinity : siteConfig.tickets.maxPerOrder
+  const maxQuantity = Math.min(remaining ?? Infinity, maxPerOrder)
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
@@ -209,8 +213,8 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
                 </div>
                 <button
                   type="button"
-                  disabled={remaining != null && quantity >= remaining}
-                  onClick={() => setQuantity(q => remaining != null ? Math.min(q + 1, remaining) : q + 1)}
+                  disabled={quantity >= maxQuantity}
+                  onClick={() => setQuantity(q => Math.min(q + 1, maxQuantity))}
                   aria-label="Add a ticket"
                   className="w-14 h-14 sm:w-12 sm:h-12 rounded-full border-2 text-2xl sm:text-xl font-medium flex items-center justify-center select-none touch-manipulation transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-gray-300 text-gray-600 active:bg-comedy-purple active:text-white active:border-comedy-purple hover:border-comedy-purple hover:text-comedy-purple"
                 >
@@ -221,6 +225,15 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
               <p className="text-lg font-semibold text-gray-900 mb-6">
                 Total: ${quantity * 20}
               </p>
+
+              {quantity >= maxPerOrder && (
+                <p className="text-sm text-gray-500 -mt-4 mb-6">
+                  Limit {maxPerOrder} per order. Need more?{' '}
+                  <a href="mailto:tavi@tavicomedy.com?subject=Group tickets" className="text-comedy-purple hover:underline">
+                    Email tavi@tavicomedy.com
+                  </a>
+                </p>
+              )}
 
               <label className="flex items-start gap-3 text-left mb-5 cursor-pointer">
                 <input

@@ -31,6 +31,11 @@ export default async function handler(req, res) {
     const showDate = siteConfig.nextShowDateISO
 
     if (!bypass) {
+      const { maxPerOrder } = siteConfig.tickets
+      if (ticketCount > maxPerOrder) {
+        return res.status(200).json({ error: `Online orders are limited to ${maxPerOrder} tickets. For more, email tavi@tavicomedy.com.` })
+      }
+
       let remaining
       try {
         remaining = await getRemaining()

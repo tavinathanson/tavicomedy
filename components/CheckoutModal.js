@@ -14,11 +14,27 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
   const [remaining, setRemaining] = useState(null)
   const [step, setStep] = useState('pick') // 'pick', 'pay', 'error', or 'soldout'
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(true)
   const [minimumAcknowledged, setMinimumAcknowledged] = useState(false)
   const [hearAbout, setHearAbout] = useState('')
 
-  // Fetch remaining capacity and reset state when modal opens
+  // Check capacity in the background; the picker shows immediately and the POST
+  // re-checks before creating a session, so this only caps quantity early.
+  const checkCapacity = useCallback((networkError) => {
+    fetch('/api/create-checkout-session')
+      .then(res => res.json())
+      .then(data => {
+        if (data.soldOut) { setStep('soldout'); return }
+        if (data.error) { setError(data.error); setStep('error'); return }
+        setRemaining(data.remaining)
+        setQuantity(q => Math.min(q, data.remaining))
+      })
+      .catch(() => {
+        setError(networkError)
+        setStep('error')
+      })
+  }, [])
+
+  // Reset state and check capacity when modal opens
   useEffect(() => {
     if (!open) return
 
@@ -27,7 +43,6 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
       setStep('pick')
       setError('')
       setRemaining(bypassMax ?? null)
-      setLoading(false)
       setMinimumAcknowledged(false)
       setHearAbout('')
       return
@@ -35,13 +50,11 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
 
     if (!initialStep && siteConfig.showcaseForceSoldOut) {
       setStep('soldout')
-      setLoading(false)
       return
     }
 
     if (initialStep) {
       setStep(initialStep)
-      setLoading(false)
       setQuantity(3)
       setRemaining(3)
       if (initialStep === 'error') {
@@ -60,31 +73,10 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
     setStep('pick')
     setError('')
     setRemaining(null)
-    setLoading(true)
     setMinimumAcknowledged(false)
     setHearAbout('')
-    fetch('/api/create-checkout-session')
-      .then(res => res.json())
-      .then(data => {
-        if (data.soldOut) {
-          setStep('soldout')
-          return
-        }
-        if (data.error) {
-          setError(data.error)
-          setStep('error')
-          return
-        }
-        setRemaining(data.remaining)
-        // If only 1 left, default to 1
-        if (data.remaining === 1) setQuantity(1)
-      })
-      .catch(() => {
-        setError('Could not connect to the server. Please check your internet connection and try again.')
-        setStep('error')
-      })
-      .finally(() => setLoading(false))
-  }, [open, initialStep, bypass, bypassMax])
+    checkCapacity('Could not connect to the server. Please check your internet connection and try again.')
+  }, [open, initialStep, bypass, bypassMax, checkCapacity])
 
   const fetchClientSecret = useCallback(async () => {
     try {
@@ -171,21 +163,7 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
                 onClick={() => {
                   setError('')
                   setStep('pick')
-                  if (bypass) return
-                  setLoading(true)
-                  fetch('/api/create-checkout-session')
-                    .then(res => res.json())
-                    .then(data => {
-                      if (data.soldOut) { setStep('soldout'); return }
-                      if (data.error) { setError(data.error); setStep('error'); return }
-                      setRemaining(data.remaining)
-                      if (data.remaining === 1) setQuantity(1)
-                    })
-                    .catch(() => {
-                      setError('Still unable to connect. Please try again in a moment.')
-                      setStep('error')
-                    })
-                    .finally(() => setLoading(false))
+                  if (!bypass) checkCapacity('Still unable to connect. Please try again in a moment.')
                 }}
                 className="w-full bg-comedy-purple text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors"
               >
@@ -215,87 +193,81 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
               <p className="text-red-600 text-sm mb-4">{error}</p>
             )}
 
-            {loading ? (
-              <p className="text-gray-400 py-8">Loading...</p>
-            ) : (
-              <>
-                <div className="flex items-center justify-center gap-6 mb-8">
-                  <button
-                    type="button"
-                    disabled={quantity <= 1}
-                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    aria-label="Remove a ticket"
-                    className="w-14 h-14 sm:w-12 sm:h-12 rounded-full border-2 text-2xl sm:text-xl font-medium flex items-center justify-center select-none touch-manipulation transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-gray-300 text-gray-600 active:bg-comedy-purple active:text-white active:border-comedy-purple hover:border-comedy-purple hover:text-comedy-purple"
-                  >
-                    -
-                  </button>
-                  <div className="text-center min-w-[80px]">
-                    <span className="text-4xl font-bold text-gray-900">{quantity}</span>
-                    <p className="text-sm text-gray-500 mt-1">{quantity === 1 ? 'ticket' : 'tickets'}</p>
-                  </div>
-                  <button
-                    type="button"
-                    disabled={remaining != null && quantity >= remaining}
-                    onClick={() => setQuantity(q => remaining != null ? Math.min(q + 1, remaining) : q + 1)}
-                    aria-label="Add a ticket"
-                    className="w-14 h-14 sm:w-12 sm:h-12 rounded-full border-2 text-2xl sm:text-xl font-medium flex items-center justify-center select-none touch-manipulation transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-gray-300 text-gray-600 active:bg-comedy-purple active:text-white active:border-comedy-purple hover:border-comedy-purple hover:text-comedy-purple"
-                  >
-                    +
-                  </button>
-                </div>
-
-                <p className="text-lg font-semibold text-gray-900 mb-6">
-                  Total: ${quantity * 20}
-                </p>
-
-                <label className="flex items-start gap-3 text-left mb-5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={minimumAcknowledged}
-                    onChange={(e) => setMinimumAcknowledged(e.target.checked)}
-                    className="mt-1 w-4 h-4 accent-comedy-purple flex-shrink-0"
-                  />
-                  <span>
-                    <span className="text-sm text-gray-700">
-                      I understand there&apos;s a 1-item minimum per person
-                    </span>
-                    <span className="block text-xs text-gray-400 mt-1">
-                      Anything from the cafe menu counts! BYOB is welcome but doesn&apos;t count toward the minimum. Your purchase keeps our BYOB policy possible!
-                    </span>
-                  </span>
-                </label>
-
-                <div className="mb-6 text-left">
-                  <label htmlFor="hear-about" className="block text-sm text-gray-600 mb-1">
-                    How did you hear about the show?
-                  </label>
-                  <select
-                    id="hear-about"
-                    value={hearAbout}
-                    onChange={(e) => setHearAbout(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-comedy-purple focus:border-transparent"
-                  >
-                    <option value="">Select one...</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="Facebook">Facebook</option>
-                    <option value="Friend or family">Friend or family</option>
-                    <option value="From Crave">From Crave</option>
-                    <option value="Saw a flyer">Saw a flyer</option>
-                    <option value="Google search">Google search</option>
-                    <option value="Been to a previous show">Been to a previous show</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-
+              <div className="flex items-center justify-center gap-6 mb-8">
                 <button
-                  onClick={() => setStep('pay')}
-                  disabled={!minimumAcknowledged}
-                  className="w-full bg-comedy-purple text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors text-lg disabled:opacity-40 disabled:cursor-not-allowed"
+                  type="button"
+                  disabled={quantity <= 1}
+                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                  aria-label="Remove a ticket"
+                  className="w-14 h-14 sm:w-12 sm:h-12 rounded-full border-2 text-2xl sm:text-xl font-medium flex items-center justify-center select-none touch-manipulation transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-gray-300 text-gray-600 active:bg-comedy-purple active:text-white active:border-comedy-purple hover:border-comedy-purple hover:text-comedy-purple"
                 >
-                  Continue to Payment
+                  -
                 </button>
-              </>
-            )}
+                <div className="text-center min-w-[80px]">
+                  <span className="text-4xl font-bold text-gray-900">{quantity}</span>
+                  <p className="text-sm text-gray-500 mt-1">{quantity === 1 ? 'ticket' : 'tickets'}</p>
+                </div>
+                <button
+                  type="button"
+                  disabled={remaining != null && quantity >= remaining}
+                  onClick={() => setQuantity(q => remaining != null ? Math.min(q + 1, remaining) : q + 1)}
+                  aria-label="Add a ticket"
+                  className="w-14 h-14 sm:w-12 sm:h-12 rounded-full border-2 text-2xl sm:text-xl font-medium flex items-center justify-center select-none touch-manipulation transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-gray-300 text-gray-600 active:bg-comedy-purple active:text-white active:border-comedy-purple hover:border-comedy-purple hover:text-comedy-purple"
+                >
+                  +
+                </button>
+              </div>
+
+              <p className="text-lg font-semibold text-gray-900 mb-6">
+                Total: ${quantity * 20}
+              </p>
+
+              <label className="flex items-start gap-3 text-left mb-5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={minimumAcknowledged}
+                  onChange={(e) => setMinimumAcknowledged(e.target.checked)}
+                  className="mt-1 w-4 h-4 accent-comedy-purple flex-shrink-0"
+                />
+                <span>
+                  <span className="text-sm text-gray-700">
+                    I understand there&apos;s a 1-item minimum per person
+                  </span>
+                  <span className="block text-xs text-gray-400 mt-1">
+                    Anything from the cafe menu counts! BYOB is welcome but doesn&apos;t count toward the minimum. Your purchase keeps our BYOB policy possible!
+                  </span>
+                </span>
+              </label>
+
+              <div className="mb-6 text-left">
+                <label htmlFor="hear-about" className="block text-sm text-gray-600 mb-1">
+                  How did you hear about the show?
+                </label>
+                <select
+                  id="hear-about"
+                  value={hearAbout}
+                  onChange={(e) => setHearAbout(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-comedy-purple focus:border-transparent"
+                >
+                  <option value="">Select one...</option>
+                  <option value="Instagram">Instagram</option>
+                  <option value="Facebook">Facebook</option>
+                  <option value="Friend or family">Friend or family</option>
+                  <option value="From Crave">From Crave</option>
+                  <option value="Saw a flyer">Saw a flyer</option>
+                  <option value="Google search">Google search</option>
+                  <option value="Been to a previous show">Been to a previous show</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <button
+                onClick={() => setStep('pay')}
+                disabled={!minimumAcknowledged}
+                className="w-full bg-comedy-purple text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors text-lg disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Continue to Payment
+              </button>
           </div>
         ) : (
           <div className="p-4 pt-6">

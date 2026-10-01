@@ -25,7 +25,51 @@ export const upcomingShows = [
     venue: "Crave Nature's Eatery",
     location: "Lawrenceville, NJ",
     description: "A standup comedy show in Lawrenceville! BYOB!",
-    performers: [],
+    performers: [
+      {
+        name: "Steve Schwarz",
+        instagram: "steve_schwarz_nj",
+        credits: "Willie McBride's",
+        bio: "Steve Schwarz performs all over the tri state area. He also co-produces shows at Willie McBride's in Branchburg."
+      },
+      {
+        name: "Jim Donzi",
+        instagram: "jimmydonz",
+        credits: "NJ101.5 Standup Contest winner",
+        bio: "Jimmy Donz is a previous winner of the NJ101.5 Standup Contest. He's performed across New Jersey and has tens, maybe even possibly dozens of fans across the globe (but mostly in New Jersey)."
+      },
+      {
+        name: "Ali Rayef",
+        instagram: "arabwaluigi",
+        bio: "Ali Rayef is an up and coming comedian from Robbinsville, NJ. He is known for his jokes about identity, politics, and toilets."
+      },
+      {
+        name: "Ashia T. McRae",
+        instagram: "ashistenacious",
+        credits: "Jersey Shore Top Comic finalist",
+        bio: "Ashia McRae is a New Jersey-based comedian known for her bold delivery, animated storytelling, and hilariously unexpected takes on everyday life. A Jersey Shore Top Comic finalist, she brings sharp observations, big personality, and unapologetic honesty to every stage."
+      },
+      {
+        name: "Holly Huff",
+        instagram: "hollyhuffcomedy",
+        credits: "High Note Humor",
+        bio: "Holly Huff is one of New Jersey's fastest rising comedians. She is a member of the legendary High Note Humor comedy group based out of Haddonfield, NJ and can be found performing all over the East Coast."
+      },
+      {
+        name: "Justin Doyle",
+        instagram: "jamesjustindoyle"
+      },
+      {
+        name: "Shivani Davé",
+        instagram: "shivanidave_"
+      },
+      {
+        name: "Matt Jenkins",
+        instagram: "mattjenkinscomic",
+        credits: "Dry Bar Comedy, SiriusXM",
+        bio: "Matt Jenkins is known for his clean, quick-witted brand of comedy. Quickly becoming known as one of NY/NJ's strongest clean comics, Matt uses his diverse background, in combination with solid joke writing and charisma, to give audiences a relatable as well as memorable experience."
+      },
+    ],
     vibe: siteConfig.showcaseTicketsAvailable
       ? "Our shows regularly sell out with ~100 attendees! Don't wait to get your tickets!"
       : "Our shows regularly sell out with ~100 attendees! Join the mailing list to get notified when tickets are available.",

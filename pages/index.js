@@ -295,10 +295,12 @@ export default function Home() {
         <div className="max-w-2xl mx-auto section-padding">
           <h2 className="text-sm font-medium uppercase tracking-widest text-center mb-6 text-gray-400">Past Performers</h2>
           <ComedianGrid comedians={comedians} recentPerformers={mostRecentShowPerformers} />
-          <p className="text-xs text-gray-400 text-center mt-4 flex items-center justify-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-comedy-purple inline-block" />
-            Performed at the most recent show
-          </p>
+          {mostRecentShowPerformers.length > 0 && (
+            <p className="text-xs text-gray-400 text-center mt-4 flex items-center justify-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-comedy-purple inline-block" />
+              Performed at the most recent show
+            </p>
+          )}
         </div>
       </section>
 

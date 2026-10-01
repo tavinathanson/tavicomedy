@@ -3,15 +3,8 @@
 
 // Names of comedians who performed at the most recent show.
 // Update this list each time a new show happens. Names must match `comedians` entries exactly.
-export const mostRecentShowPerformers = [
-  "Belynda Cleare",
-  "Cousin Kenny",
-  "Dennis Voj",
-  "P Doc",
-  "Shana Harton",
-  "Steve Schwarz",
-  "Tim Rager",
-]
+// Leave empty while the next show's lineup is announced; the dots and legend hide automatically.
+export const mostRecentShowPerformers = []
 
 export const comedians = [
   { name: "Aaron Bell", instagram: "aaronbellcomedy" },
@@ -20,7 +13,7 @@ export const comedians = [
   { name: "Andre Mitchell", instagram: "_comedyconnoisseur" },
   { name: "Andy Glaser", instagram: "andreaglaser3" },
   { name: "Asha McDowell", instagram: "queenofzamunda2" },
-  { name: "Ashia McRae", instagram: "ashistenacious" },
+  { name: "Ashia T. McRae", instagram: "ashistenacious" },
   { name: "Becky Veduccio", instagram: "beckyveduccio" },
   { name: "Becky Z", instagram: "beckycomedy" },
   { name: "Belynda Cleare", instagram: "bjcleare" },
@@ -41,7 +34,7 @@ export const comedians = [
   { name: "Jason Thompson", instagram: "jaysooofunny" },
   { name: "Jay Silverberg", instagram: "silverbergcomedy" },
   { name: "Jim Christy", instagram: "jchristy1515" },
-  { name: "Jim Donzi", instagram: "jimmyd0nz" },
+  { name: "Jim Donzi", instagram: "jimmydonz" },
   { name: "Joe Flynn", instagram: "joeflynn_01" },
   { name: "John Montague", instagram: "montaguecomedy" },
   { name: "Josh Tinley", instagram: "thatsjtcomedy" },

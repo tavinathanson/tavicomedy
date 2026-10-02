@@ -57,7 +57,9 @@ export const upcomingShows = [
       },
       {
         name: "Justin Doyle",
-        instagram: "jamesjustindoyle"
+        instagram: "jamesjustindoyle",
+        credits: "Stress Factory, The Roast of New Jersey",
+        bio: "NJ native Justin Doyle performs at the Stress Factory Comedy Club and recently wrote for The Roast of New Jersey. He also co-produces Jokes on Us Comedy."
       },
       {
         name: "Shivani Davé",

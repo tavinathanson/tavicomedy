@@ -63,7 +63,9 @@ export const upcomingShows = [
       },
       {
         name: "Shivani Davé",
-        instagram: "shivanidave_"
+        instagram: "shivanidave_",
+        credits: "Don't Tell Comedy, New York Comedy Festival",
+        bio: "Shivani Davé is an NYC-based, Indian-American stand up comic and writer from Boston. She's a regular performer at the top clubs in NYC, tours all over the country, and opens for Dave Attell, Pete Lee & Rafi Bastos. Shivani is the host of the popular web series, Smacking Balls & Talking Smack (featured in the New York Comedy Festival), and her Don't Tell Comedy special is out now."
       },
       {
         name: "Matt Jenkins",

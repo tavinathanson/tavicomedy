@@ -7,7 +7,8 @@
     "dev": "next dev -p 3005",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sync-attendance": "node --env-file=.env.local scripts/sync-attendance.mjs"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^6.1.0",
@@ -29,6 +30,7 @@
     "autoprefixer": "10.4.17",
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
+    "js-yaml": "^5.4.2",
     "postcss": "8.4.33",
     "tailwindcss": "3.4.1"
   }

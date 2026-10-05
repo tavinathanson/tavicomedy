@@ -328,7 +328,7 @@ function GuestList({ onLogout }) {
           </div>
 
           {/* Guest table */}
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-lg border border-gray-200 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
@@ -355,11 +355,11 @@ function GuestList({ onLogout }) {
                     className={`border-b border-gray-100 last:border-0 ${guest.skip ? 'opacity-50' : ''} ${(guest.checkedIn || 0) >= guest.tickets && !guest.skip ? 'bg-green-50' : ''}`}
                   >
                     <td className="px-4 py-3">
-                      <span className="inline-flex items-center gap-2">
+                      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         {guest.name || <span className="text-gray-400">No name</span>}
                         {guest.priorVisits > 0 && (
                           <span
-                            className="text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-comedy-purple"
+                            className="text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-comedy-purple whitespace-nowrap"
                             title={`Been to ${guest.priorVisits} previous show${guest.priorVisits > 1 ? 's' : ''}`}
                           >
                             {guest.priorVisits > 1 ? `${guest.priorVisits}× before` : 'returning'}

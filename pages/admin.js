@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import Head from 'next/head'
+import { siteConfig } from '@/config/site'
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(null) // null = checking
@@ -90,8 +91,10 @@ function GuestList({ onLogout }) {
   const [error, setError] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
   const [shows, setShows] = useState([])
-  const [selectedShow, setSelectedShow] = useState(null)
-  const [currentShowDate, setCurrentShowDate] = useState(null)
+  // Start on the current configured show so its guest list loads right away,
+  // in parallel with the (slower) list of all shows for the picker.
+  const currentShowDate = siteConfig.nextShowDateISO
+  const [selectedShow, setSelectedShow] = useState(currentShowDate)
   const checkinTimers = useRef({})
   const checkinValues = useRef({})
 
@@ -110,45 +113,47 @@ function GuestList({ onLogout }) {
     }
   }, [])
 
-  // Load the list of shows, then default to the most recent one that has data
-  // (falling back to the current configured show if nothing has sold yet).
   useEffect(() => {
     fetch('/api/admin/shows')
       .then(r => r.json())
-      .then(d => {
-        const list = d.shows || []
-        setShows(list)
-        setCurrentShowDate(d.currentShowDate || null)
-        const withData = list.find(s => s.parties > 0)
-        setSelectedShow(withData?.showDate || d.currentShowDate || list[0]?.showDate || null)
-      })
+      .then(d => setShows(d.shows || []))
       .catch(() => setError('Failed to load shows'))
   }, [])
 
   useEffect(() => { fetchGuests(selectedShow) }, [selectedShow, fetchGuests])
 
-  const handleDelete = async (guest) => {
-    if (!confirm(`Remove ${guest.name}?`)) return
-    const res = await fetch('/api/admin/delete-guest', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: guest.name, showDate: data.showDate }),
-    })
-    if (res.ok) fetchGuests(selectedShow)
+  const updateGuests = (fn) => setData(d => ({ ...d, guests: fn(d.guests) }))
+
+  // Edits are applied locally first so the page stays instant; if the save
+  // fails we reload the real list from the server.
+  const save = async (url, body) => {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...body, showDate: data.showDate }),
+      })
+      if (!res.ok) throw new Error('save failed')
+    } catch {
+      setError('Could not save a change. Reloading the latest...')
+      fetchGuests(selectedShow)
+    }
   }
 
-  const handleToggleSkip = async (guest) => {
-    const res = await fetch('/api/admin/toggle-skip', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id: guest.id,
-        source: guest.source,
-        showDate: data.showDate,
-        skip: !guest.skip,
-      }),
-    })
-    if (res.ok) fetchGuests(selectedShow)
+  const handleDelete = (guest) => {
+    if (!confirm(`Remove ${guest.name}?`)) return
+    updateGuests(gs => gs.filter(g => g.id !== guest.id))
+    save('/api/admin/delete-guest', { name: guest.name })
+  }
+
+  const handleToggleSkip = (guest) => {
+    updateGuests(gs => gs.map(g => g.id === guest.id ? { ...g, skip: !g.skip } : g))
+    save('/api/admin/toggle-skip', { id: guest.id, source: guest.source, skip: !guest.skip })
+  }
+
+  const handleSetEmail = (guest, email) => {
+    updateGuests(gs => gs.map(g => g.id === guest.id ? { ...g, email } : g))
+    save('/api/admin/set-email', { name: guest.name, email })
   }
 
   const handleSetCheckedIn = (guest, count) => {
@@ -163,26 +168,14 @@ function GuestList({ onLogout }) {
     // single request with the final value (avoids racing writes to the sheet).
     checkinValues.current[guest.id] = clamped
     if (checkinTimers.current[guest.id]) clearTimeout(checkinTimers.current[guest.id])
-    checkinTimers.current[guest.id] = setTimeout(async () => {
+    checkinTimers.current[guest.id] = setTimeout(() => {
       delete checkinTimers.current[guest.id]
-      const value = checkinValues.current[guest.id]
-      try {
-        const res = await fetch('/api/admin/check-in', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: guest.id,
-            source: guest.source,
-            name: guest.name,
-            showDate: data.showDate,
-            checkedIn: value,
-          }),
-        })
-        if (!res.ok) throw new Error('save failed')
-      } catch {
-        setError('Could not save a check-in. Reloading the latest...')
-        fetchGuests(selectedShow)
-      }
+      save('/api/admin/check-in', {
+        id: guest.id,
+        source: guest.source,
+        name: guest.name,
+        checkedIn: checkinValues.current[guest.id],
+      })
     }, 300)
   }
 
@@ -193,6 +186,8 @@ function GuestList({ onLogout }) {
   const remaining = data ? data.capacity - countingTickets : 0
   const checkedInTickets = counting.reduce((s, g) => s + (g.checkedIn || 0), 0)
   const notArrived = Math.max(0, countingTickets - checkedInTickets)
+  const totalTickets = data?.guests?.reduce((s, g) => s + g.tickets, 0) || 0
+  const returningParties = data?.guests?.filter(g => g.priorVisits > 0).length || 0
 
   // Display guests sorted by last name (last word of the name). Guests with no
   // name sort to the bottom.
@@ -286,12 +281,12 @@ function GuestList({ onLogout }) {
             />
             <SummaryCard
               label="Total People"
-              value={data.totalTickets}
+              value={totalTickets}
               sub="all entries"
             />
             <SummaryCard
               label="Returning"
-              value={data.returningParties || 0}
+              value={returningParties}
               sub="been before"
             />
             <SummaryCard
@@ -372,7 +367,11 @@ function GuestList({ onLogout }) {
                         )}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">{guest.email}</td>
+                    <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">
+                      {guest.source === 'stripe'
+                        ? guest.email
+                        : <EmailCell guest={guest} onSave={handleSetEmail} />}
+                    </td>
                     <td className="px-4 py-3 text-center">{guest.tickets}</td>
                     <td className="px-4 py-3 text-center">
                       <CheckInCell guest={guest} onSet={handleSetCheckedIn} />
@@ -450,6 +449,47 @@ function ReservedLinkButton() {
         {copied ? 'Copied!' : 'Copy reserved link'}
       </button>
     </div>
+  )
+}
+
+// Manual guests' email, editable in place (e.g. adding one for a comp guest
+// who was entered without it).
+function EmailCell({ guest, onSave }) {
+  const [editing, setEditing] = useState(false)
+  const [value, setValue] = useState(guest.email || '')
+
+  if (!editing) {
+    return (
+      <button
+        onClick={() => { setValue(guest.email || ''); setEditing(true) }}
+        className={guest.email ? 'text-left hover:text-gray-700' : 'text-xs text-comedy-purple hover:underline'}
+        title="Edit email"
+      >
+        {guest.email || '+ add email'}
+      </button>
+    )
+  }
+
+  const submit = (e) => {
+    e.preventDefault()
+    const email = value.trim()
+    if (email !== (guest.email || '')) onSave(guest, email)
+    setEditing(false)
+  }
+
+  return (
+    <form onSubmit={submit} className="flex items-center gap-1">
+      <input
+        type="email"
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        onKeyDown={e => e.key === 'Escape' && setEditing(false)}
+        placeholder="email@example.com"
+        className="w-full min-w-0 border border-gray-300 rounded px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-comedy-purple"
+        autoFocus
+      />
+      <button type="submit" className="text-xs text-comedy-purple font-medium px-1">Save</button>
+    </form>
   )
 }
 

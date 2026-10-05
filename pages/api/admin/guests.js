@@ -1,10 +1,9 @@
-import Stripe from 'stripe'
 import { requireAuth } from '@/lib/admin-auth'
 import { siteConfig } from '@/config/site'
-import { getSheets, getSpreadsheetId } from '@/lib/google-sheets'
+import { readTab } from '@/lib/google-sheets'
 import { getSkippedSessionIds, getCheckedInCounts } from '@/lib/capacity'
+import { getShowSessions, getSessionHistory, sessionTickets } from '@/lib/stripe-sessions'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const GUESTS_SHEET = 'admin-guests'
 
 const normEmail = (email) => (email || '').trim().toLowerCase()
@@ -33,98 +32,35 @@ function priorVisitCount(history, guest, showDate) {
   return shows.size
 }
 
-// Returns the current show's Stripe guests plus a cross-show visit history built
-// from every completed session (we already page through all of them here).
-async function getStripeGuests(showDate, skippedIds, history) {
-  const guests = []
-  let hasMore = true
-  let startingAfter = undefined
-
-  while (hasMore) {
-    const sessions = await stripe.checkout.sessions.list({
-      status: 'complete',
-      limit: 100,
-      ...(startingAfter && { starting_after: startingAfter }),
-      expand: ['data.line_items', 'data.payment_intent.latest_charge.balance_transaction'],
-    })
-
-    for (const session of sessions.data) {
-      const sessionShowDate = session.metadata?.showDate
-      const name = session.customer_details?.name || ''
-      const email = session.customer_details?.email || ''
-      addVisit(history, email, name, sessionShowDate)
-
-      if (sessionShowDate !== showDate) continue
-      const ticketCount = (session.line_items?.data || []).reduce(
-        (sum, item) => sum + (item.quantity || 0), 0
-      )
-      // Exact amounts/fees from the underlying charge (all in cents). The
-      // balance transaction holds Stripe's real fee; amount_refunded lets us
-      // net out any refunds so revenue reflects what was actually kept.
-      const charge = session.payment_intent?.latest_charge
-      const fee = charge?.balance_transaction?.fee || 0
-      const refunded = charge?.amount_refunded || 0
-      const amount = session.amount_total || 0
-      guests.push({
-        id: session.id,
-        name,
-        email,
-        tickets: ticketCount,
-        source: 'stripe',
-        skip: skippedIds.has(session.id),
-        date: new Date(session.created * 1000).toISOString(),
-        amount,
-        fee,
-        refunded,
-      })
-    }
-
-    hasMore = sessions.has_more
-    if (sessions.data.length > 0) {
-      startingAfter = sessions.data[sessions.data.length - 1].id
-    }
-  }
-
-  return guests
-}
-
-// Returns the current show's manual guests plus folds every manual row (all
-// shows) into the shared visit history.
-async function getManualGuests(showDate, history) {
-  const sheets = getSheets()
-  const spreadsheetId = getSpreadsheetId()
-  if (!spreadsheetId) return []
-
-  try {
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: `${GUESTS_SHEET}!A:G`,
-    })
-
-    const rows = response.data.values || []
-    const dataRows = rows.slice(1)
-    for (const row of dataRows) {
-      addVisit(history, row[1], row[0], row[4])
-    }
-    return dataRows
-      .filter(row => row[4] === showDate)
-      .map((row, i) => ({
-        id: `manual-${i}-${row[0]}`,
-        name: row[0] || '',
-        email: row[1] || '',
-        tickets: parseInt(row[2]) || 1,
-        source: row[3] || 'other',
-        skip: row[6] === 'true',
-        date: row[5] || '',
-        showDate: row[4] || '',
-      }))
-  } catch (err) {
-    if (err.code === 400 || err.message?.includes('Unable to parse range')) {
-      return []
-    }
-    throw err
+// Exact amounts and fees come from the underlying charge (all in cents). The
+// balance transaction holds Stripe's real fee; amount_refunded lets us net out
+// refunds so revenue reflects what was actually kept.
+const toStripeGuest = (session, skippedIds) => {
+  const charge = session.payment_intent?.latest_charge
+  return {
+    id: session.id,
+    name: session.customer_details?.name || '',
+    email: session.customer_details?.email || '',
+    tickets: sessionTickets(session),
+    source: 'stripe',
+    skip: skippedIds.has(session.id),
+    date: new Date(session.created * 1000).toISOString(),
+    amount: session.amount_total || 0,
+    fee: charge?.balance_transaction?.fee || 0,
+    refunded: charge?.amount_refunded || 0,
   }
 }
+
+const toManualGuest = (row, i) => ({
+  id: `manual-${i}-${row[0]}`,
+  name: row[0] || '',
+  email: row[1] || '',
+  tickets: parseInt(row[2]) || 1,
+  source: row[3] || 'other',
+  skip: row[6] === 'true',
+  date: row[5] || '',
+  showDate: row[4] || '',
+})
 
 export default requireAuth(async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -135,37 +71,31 @@ export default requireAuth(async function handler(req, res) {
   const showDate = req.query.showDate || siteConfig.nextShowDateISO
 
   try {
-    const [skippedIds, checkedInCounts] = await Promise.all([
+    const [skippedIds, checkedInCounts, manualRows, showSessions, pastSessions] = await Promise.all([
       getSkippedSessionIds(showDate),
       getCheckedInCounts(showDate),
-    ])
-    const history = { byEmail: {}, byName: {} }
-    const [stripeGuests, manualGuests] = await Promise.all([
-      getStripeGuests(showDate, skippedIds, history),
-      getManualGuests(showDate, history),
+      readTab(`${GUESTS_SHEET}!A:G`),
+      getShowSessions(showDate, ['data.payment_intent.latest_charge.balance_transaction']),
+      getSessionHistory(),
     ])
 
-    const allGuests = [...stripeGuests, ...manualGuests].map(g => {
+    const history = { byEmail: {}, byName: {} }
+    for (const s of pastSessions) addVisit(history, s.email, s.name, s.showDate)
+    for (const row of manualRows) addVisit(history, row[1], row[0], row[4])
+
+    const manualGuests = manualRows.filter(row => row[4] === showDate).map(toManualGuest)
+    const stripeGuests = showSessions.map(s => toStripeGuest(s, skippedIds))
+    const guests = [...stripeGuests, ...manualGuests].map(g => {
       const key = g.source === 'stripe' ? g.id : g.name
       const checkedIn = Math.min(checkedInCounts.get(key) || 0, g.tickets)
       const priorVisits = priorVisitCount(history, g, showDate)
-      return { ...g, checkedIn, priorVisits, returning: priorVisits > 0 }
+      return { ...g, checkedIn, priorVisits }
     })
-    const totalTickets = allGuests.reduce((sum, g) => sum + g.tickets, 0)
-    const countingTickets = allGuests
-      .filter(g => !g.skip)
-      .reduce((sum, g) => sum + g.tickets, 0)
-    const checkedInTickets = allGuests.reduce((sum, g) => sum + g.checkedIn, 0)
-    const returningParties = allGuests.filter(g => g.returning).length
 
     return res.status(200).json({
       showDate,
       capacity: siteConfig.tickets.capacity,
-      totalTickets,
-      countingTickets,
-      checkedInTickets,
-      returningParties,
-      guests: allGuests,
+      guests,
     })
   } catch (err) {
     console.error('Error fetching guests:', err)

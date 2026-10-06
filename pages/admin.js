@@ -95,6 +95,7 @@ function GuestList({ onLogout }) {
   // in parallel with the (slower) list of all shows for the picker.
   const currentShowDate = siteConfig.nextShowDateISO
   const [selectedShow, setSelectedShow] = useState(currentShowDate)
+  const [sortOverride, setSortOverride] = useState(null) // null = default for the day
   const checkinTimers = useRef({})
   const checkinValues = useRef({})
 
@@ -189,18 +190,11 @@ function GuestList({ onLogout }) {
   const totalTickets = data?.guests?.reduce((s, g) => s + g.tickets, 0) || 0
   const returningParties = data?.guests?.filter(g => g.priorVisits > 0).length || 0
 
-  // Display guests sorted by last name (last word of the name). Guests with no
-  // name sort to the bottom.
-  const sortedGuests = data?.guests
-    ? [...data.guests].sort((a, b) => {
-        const la = lastName(a.name)
-        const lb = lastName(b.name)
-        if (!la && !lb) return 0
-        if (!la) return 1
-        if (!lb) return -1
-        return la.localeCompare(lb) || (a.name || '').localeCompare(b.name || '')
-      })
-    : []
+  // Door mode (sort by name) on show day, newest purchases first otherwise.
+  // An explicit toggle wins until a different show is picked.
+  const isShowDay = data?.showDate === new Date().toLocaleDateString('en-CA')
+  const sortBy = sortOverride || (isShowDay ? 'name' : 'date')
+  const sortedGuests = data?.guests ? [...data.guests].sort(GUEST_SORTS[sortBy]) : []
 
   const handleExportCsv = () => {
     const rows = [['Name', 'Email', 'Tickets']]
@@ -229,7 +223,7 @@ function GuestList({ onLogout }) {
           {shows.length > 0 && (
             <select
               value={selectedShow || ''}
-              onChange={e => setSelectedShow(e.target.value)}
+              onChange={e => { setSelectedShow(e.target.value); setSortOverride(null) }}
               className="mt-2 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-comedy-purple"
             >
               {shows.map(s => (
@@ -323,6 +317,12 @@ function GuestList({ onLogout }) {
                   Export CSV
                 </button>
                 <ReservedLinkButton />
+                <button
+                  onClick={() => setSortOverride(sortBy === 'name' ? 'date' : 'name')}
+                  className="text-sm bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Sort: {sortBy === 'name' ? 'Name' : 'Newest'}
+                </button>
               </div>
             )}
           </div>
@@ -496,6 +496,18 @@ function EmailCell({ guest, onSave }) {
 function lastName(name) {
   const parts = (name || '').trim().split(/\s+/).filter(Boolean)
   return parts.length ? parts[parts.length - 1].toLowerCase() : ''
+}
+
+const GUEST_SORTS = {
+  // Last name (last word of the name); guests with no name go to the bottom.
+  name: (a, b) => {
+    const la = lastName(a.name)
+    const lb = lastName(b.name)
+    if (!la || !lb) return !la - !lb
+    return la.localeCompare(lb) || (a.name || '').localeCompare(b.name || '')
+  },
+  // Newest purchase/entry first (ISO timestamps compare as strings).
+  date: (a, b) => (b.date || '').localeCompare(a.date || ''),
 }
 
 function CheckInCell({ guest, onSet }) {

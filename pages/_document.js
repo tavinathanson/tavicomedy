@@ -48,7 +48,7 @@ export default function Document() {
         />
         {/* End Microsoft Clarity */}
 
-        {/* Google Analytics */}
+        {/* Google tag: Analytics and Ads */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-NY5L0CCRJM" />
         <script
           dangerouslySetInnerHTML={{
@@ -57,10 +57,11 @@ export default function Document() {
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'G-NY5L0CCRJM');
+              gtag('config', 'AW-18511031580');
             `,
           }}
         />
-        {/* End Google Analytics */}
+        {/* End Google tag */}
       </Head>
       <body>
         <Main />

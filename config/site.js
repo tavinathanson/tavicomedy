@@ -18,7 +18,7 @@ export const siteConfig = {
 
   // Optional: set to true to force sold out immediately (skips Stripe capacity check)
   // Leave false/undefined to auto-detect from Stripe
-  showcaseForceSoldOut: false,
+  showcaseForceSoldOut: true,
 
   // ⚠️  WHEN UPDATING SHOW DATE, ALSO UPDATE:
   //     1. performers array in data/shows.js

@@ -559,19 +559,26 @@ const money = (cents) => `$${(cents / 100).toFixed(2)}`
 // guest and the numbers update) plus a few editable knobs: whether to count
 // tickets sold vs. only those checked in, the flat door price, and the NJ tax
 // rate that is baked into each ticket. Stripe entries always use their real
-// charged amount and Stripe fee; door entries use the flat price; comps are free.
+// charged amount and Stripe fee; Eventbrite entries use their price minus
+// Eventbrite's fees (absorbed by us); door entries use the flat price; comps are free.
+const EVENTBRITE_FEE_PCT = 0.037 + 0.029 // service fee + payment processing
+const EVENTBRITE_FEE_FLAT_CENTS = 179
+
 function FinancialsPanel({ guests }) {
   const [open, setOpen] = useState(true)
   const [basis, setBasis] = useState('sold') // 'sold' | 'checkedin'
   const [price, setPrice] = useState('20')
+  const [ebPrice, setEbPrice] = useState('20')
   const [taxRate, setTaxRate] = useState('6.625')
 
   const fin = useMemo(() => {
     const priceCents = Math.round((parseFloat(price) || 0) * 100)
+    const ebPriceCents = Math.round((parseFloat(ebPrice) || 0) * 100)
+    const ebFeeCents = ebPriceCents > 0 ? Math.round(ebPriceCents * EVENTBRITE_FEE_PCT) + EVENTBRITE_FEE_FLAT_CENTS : 0
     const rate = (parseFloat(taxRate) || 0) / 100
     let tickets = 0, grossCents = 0, feeCents = 0
-    let stripeGrossCents = 0, doorGrossCents = 0
-    let stripeCount = 0, doorCount = 0, compCount = 0
+    let stripeGrossCents = 0, doorGrossCents = 0, ebGrossCents = 0
+    let stripeCount = 0, doorCount = 0, ebCount = 0, compCount = 0
     for (const g of guests) {
       if (g.skip) continue
       const count = basis === 'sold' ? g.tickets : (g.checkedIn || 0)
@@ -583,6 +590,10 @@ function FinancialsPanel({ guests }) {
         const ff = Math.round((g.fee || 0) * ratio)
         grossCents += gg; feeCents += ff; stripeGrossCents += gg
         tickets += count; stripeCount += count
+      } else if (g.source === 'eventbrite') {
+        const gg = ebPriceCents * count
+        grossCents += gg; feeCents += ebFeeCents * count; ebGrossCents += gg
+        tickets += count; ebCount += count
       } else if (g.source === 'comp') {
         compCount += count; tickets += count
       } else {
@@ -595,9 +606,9 @@ function FinancialsPanel({ guests }) {
     const netCents = grossCents - feeCents - taxCents
     return {
       tickets, grossCents, feeCents, taxCents, netCents,
-      stripeGrossCents, doorGrossCents, stripeCount, doorCount, compCount,
+      stripeGrossCents, doorGrossCents, ebGrossCents, stripeCount, doorCount, ebCount, compCount,
     }
-  }, [guests, basis, price, taxRate])
+  }, [guests, basis, price, ebPrice, taxRate])
 
   const basisBtn = (key, label) => (
     <button
@@ -645,6 +656,14 @@ function FinancialsPanel({ guests }) {
               />
             </label>
             <label className="text-xs text-gray-500 font-medium">
+              Eventbrite price ($)
+              <input
+                type="number" min="0" step="1" value={ebPrice}
+                onChange={e => setEbPrice(e.target.value)}
+                className="block w-24 mt-1 border border-gray-300 rounded-lg px-2 py-1.5 text-sm font-normal text-gray-900 focus:outline-none focus:ring-2 focus:ring-comedy-purple"
+              />
+            </label>
+            <label className="text-xs text-gray-500 font-medium">
               NJ tax (%)
               <input
                 type="number" min="0" step="0.001" value={taxRate}
@@ -660,14 +679,14 @@ function FinancialsPanel({ guests }) {
             <FinRow
               label="Gross revenue"
               value={money(fin.grossCents)}
-              sub={`Stripe ${money(fin.stripeGrossCents)} (${fin.stripeCount}) · door ${money(fin.doorGrossCents)} (${fin.doorCount}) · comp ${fin.compCount} free`}
+              sub={`Stripe ${money(fin.stripeGrossCents)} (${fin.stripeCount}) · Eventbrite ${money(fin.ebGrossCents)} (${fin.ebCount}) · door ${money(fin.doorGrossCents)} (${fin.doorCount}) · comp ${fin.compCount} free`}
             />
-            <FinRow label="Stripe fees" value={`- ${money(fin.feeCents)}`} negative />
+            <FinRow label="Stripe + Eventbrite fees" value={`- ${money(fin.feeCents)}`} negative />
             <FinRow label={`NJ sales tax (set aside, ${taxRate || 0}%)`} value={`- ${money(fin.taxCents)}`} negative />
             <FinRow label="Net profit" value={money(fin.netCents)} bold />
           </dl>
           <p className="text-xs text-gray-400 mt-3">
-            Net profit = gross revenue minus Stripe fees and NJ sales tax. It does not include venue, comics, or other costs. Skipped entries are excluded.
+            Net profit = gross revenue minus Stripe fees, Eventbrite fees (3.7% + $1.79 service plus 2.9% processing per ticket, absorbed), and NJ sales tax. It does not include venue, comics, or other costs. Skipped entries are excluded.
           </p>
         </div>
       )}
@@ -704,6 +723,7 @@ function SummaryCard({ label, value, sub, highlight, accent }) {
 const SOURCE_STYLES = {
   stripe: 'bg-blue-100 text-blue-700',
   venmo: 'bg-cyan-100 text-cyan-700',
+  eventbrite: 'bg-orange-100 text-orange-700',
   comp: 'bg-green-100 text-green-700',
   cash: 'bg-yellow-100 text-yellow-700',
   other: 'bg-gray-100 text-gray-600',
@@ -781,6 +801,7 @@ function AddGuestForm({ showDate, onDone, onCancel }) {
           className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-comedy-purple"
         >
           <option value="venmo">Venmo</option>
+          <option value="eventbrite">Eventbrite</option>
           <option value="comp">Comp (free)</option>
           <option value="cash">Cash</option>
           <option value="other">Other</option>

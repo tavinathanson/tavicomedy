@@ -17,7 +17,7 @@ export default requireAuth(async function handler(req, res) {
     return res.status(400).json({ error: 'Name is required' })
   }
 
-  const validSources = ['venmo', 'comp', 'cash', 'other']
+  const validSources = ['venmo', 'eventbrite', 'comp', 'cash', 'other']
   if (!source || !validSources.includes(source)) {
     return res.status(400).json({ error: `Source must be one of: ${validSources.join(', ')}` })
   }

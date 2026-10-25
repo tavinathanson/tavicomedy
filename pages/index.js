@@ -140,7 +140,7 @@ export default function Home() {
                 <p className="text-white/90 text-sm sm:text-base mt-2 text-center backdrop-blur-sm bg-white/10 px-4 py-2 rounded-lg border border-white/20">
                   {hasNextShowDate
                     ? <span>Next show: {nextUpcomingDate}. <a href="#updates" className="underline underline-offset-2 hover:text-white" onClick={(e) => { e.stopPropagation(); document.querySelector('#updates')?.scrollIntoView({ behavior: 'smooth' }); e.preventDefault() }}>Join the list for ticket alerts.</a></span>
-                    : 'Join the waitlist and we\'ll reach out if spots open up'}
+                    : 'Join the waitlist: seats often open up at the door'}
                 </p>
               )}
             </div>

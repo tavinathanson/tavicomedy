@@ -3,7 +3,8 @@ import { useState } from 'react'
 export default function WaitlistSignup({ showDate }) {
   const [email, setEmail] = useState('')
   const [tickets, setTickets] = useState('2')
-  const [status, setStatus] = useState('') // 'submitting', 'success', 'duplicate', or error message
+  const [status, setStatus] = useState('') // 'submitting', 'success', or error message
+  const [successMessage, setSuccessMessage] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -23,11 +24,8 @@ export default function WaitlistSignup({ showDate }) {
       const data = await response.json()
 
       if (response.ok) {
-        if (data.message?.includes('already')) {
-          setStatus('duplicate')
-        } else {
-          setStatus('success')
-        }
+        setSuccessMessage(data.message)
+        setStatus('success')
         setEmail('')
         setTickets('2')
       } else {
@@ -38,7 +36,7 @@ export default function WaitlistSignup({ showDate }) {
     }
   }
 
-  const isSuccess = status === 'success' || status === 'duplicate'
+  const isSuccess = status === 'success'
   const isSubmitting = status === 'submitting'
   const isError = status && !isSuccess && !isSubmitting
 
@@ -48,7 +46,7 @@ export default function WaitlistSignup({ showDate }) {
         Join the waitlist for this show
       </p>
       <p className="text-xs text-gray-500 mt-1 mb-2">
-        We&apos;ll let you know if spots open up
+        Seats often open up. Come by before the show and we&apos;ll try to squeeze you in.
       </p>
       <form onSubmit={handleSubmit} className="flex flex-wrap gap-2">
         <input
@@ -81,9 +79,7 @@ export default function WaitlistSignup({ showDate }) {
       </form>
       {isSuccess && (
         <p className="mt-2 text-sm text-green-700">
-          {status === 'duplicate'
-            ? "You're already on the waitlist for this show!"
-            : "You're on the waitlist! We'll reach out if spots open up."}
+          {successMessage}
         </p>
       )}
       {isError && (

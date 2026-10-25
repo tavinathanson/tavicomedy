@@ -152,7 +152,7 @@ export default function CheckoutModal({ open, onClose, initialStep, bypass, bypa
               Sold Out
             </h2>
             <p className="text-gray-600 mb-6 text-center">
-              This show is sold out! Join the waitlist and we&apos;ll reach out if spots open up.
+              This show is sold out, but seats often open up at the door. Join the waitlist and come by before the show.
             </p>
             <WaitlistSignup showDate={siteConfig.nextShowDate} />
           </div>

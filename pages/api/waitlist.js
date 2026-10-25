@@ -1,6 +1,12 @@
 import { google } from 'googleapis'
 import { sendWaitlistConfirmation, sendCheckoutErrorAlert } from '../../lib/resend'
 
+const SHOW_UP_TEXT = "If seats open up, we'll fill them at the door right before the show, so come by early for the best shot."
+
+function waitlistCountText(people) {
+  return people === 1 ? "You're the first one on it." : `${people} people are on it so far, counting you.`
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
@@ -49,29 +55,28 @@ export default async function handler(req, res) {
 
     const sheets = google.sheets({ version: 'v4', auth })
 
-    // Check for duplicate email + show date
+    // Check for duplicate email + show date, and count people already waiting
     const readResponse = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `${sheetName}!A:B`,
+      range: `${sheetName}!A:C`,
     })
 
-    const existingRows = readResponse.data.values || []
-    const isDuplicate = existingRows.some(
-      (row) =>
-        row[0] &&
-        row[0].toLowerCase() === email.toLowerCase() &&
-        row[1] === showDate
+    const showRows = (readResponse.data.values || []).filter((row) => row[1] === showDate)
+    const peopleWaiting = showRows.reduce((sum, row) => sum + (parseInt(row[2], 10) || 1), 0)
+    const isDuplicate = showRows.some(
+      (row) => row[0] && row[0].toLowerCase() === email.toLowerCase()
     )
 
     if (isDuplicate) {
       return res.status(200).json({
         success: true,
-        message: "You're already on the waitlist for this show!",
+        message: `You're already on the waitlist for this show. ${waitlistCountText(peopleWaiting)} ${SHOW_UP_TEXT}`,
       })
     }
 
     const timestamp = new Date().toISOString()
     const ticketCount = Math.min(Math.max(parseInt(tickets, 10) || 1, 1), 10)
+    const totalWaiting = peopleWaiting + ticketCount
     const rowData = [email, showDate, ticketCount, timestamp, 'website']
 
     await sheets.spreadsheets.values.append({
@@ -85,7 +90,7 @@ export default async function handler(req, res) {
     })
 
     // Send confirmation email (don't fail the request if this fails)
-    const emailResult = await sendWaitlistConfirmation(email, showDate, ticketCount)
+    const emailResult = await sendWaitlistConfirmation(email, showDate, ticketCount, waitlistCountText(totalWaiting))
     if (!emailResult.success) {
       console.error('Failed to send waitlist confirmation email:', emailResult.error)
       sendCheckoutErrorAlert(`Waitlist confirmation email failed: ${emailResult.error}`, {
@@ -98,7 +103,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: "You're on the waitlist! We'll reach out if spots open up.",
+      message: `You're on the waitlist! ${waitlistCountText(totalWaiting)} ${SHOW_UP_TEXT}`,
     })
   } catch (error) {
     console.error('Waitlist error:', error)

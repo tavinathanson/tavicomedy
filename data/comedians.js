@@ -4,12 +4,22 @@
 // Names of comedians who performed at the most recent show.
 // Update this list each time a new show happens. Names must match `comedians` entries exactly.
 // Leave empty while the next show's lineup is announced; the dots and legend hide automatically.
-export const mostRecentShowPerformers = []
+export const mostRecentShowPerformers = [
+  "Ali Rayef",
+  "Ashia T. McRae",
+  "Holly Huff",
+  "Jimmy Donz",
+  "Justin Doyle",
+  "Matt Jenkins",
+  "Shivani Davé",
+  "Steve Schwarz",
+]
 
 export const comedians = [
   { name: "Aaron Bell", instagram: "aaronbellcomedy" },
   { name: "Abe Shapiro", instagram: "abeshaps" },
   { name: "Alex Aversano", instagram: "alexaversano_" },
+  { name: "Ali Rayef", instagram: "arabwaluigi" },
   { name: "Andre Mitchell", instagram: "_comedyconnoisseur" },
   { name: "Andy Glaser", instagram: "andreaglaser3" },
   { name: "Asha McDowell", instagram: "queenofzamunda2" },
@@ -39,11 +49,13 @@ export const comedians = [
   { name: "John Montague", instagram: "montaguecomedy" },
   { name: "Josh Tinley", instagram: "thatsjtcomedy" },
   { name: "Josh Wells", instagram: "joshaintfunny" },
+  { name: "Justin Doyle", instagram: "jamesjustindoyle" },
   { name: "Kaitlyn Kocses", instagram: "kaitlynmko" },
   { name: "Kyle Colorado", instagram: "kylergcolorado" },
   { name: "Laz Vic", instagram: "justlazvic" },
   { name: "Louis Deraville", instagram: "h8shun" },
   { name: "Lucas Connolly", instagram: "lovablelucas1" },
+  { name: "Matt Jenkins", instagram: "mattjenkinscomic" },
   { name: "Megan Goetz", instagram: "meggoetzmoney" },
   { name: "Michael Beavers", instagram: "leave_it.to_beavers" },
   { name: "Mike Mar", instagram: "mike_mar_comedy" },
@@ -55,6 +67,7 @@ export const comedians = [
   { name: "Rohan Mahashabde", instagram: "roshabde1" },
   { name: "Shae Thomas", instagram: "shaethomas_iam" },
   { name: "Shana Harton", instagram: "shanaharton" },
+  { name: "Shivani Davé", instagram: "shivanidave_" },
   { name: "Steve Schwarz", instagram: "steve_schwarz_nj" },
   { name: "Tim Lowe", instagram: "thetimlowe" },
   { name: "Tim Rager", instagram: "timothyrager" },

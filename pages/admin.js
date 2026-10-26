@@ -99,18 +99,24 @@ function GuestList({ onLogout }) {
   const checkinTimers = useRef({})
   const checkinValues = useRef({})
 
+  // Latest show requested, so a slow response for a show we've since switched
+  // away from doesn't overwrite the newer one.
+  const latestShow = useRef(null)
+
   const fetchGuests = useCallback(async (showDate) => {
     if (!showDate) return
+    latestShow.current = showDate
     setLoading(true)
     setError('')
     try {
       const res = await fetch(`/api/admin/guests?showDate=${encodeURIComponent(showDate)}`)
       if (!res.ok) throw new Error('Failed to fetch')
-      setData(await res.json())
+      const json = await res.json()
+      if (latestShow.current === showDate) setData(json)
     } catch {
-      setError('Failed to load guest list')
+      if (latestShow.current === showDate) setError('Failed to load guest list')
     } finally {
-      setLoading(false)
+      if (latestShow.current === showDate) setLoading(false)
     }
   }, [])
 
@@ -221,19 +227,24 @@ function GuestList({ onLogout }) {
         <div>
           <h1 className="text-2xl font-bold">Guest List</h1>
           {shows.length > 0 && (
-            <select
-              value={selectedShow || ''}
-              onChange={e => { setSelectedShow(e.target.value); setSortOverride(null) }}
-              className="mt-2 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-comedy-purple"
-            >
-              {shows.map(s => (
-                <option key={s.showDate} value={s.showDate}>
-                  {s.showDate}
-                  {s.showDate === currentShowDate ? ' (current)' : ''}
-                  {` — ${s.tickets} ticket${s.tickets === 1 ? '' : 's'}`}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center gap-2">
+              <select
+                value={selectedShow || ''}
+                onChange={e => { setSelectedShow(e.target.value); setSortOverride(null) }}
+                className="mt-2 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-comedy-purple"
+              >
+                {shows.map(s => (
+                  <option key={s.showDate} value={s.showDate}>
+                    {s.showDate}
+                    {s.showDate === currentShowDate ? ' (current)' : ''}
+                    {` — ${s.tickets} ticket${s.tickets === 1 ? '' : 's'}`}
+                  </option>
+                ))}
+              </select>
+              {loading && (
+                <span className="mt-2 h-4 w-4 rounded-full border-2 border-gray-300 border-t-comedy-purple animate-spin" aria-label="Loading" />
+              )}
+            </div>
           )}
         </div>
         <button
@@ -248,7 +259,7 @@ function GuestList({ onLogout }) {
       {loading && !data && <p className="text-gray-500">Loading...</p>}
 
       {data && (
-        <>
+        <div className={loading ? 'opacity-50 pointer-events-none transition-opacity' : 'transition-opacity'}>
           {/* Summary */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
             <SummaryCard
@@ -408,7 +419,7 @@ function GuestList({ onLogout }) {
               </tbody>
             </table>
           </div>
-        </>
+        </div>
       )}
     </div>
   )
